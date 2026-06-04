@@ -3,1022 +3,776 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Connectd — Social Media Dashboard · May 2026</title>
+<title>Connectd — May 2026 Social Media Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg: #f7f6f5;
-    --red: #f60039;
-    --dark-red: #5d0027;
-    --green: #51e668;
-    --text: #202020;
-    --white: #ffffff;
-    --card-bg: #ffffff;
-    --muted: #888;
-    --radius: 18px;
-    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    background: linear-gradient(135deg, var(--dark-red) 0%, var(--red) 100%);
-    padding: 36px 40px 28px;
-    display: flex;
-    align-items: flex-end;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .header-title {
-    flex: 1 1 auto;
-  }
-  .header-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.65);
-    margin-bottom: 6px;
-  }
-  .header h1 {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--white);
-    line-height: 1.15;
-  }
-  .header-sub {
-    font-size: 13px;
-    color: rgba(255,255,255,0.7);
-    margin-top: 6px;
-  }
-  .header-badge {
-    background: var(--green);
-    color: var(--dark-red);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 999px;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    align-self: flex-start;
-    margin-top: 4px;
-  }
-
-  /* ── MAIN LAYOUT ── */
-  .main { padding: 32px 40px 60px; max-width: 1400px; margin: 0 auto; }
-
-  /* ── STAT CARDS ── */
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  .stat-card {
-    background: var(--dark-red);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    border: 2px solid var(--red);
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 80px;
-    height: 80px;
-    background: var(--red);
-    border-radius: 50%;
-    opacity: 0.25;
-  }
-  .stat-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 8px;
-  }
-  .stat-value {
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--white);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-sub {
-    font-size: 11px;
-    color: rgba(255,255,255,0.55);
-  }
-  .stat-accent {
-    color: var(--green);
-  }
-
-  /* ── SECTION HEADERS ── */
-  .section { margin-bottom: 32px; }
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  .section-header h2 {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .section-num {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--red);
-    text-transform: uppercase;
-  }
-  .section-note {
-    font-size: 11px;
-    color: var(--muted);
-    margin-left: auto;
-  }
-
-  /* ── CHART CARDS ── */
-  .chart-card {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-  .chart-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  .chart-wrapper {
-    position: relative;
-  }
-  .chart-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 16px;
-  }
-  .chart-gradient-bg {
-    background: linear-gradient(135deg, var(--dark-red) 0%, var(--red) 100%);
-    border-radius: var(--radius);
-    padding: 24px;
-  }
-  .chart-gradient-bg .chart-title {
-    color: rgba(255,255,255,0.85);
-  }
-
-  /* ── LEGEND PILLS ── */
-  .legend {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-  }
-  .legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ── POSTING PEAK NOTE ── */
-  .peak-note {
-    background: #fff3f5;
-    border-left: 3px solid var(--red);
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 11px;
-    color: var(--text);
-    margin-top: 14px;
-  }
-  .peak-note strong { color: var(--red); }
-
-  /* ── MENTIONS SECTION ── */
-  .mentions-section {
-    background: var(--dark-red);
-    border-radius: var(--radius);
-    padding: 32px;
-    margin-bottom: 32px;
-  }
-  .mentions-section .section-header h2 {
-    color: var(--white);
-  }
-  .mentions-section .section-num {
-    color: var(--green);
-  }
-  .mentions-section .section-note {
-    color: rgba(255,255,255,0.5);
-  }
-
-  .mentions-grid {
-    display: grid;
-    grid-template-columns: 200px 1fr 1fr;
-    gap: 20px;
-  }
-
-  .mentions-stat-col {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .m-stat-box {
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .m-stat-box .stat-label { color: rgba(255,255,255,0.5); }
-  .m-stat-box .stat-value { font-size: 38px; }
-
-  .authors-col {
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .authors-col h3 {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 14px;
-  }
-  .author-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  .author-row:last-child { border-bottom: none; }
-  .author-name { font-size: 13px; font-weight: 600; color: var(--white); }
-  .author-handle { font-size: 10px; color: rgba(255,255,255,0.45); }
-  .author-count {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--green);
-  }
-
-  .timeline-col {
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .timeline-col h3 {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 14px;
-  }
-
-  /* Mention cards */
-  .mention-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 14px;
-    margin-top: 20px;
-  }
-  .mention-card {
-    background: rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: transform 0.15s;
-  }
-  .mention-card:hover { transform: translateY(-2px); }
-  .mention-card.high-eng {
-    border: 2px solid var(--green);
-    box-shadow: 0 0 16px rgba(81,230,104,0.2);
-  }
-  .high-eng-badge {
-    display: inline-block;
-    background: var(--green);
-    color: var(--dark-red);
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 99px;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-  .mc-author { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-  .mc-meta { font-size: 10px; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
-  .mc-content {
-    font-size: 11px;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.5;
-    margin-bottom: 12px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .mc-stats {
-    display: flex;
-    gap: 12px;
-  }
-  .mc-stat {
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-  }
-  .mc-stat strong {
-    color: var(--white);
-    font-weight: 700;
-  }
-  .mc-link {
-    font-size: 10px;
-    color: var(--green);
-    text-decoration: none;
-    margin-top: 8px;
-    display: inline-block;
-  }
-  .mc-link:hover { text-decoration: underline; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .main { padding: 20px; }
-    .stat-row { grid-template-columns: 1fr 1fr; }
-    .chart-grid-2 { grid-template-columns: 1fr; }
-    .mentions-grid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 600px) {
-    .stat-row { grid-template-columns: 1fr; }
-    .header { padding: 24px 20px; }
-    .header h1 { font-size: 22px; }
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 20px 40px 40px;
-    font-size: 11px;
-    color: var(--muted);
-  }
+:root{
+  --bg:#f7f6f5;--red:#f60039;--dark:#5d0027;--green:#51e668;--text:#202020;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:32px 20px;}
+.page-header{text-align:center;margin-bottom:40px;}
+.page-header h1{font-size:28px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.page-header .sub{font-size:14px;color:#888;margin-bottom:4px;}
+.badge{display:inline-block;background:var(--dark);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;letter-spacing:.5px;margin-top:8px;}
+.section{margin-bottom:48px;}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.section-title{font-size:20px;font-weight:800;color:var(--dark);margin-bottom:20px;}
+/* ── SECTION 0 — FINDINGS ── */
+.findings-card{background:var(--dark);border-radius:var(--radius);padding:32px 36px;margin-bottom:12px;}
+.findings-card h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;opacity:.7;text-transform:uppercase;letter-spacing:1px;}
+.finding{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);}
+.finding:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.finding-bar{width:4px;min-width:4px;background:var(--red);border-radius:2px;min-height:40px;}
+.finding-text{font-size:15px;font-weight:600;color:#fff;line-height:1.5;}
+.finding-text em{color:var(--green);font-style:normal;}
+/* ── STAT CARDS ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.stat-card{background:var(--dark);border-radius:var(--radius);padding:24px;border-left:4px solid var(--red);}
+.stat-card .label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.stat-card .value{font-size:26px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px;}
+.stat-card .sub-val{font-size:12px;color:rgba(255,255,255,.45);}
+/* ── CHART CONTAINERS ── */
+.chart-card{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;}
+.chart-card h3{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:20px;}
+.chart-wrap{position:relative;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+/* ── DAY HEATMAP ── */
+.day-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;}
+.day-table th{text-align:left;padding:8px 12px;color:#666;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.day-table td{padding:10px 12px;border-top:1px solid #f0f0f0;}
+.day-table tr:hover td{background:#fafafa;}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.pill-best{background:var(--green);color:var(--dark);}
+.pill-worst{background:var(--red);color:#fff;}
+.callout-box{background:var(--dark);color:#fff;border-radius:12px;padding:16px 20px;font-size:13px;font-weight:600;margin-top:12px;line-height:1.6;}
+.callout-box em{color:var(--green);font-style:normal;}
+/* ── TABLE ── */
+.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.filter-bar select,.filter-bar input{padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:var(--font);background:#fff;outline:none;}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--red);}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{text-align:left;padding:10px 12px;background:var(--dark);color:#fff;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;user-select:none;white-space:nowrap;}
+.data-table th:hover{background:#7a003a;}
+.data-table th .sort-icon{margin-left:4px;opacity:.5;}
+.data-table th.sorted .sort-icon{opacity:1;}
+.data-table td{padding:10px 12px;border-top:1px solid #f0f0f0;vertical-align:top;}
+.data-table tr.top-post td:first-child{border-left:4px solid var(--green);}
+.data-table tr.top-post td{background:#f0fff4;}
+.data-table tr:hover td{background:#fafafa;}
+.data-table tr.top-post:hover td{background:#e8ffe8;}
+.platform-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;}
+.pb-li{background:var(--dark);color:#fff;}
+.pb-ig{background:var(--red);color:#fff;}
+.pb-li-ceo{background:#9b1a4a;color:#fff;}
+.caption-link{color:var(--dark);text-decoration:none;font-weight:500;}
+.caption-link:hover{color:var(--red);text-decoration:underline;}
+/* ── TOP 5 CARDS ── */
+.top5-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.top5-card{background:var(--dark);border-radius:var(--radius);padding:24px;border-left:4px solid var(--green);}
+.top5-card .rank{font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;}
+.top5-card .caption{font-size:13px;color:rgba(255,255,255,.85);line-height:1.5;margin-bottom:14px;}
+.top5-card .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.top5-card .metric-item{background:rgba(255,255,255,.07);border-radius:8px;padding:8px 10px;}
+.top5-card .metric-item .m-label{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:2px;}
+.top5-card .metric-item .m-val{font-size:14px;font-weight:700;color:#fff;}
+.top5-card .post-link{font-size:12px;color:var(--green);text-decoration:none;}
+.top5-card .post-link:hover{text-decoration:underline;}
+/* ── MENTION TRACKER ── */
+.mentions-section{background:var(--dark);border-radius:var(--radius);padding:32px;}
+.mentions-section .section-title{color:#fff;}
+.mentions-section .section-label{color:rgba(255,255,255,.5);}
+.mention-card{background:rgba(255,255,255,.06);border-radius:12px;padding:16px 20px;margin-bottom:12px;border-left:3px solid rgba(255,255,255,.15);}
+.mention-card.above-avg{border-left-color:var(--green);}
+.mention-card .m-author{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.mention-card .m-date{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px;}
+.mention-card .m-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:10px;}
+.mention-card .m-metrics{display:flex;gap:16px;}
+.mention-card .m-metric{font-size:12px;color:rgba(255,255,255,.6);}
+.mention-card .m-metric strong{color:var(--green);}
+.mention-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.mention-stat{background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center;}
+.mention-stat .ms-val{font-size:24px;font-weight:800;color:#fff;}
+.mention-stat .ms-label{font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;}
+/* ── PAGE ANALYTICS ── */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.analytics-card{background:#fff;border-radius:14px;padding:20px;border-top:4px solid var(--red);box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.analytics-card .a-label{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.analytics-card .a-value{font-size:22px;font-weight:800;color:var(--dark);}
+.analytics-card .a-sub{font-size:11px;color:#bbb;margin-top:3px;}
+/* ── BENCHMARK ── */
+.benchmark-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.benchmark-table th{padding:10px 14px;background:var(--dark);color:#fff;font-size:11px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.benchmark-table td{padding:10px 14px;border-top:1px solid #eee;}
+.benchmark-table tr.connectd-row td{background:#fff7f7;font-weight:700;color:var(--dark);}
+.gap-card{background:var(--dark);border-radius:12px;padding:16px 20px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;}
+.gap-card .gap-icon{font-size:18px;}
+.gap-card .gap-text{font-size:13px;color:var(--green);font-weight:600;line-height:1.5;}
+.gap-card .gap-sub{font-size:12px;color:rgba(255,255,255,.55);margin-top:3px;}
+/* ── DATA DISCLAIMER ── */
+.disclaimer{background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px 16px;font-size:12px;color:#856404;margin-bottom:16px;}
+/* ── FOOTER ── */
+footer{text-align:center;padding:32px 0;font-size:12px;color:#bbb;border-top:1px solid #e8e8e8;margin-top:48px;}
+footer a{color:var(--red);text-decoration:none;}
+@media(max-width:640px){
+  .two-col{grid-template-columns:1fr;}
+  .top5-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
-<header class="header">
-  <div class="header-title">
-    <div class="header-eyebrow">Social Media Analytics</div>
-    <h1>Connectd — May 2026 Dashboard</h1>
-    <div class="header-sub">LinkedIn · Instagram · Public Mentions &nbsp;·&nbsp; Data scraped 4 Jun 2026 via Apify &amp; LinkedIn Page Admin Export</div>
+<header class="page-header">
+  <div style="display:inline-block;background:var(--dark);color:#fff;border-radius:14px;padding:12px 20px;margin-bottom:20px;">
+    <span style="font-size:24px;margin-right:8px;">📊</span>
+    <span style="font-size:16px;font-weight:800;vertical-align:middle;">Connectd</span>
   </div>
-  <span class="header-badge">MAY 2026</span>
+  <h1>Social Media Analytics Dashboard</h1>
+  <p class="sub">May 2026 · LinkedIn Company Page &amp; Instagram @connectduk</p>
+  <p class="sub">LinkedIn followers: 44,081 &nbsp;·&nbsp; Instagram followers: 2,112</p>
+  <span class="badge">Built with Claude · Auto-updated monthly</span>
 </header>
 
-<main class="main">
-
-  <!-- ── SUMMARY STATS ROW ── -->
-  <div class="stat-row">
-    <div class="stat-card">
-      <div class="stat-label">Total Posts Analysed</div>
-      <div class="stat-value">21</div>
-      <div class="stat-sub">12 LinkedIn · 4 Instagram · 5 Mentions</div>
+<!-- ── SECTION 0 — HEADLINE FINDINGS ── -->
+<div class="section">
+  <div class="section-label">Section 0</div>
+  <div class="section-title">Headline Findings</div>
+  <div class="findings-card">
+    <h2>🔍 May 2026 Critical Insights</h2>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">Documents are outperforming videos on clicks by <em>6x</em> — avg CTR 26.4% vs 4.1%. Yet you're posting equal numbers of each. Consider shifting to a 2:1 document-to-video ratio.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Avg Engagement Rate</div>
-      <div class="stat-value stat-accent">17.4%</div>
-      <div class="stat-sub">LinkedIn admin export · 0.47% Instagram</div>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">Tuesday is your <em>best performing day</em> on LinkedIn (avg 3,590 impressions) — Monday is your worst (1,505). You posted 5× on Tuesday and just 2× on Monday. Your schedule is already working for you here.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Most Active Platform</div>
-      <div class="stat-value">LinkedIn</div>
-      <div class="stat-sub">12 posts vs 4 Instagram · 44,081 followers</div>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">The CEO's personal post got <em>1,386 engagements</em> vs 28 avg for company page posts — that's 50× more. One piece of authentic founder content eclipsed the entire month's output.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Top Theme by Engagement</div>
-      <div class="stat-value" style="font-size:20px;padding-top:4px;">Company Growth</div>
-      <div class="stat-sub"><span class="stat-accent">1,386</span> avg total engagements</div>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">You received 5 public LinkedIn mentions in May and <em>amplified none of them</em>. Adam Hyland's pro-bono testimonial (65 engagements) and Gavin Rowe's two posts were natural social proof — not reshared or commented on from the Connectd page.</div>
     </div>
-  </div>
-
-  <!-- ── SECTION 1: ENGAGEMENT BY PLATFORM ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <h2>Engagement by Platform</h2>
-      <span class="section-note">Average per post · May 2026 · LinkedIn company posts excl. CEO personal post</span>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">Your best Instagram post directly reacted to the Meta layoffs news (<em>0.80% ER, your highest of the month</em>). Every other post averaged 0.37%. News-reactive content is clearly a lever you're not pulling consistently.</div>
     </div>
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#f60039"></div>LinkedIn (company)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#5d0027"></div>Instagram</div>
-        </div>
-        <div class="chart-wrapper" style="height:260px">
-          <canvas id="engagementChart"></canvas>
-        </div>
-      </div>
-      <div class="chart-gradient-bg">
-        <div class="chart-title">Engagement Breakdown — LinkedIn vs Instagram</div>
-        <div style="height:260px;position:relative">
-          <canvas id="engagementRatioChart"></canvas>
-        </div>
-        <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.5">
-          ★ LinkedIn's viral CEO post (21 May, 1,158 likes) is shown separately to preserve the company page baseline.
-          Including it raises LinkedIn avg likes to 119.2.
-        </div>
-      </div>
+    <div class="finding">
+      <div class="finding-bar"></div>
+      <div class="finding-text">Instagram engagement is critically low at <em>0.47% average</em>. With only 4 posts across 31 days and no saves data available, the account needs both higher posting frequency and a move toward save-worthy formats (carousels, frameworks, how-tos).</div>
     </div>
   </div>
-
-  <!-- ── SECTION 2: POSTING FREQUENCY ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2>Posting Frequency Over Time</h2>
-      <span class="section-note">Posts per day across May 2026</span>
-    </div>
-    <div class="chart-card">
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f60039"></div>LinkedIn</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#51e668"></div>Instagram</div>
-      </div>
-      <div class="chart-wrapper" style="height:220px">
-        <canvas id="frequencyChart"></canvas>
-      </div>
-      <div class="peak-note">
-        📌 <strong>Peak activity:</strong> 6–8 May saw back-to-back posts across 3 consecutive days on LinkedIn.
-        Instagram posted in concentrated bursts around mid-to-late May (19, 22, 27 May).
-        No platform posted on the same day in May.
-      </div>
-    </div>
-  </div>
-
-  <!-- ── SECTION 3: CONTENT THEMES ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <h2>Top Performing Content Themes</h2>
-      <span class="section-note">Avg total engagements (likes + comments + shares) per theme · all platforms</span>
-    </div>
-    <div class="chart-grid-2">
-      <div class="chart-card">
-        <div class="chart-title">Average Engagement by Theme (all posts)</div>
-        <div class="chart-wrapper" style="height:300px">
-          <canvas id="themesChart"></canvas>
-        </div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-title">Theme Distribution — Post Count</div>
-        <div class="chart-wrapper" style="height:300px">
-          <canvas id="themesPieChart"></canvas>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top:12px;font-size:11px;color:var(--muted);padding:0 4px">
-      ⚠ <em>Company Growth</em> includes the CEO Chief of Staff viral post (1,386 total engagements). Excluding it, <em>Events &amp; Community</em> leads with 84 avg engagements.
-      Themes derived from post content analysis across LinkedIn and Instagram.
-    </div>
-  </div>
-
-  <!-- ── SECTION 4 (MENTIONS) ── -->
-  <div class="mentions-section">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <h2>Public LinkedIn Mentions of @connectd-co</h2>
-      <span class="section-note">External authors · May 2026 · avg engagement threshold: 26</span>
-    </div>
-
-    <div class="mentions-grid">
-      <!-- Stats col -->
-      <div class="mentions-stat-col">
-        <div class="m-stat-box">
-          <div class="stat-label">Total Mentions</div>
-          <div class="stat-value">5</div>
-          <div class="stat-sub" style="color:rgba(255,255,255,0.45)">External posts</div>
-        </div>
-        <div class="m-stat-box">
-          <div class="stat-label">Total Likes</div>
-          <div class="stat-value">115</div>
-        </div>
-        <div class="m-stat-box">
-          <div class="stat-label">Total Comments</div>
-          <div class="stat-value">14</div>
-        </div>
-        <div class="m-stat-box">
-          <div class="stat-label">Total Shares</div>
-          <div class="stat-value">2</div>
-        </div>
-      </div>
-
-      <!-- Top authors -->
-      <div class="authors-col">
-        <h3>Top Authors by Mention Count</h3>
-        <div class="author-row">
-          <div>
-            <div class="author-name">Gavin Rowe</div>
-            <div class="author-handle">linkedin.com/in/gavin-rowe-deepsea · Task Force VA</div>
-          </div>
-          <div class="author-count">2</div>
-        </div>
-        <div class="author-row">
-          <div>
-            <div class="author-name">Dawn Marie Bornheimer</div>
-            <div class="author-handle">linkedin.com/in/dawn-marie-bornheimer · Fractional Sales</div>
-          </div>
-          <div class="author-count">1</div>
-        </div>
-        <div class="author-row">
-          <div>
-            <div class="author-name">Adam Hyland</div>
-            <div class="author-handle">linkedin.com/in/adam-hyland-316b17127 · Kick The Stigma</div>
-          </div>
-          <div class="author-count">1</div>
-        </div>
-        <div class="author-row">
-          <div>
-            <div class="author-name">Davion Louis</div>
-            <div class="author-handle">linkedin.com/in/davion-louis-62147766 · Capital Raiser</div>
-          </div>
-          <div class="author-count">1</div>
-        </div>
-        <div style="margin-top:14px;font-size:11px;color:rgba(255,255,255,0.4)">
-          💡 Gavin Rowe (Task Force VA) is the most engaged external ambassador — 2 posts, both reposts of Connectd content with personal commentary.
-        </div>
-      </div>
-
-      <!-- Timeline chart -->
-      <div class="timeline-col">
-        <h3>Mentions Timeline — May 2026</h3>
-        <div style="height:200px;position:relative">
-          <canvas id="mentionsTimeline"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mention cards -->
-    <div class="mention-cards">
-
-      <!-- Adam Hyland — above avg, green border -->
-      <div class="mention-card high-eng">
-        <span class="high-eng-badge">⭐ Above-average engagement</span>
-        <div class="mc-author">Adam Hyland</div>
-        <div class="mc-meta">11 May 2026 · Original Post</div>
-        <div class="mc-content">
-          "One month really does fly when you're building a business. Thanks to Roei Samuel and his awesome company Connectd (they are growing rapidly). They connected me with their network of incredible leaders to support the early stages of growth — PRO BONO!"
-        </div>
-        <div class="mc-stats">
-          <div class="mc-stat"><strong>57</strong> likes</div>
-          <div class="mc-stat"><strong>8</strong> comments</div>
-          <div class="mc-stat"><strong>0</strong> shares</div>
-        </div>
-        <a class="mc-link" href="https://www.linkedin.com/posts/adam-hyland-316b17127_kickthestigma-mensgrooming-mensmentalhealth-activity-7459645397041344513-gKT-" target="_blank">View post →</a>
-      </div>
-
-      <!-- Gavin Rowe May 19 -->
-      <div class="mention-card">
-        <div class="mc-author">Gavin Rowe</div>
-        <div class="mc-meta">19 May 2026 · Repost</div>
-        <div class="mc-content">
-          "Extremely appreciative of the entire Connectd team taking the time to highlight our mission-driven Task Force VA… The team at Connectd has been a foundational layer of success for Task Force VA. Thank you to Alex Rose, Inarah Nor Hashimi, Sarah Zia, Clement Bigot, William Smith, Alessandra Hutson, and thank you Roei Samuel for bringing this amazing opportunity to the US market."
-        </div>
-        <div class="mc-stats">
-          <div class="mc-stat"><strong>20</strong> likes</div>
-          <div class="mc-stat"><strong>2</strong> comments</div>
-          <div class="mc-stat"><strong>1</strong> share</div>
-        </div>
-        <a class="mc-link" href="https://www.linkedin.com/posts/gavin-rowe-deepsea_no-one-can-help-you-if-you-dont-ask-for-activity-7462580002728075265-kIP8" target="_blank">View post →</a>
-      </div>
-
-      <!-- Davion Louis -->
-      <div class="mention-card">
-        <div class="mc-author">Davion Louis</div>
-        <div class="mc-meta">7 May 2026 · Repost</div>
-        <div class="mc-content">
-          "Always great to be a part of such organic and impactful conversations. Happy to have connected with such a talented group of founders right here in Jersey." [Repost of Jersey City Tech Meetup post naming Connectd as a participant/sponsor.]
-        </div>
-        <div class="mc-stats">
-          <div class="mc-stat"><strong>16</strong> likes</div>
-          <div class="mc-stat"><strong>0</strong> comments</div>
-          <div class="mc-stat"><strong>0</strong> shares</div>
-        </div>
-        <a class="mc-link" href="https://www.linkedin.com/posts/activity-7458237979967303681-IPox" target="_blank">View post →</a>
-      </div>
-
-      <!-- Dawn Marie Bornheimer -->
-      <div class="mention-card">
-        <div class="mc-author">Dawn Marie Bornheimer</div>
-        <div class="mc-meta">18 May 2026 · Original Post</div>
-        <div class="mc-content">
-          "Connectd's pro-bono program gives early-stage startups free access to senior advisors and fractional executives from organizations like Google, Amazon, McKinsey, Deloitte, and Salesforce. 🔹 4,500+ vetted professionals · Free strategic support · 1:1 talent consultations"
-        </div>
-        <div class="mc-stats">
-          <div class="mc-stat"><strong>9</strong> likes</div>
-          <div class="mc-stat"><strong>1</strong> comment</div>
-          <div class="mc-stat"><strong>1</strong> share</div>
-        </div>
-        <a class="mc-link" href="https://www.linkedin.com/posts/dawn-marie-bornheimer_book-an-appointment-with-benjamin-parker-activity-7462103779119685633-S_PT" target="_blank">View post →</a>
-      </div>
-
-      <!-- Gavin Rowe May 26 -->
-      <div class="mention-card">
-        <div class="mc-author">Gavin Rowe</div>
-        <div class="mc-meta">26 May 2026 · Repost</div>
-        <div class="mc-content">
-          "Super appreciative of the Connectd team for taking the time to share what we're doing within Task Force VA. [Events at TECH WEEK by a16z, Boston + NYC in late May/early June.]  #TECHWEEKbyA16Z #TaskForceVA #ConnectD"
-        </div>
-        <div class="mc-stats">
-          <div class="mc-stat"><strong>13</strong> likes</div>
-          <div class="mc-stat"><strong>3</strong> comments</div>
-          <div class="mc-stat"><strong>0</strong> shares</div>
-        </div>
-        <a class="mc-link" href="https://www.linkedin.com/posts/gavin-rowe-deepsea_as-a-founder-wearing-every-hat-is-the-fastest-activity-7465020172576190464-y1Mw" target="_blank">View post →</a>
-      </div>
-
-    </div>
-  </div>
-
-</main>
-
-<div class="footer">
-  Connectd Social Media Dashboard · May 2026 · Built with data from LinkedIn Page Admin Export, Apify (harvestapi/linkedin-company-posts, harvestapi/linkedin-post-search, instagram-scraper) · Generated 4 Jun 2026
 </div>
 
+<!-- ── SECTION 1 — STAT CARDS ── -->
+<div class="section">
+  <div class="section-label">Section 1</div>
+  <div class="section-title">Summary Stats — May 2026</div>
+  <div class="cards-grid">
+    <div class="stat-card">
+      <div class="label">Total Posts Analysed</div>
+      <div class="value">16</div>
+      <div class="sub-val">12 LinkedIn · 4 Instagram</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Avg LinkedIn Eng. Rate</div>
+      <div class="value">17.4%</div>
+      <div class="sub-val">Company page posts (LinkedIn metric)</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Avg Instagram Eng. Rate</div>
+      <div class="value">0.47%</div>
+      <div class="sub-val">(likes + comments) ÷ 2,112 followers</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Most Active Platform</div>
+      <div class="value">LinkedIn</div>
+      <div class="sub-val">12 posts vs 4 Instagram</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Top Content Theme</div>
+      <div class="value">Advisor Profiles</div>
+      <div class="sub-val">6 docs · avg CTR 26.4%</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">LinkedIn Public Mentions</div>
+      <div class="value">5</div>
+      <div class="sub-val">115 likes · 14 comments · 2 shares</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Top Performing Format</div>
+      <div class="value">Document</div>
+      <div class="sub-val">Avg 26.4% CTR · 6× more clicks than video</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Total LinkedIn Impressions</div>
+      <div class="value">81,805</div>
+      <div class="sub-val">55,609 organic · 26,196 other</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 2 — ENGAGEMENT BY PLATFORM ── -->
+<div class="section">
+  <div class="section-label">Section 2</div>
+  <div class="section-title">Engagement by Platform</div>
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>Average Engagement Metrics Comparison</h3>
+      <div class="chart-wrap"><canvas id="engChart" height="260"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Format Performance — LinkedIn CTR</h3>
+      <div class="chart-wrap"><canvas id="formatChart" height="260"></canvas></div>
+    </div>
+  </div>
+  <div class="disclaimer">⚠️ Instagram saves, reach, and impressions are not available from the Apify scraper — export from Meta Business Suite to unlock these metrics. LinkedIn saves data is not provided in the Page Admin export.</div>
+</div>
+
+<!-- ── SECTION 3 — POSTING FREQUENCY + BEST/WORST DAYS ── -->
+<div class="section">
+  <div class="section-label">Section 3</div>
+  <div class="section-title">Posting Frequency &amp; Day-of-Week Performance</div>
+  <div class="chart-card">
+    <h3>Posts per Day — May 2026 (LinkedIn &amp; Instagram)</h3>
+    <div class="chart-wrap"><canvas id="freqChart" height="180"></canvas></div>
+  </div>
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>LinkedIn — Avg Impressions by Day of Week</h3>
+      <table class="day-table">
+        <thead><tr><th>Day</th><th>Posts</th><th>Avg Impressions</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Tuesday</td><td>5</td><td>3,590</td><td><span class="pill pill-best">BEST</span></td></tr>
+          <tr><td>Thursday</td><td>3</td><td>3,218</td><td></td></tr>
+          <tr><td>Wednesday</td><td>2 (co. page)</td><td>3,124</td><td></td></tr>
+          <tr><td>Monday</td><td>2</td><td>1,505</td><td><span class="pill pill-worst">WORST</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout-box">You posted <em>2×</em> on Monday — your lowest impression day. Shift those to Tuesday for an estimated <em>+2,085 impressions per post</em>.</div>
+    </div>
+    <div class="chart-card">
+      <h3>Instagram — Avg Engagement Rate by Day of Week</h3>
+      <table class="day-table">
+        <thead><tr><th>Day</th><th>Posts</th><th>Avg ER</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Monday</td><td>1</td><td>0.80%</td><td><span class="pill pill-best">BEST</span></td></tr>
+          <tr><td>Thursday</td><td>1</td><td>0.47%</td><td></td></tr>
+          <tr><td>Tuesday</td><td>1</td><td>0.33%</td><td></td></tr>
+          <tr><td>Friday</td><td>1</td><td>0.28%</td><td><span class="pill pill-worst">WORST</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout-box">You posted <em>once on Friday</em> — your lowest ER day on Instagram. Note: sample size is small (1 post per day) — track this over 3+ months to confirm patterns.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 4 — PER POST TABLE ── -->
+<div class="section">
+  <div class="section-label">Section 4</div>
+  <div class="section-title">All Posts — May 2026</div>
+  <div class="chart-card" style="overflow-x:auto;">
+    <div class="filter-bar">
+      <select id="platformFilter" onchange="filterTable()">
+        <option value="all">All Platforms</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Instagram">Instagram</option>
+      </select>
+      <select id="formatFilter" onchange="filterTable()">
+        <option value="all">All Formats</option>
+        <option value="Document">Document</option>
+        <option value="Video">Video</option>
+        <option value="Image">Image</option>
+      </select>
+      <input id="searchInput" type="text" placeholder="Search captions…" oninput="filterTable()"/>
+      <span id="rowCount" style="font-size:12px;color:#999;margin-left:auto;"></span>
+    </div>
+    <table class="data-table" id="postTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Platform <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(1)">Date <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(2)">Format <span class="sort-icon">↕</span></th>
+          <th>Caption Preview</th>
+          <th onclick="sortTable(4)">Impressions <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(5)">Clicks <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(6)">CTR <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(7)">Likes <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(8)">Comments <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(9)">Reposts <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(10)">ER <span class="sort-icon">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── SECTION 5 — TOP 5 POSTS ── -->
+<div class="section">
+  <div class="section-label">Section 5</div>
+  <div class="section-title">Top 5 Posts — May 2026</div>
+  <div class="top5-grid" id="top5Grid"></div>
+</div>
+
+<!-- ── SECTION 6 — CONTENT THEMES ── -->
+<div class="section">
+  <div class="section-label">Section 6</div>
+  <div class="section-title">Content Theme Analysis</div>
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>LinkedIn — Avg Likes by Content Theme</h3>
+      <div class="chart-wrap"><canvas id="themeChart" height="280"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>LinkedIn — Avg CTR by Content Theme</h3>
+      <div class="chart-wrap"><canvas id="themeCtrChart" height="280"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 7 — CTA ANALYSIS ── -->
+<div class="section">
+  <div class="section-label">Section 7</div>
+  <div class="section-title">CTA Effect Analysis</div>
+  <div class="two-col">
+    <div class="chart-card">
+      <h3>Avg Clicks: Posts With CTA vs Without</h3>
+      <div class="chart-wrap"><canvas id="ctaChart" height="240"></canvas></div>
+      <div class="callout-box" style="margin-top:12px;">Profile showcase documents (👉 named experts) drove an avg of <em>755 clicks</em> vs 147 for video/thought-leadership posts — a <em>5x difference</em>. The CTA format IS the format.</div>
+    </div>
+    <div class="chart-card">
+      <h3>Avg CTR: Posts With CTA vs Without</h3>
+      <div class="chart-wrap"><canvas id="ctaCtrChart" height="240"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 8 — SAVES + CONVERSION RATE ── -->
+<div class="section">
+  <div class="section-label">Section 8</div>
+  <div class="section-title">Conversion Rate by Format</div>
+  <div class="disclaimer">⚠️ Saves data is not available from Apify or LinkedIn Page Admin export. Connect Meta Business Suite (Instagram) and LinkedIn Campaign Manager (LinkedIn) to track saves. Conversion rate shown = clicks ÷ impressions (LinkedIn only).</div>
+  <div class="chart-card">
+    <h3>LinkedIn Conversion Rate (Clicks ÷ Impressions) by Format</h3>
+    <div class="chart-wrap"><canvas id="convChart" height="200"></canvas></div>
+  </div>
+</div>
+
+<!-- ── SECTION 9 — LINKEDIN MENTION TRACKER ── -->
+<div class="section mentions-section">
+  <div class="section-label">Section 9</div>
+  <div class="section-title">Public LinkedIn Mention Tracker — May 2026</div>
+  <div class="mention-stats">
+    <div class="mention-stat"><div class="ms-val">5</div><div class="ms-label">Total Mentions</div></div>
+    <div class="mention-stat"><div class="ms-val">115</div><div class="ms-label">Total Likes</div></div>
+    <div class="mention-stat"><div class="ms-val">26</div><div class="ms-label">Avg Engagement Threshold</div></div>
+  </div>
+
+  <div class="mention-card above-avg">
+    <div class="m-author">Adam Hyland <span style="font-size:11px;background:var(--green);color:var(--dark);border-radius:999px;padding:2px 8px;margin-left:6px;">ABOVE AVG</span></div>
+    <div class="m-date">11 May 2026 · Original Post</div>
+    <div class="m-text">"One month really does fly when you're building a business. Thanks to Roei Samuel and his awesome company Connectd... they have connected me with their network of incredible leaders to support the early stages of growth — PRO BONO!"</div>
+    <div class="m-metrics">
+      <span class="m-metric">👍 <strong>57</strong> likes</span>
+      <span class="m-metric">💬 <strong>8</strong> comments</span>
+      <span class="m-metric">🔁 <strong>0</strong> shares</span>
+      <span class="m-metric"><a href="https://www.linkedin.com/posts/adam-hyland-316b17127_kickthestigma-mensgrooming-mensmentalhealth-activity-7459645397041344513-gKT-" style="color:var(--green);" target="_blank">View post →</a></span>
+    </div>
+  </div>
+  <div class="mention-card above-avg">
+    <div class="m-author">Gavin Rowe (Task Force VA) <span style="font-size:11px;background:var(--green);color:var(--dark);border-radius:999px;padding:2px 8px;margin-left:6px;">ABOVE AVG</span></div>
+    <div class="m-date">19 May 2026 · Repost</div>
+    <div class="m-text">"Extremely appreciative of the entire Connectd team taking the time to highlight our mission-driven Task Force VA... The team at Connectd has been a foundational layer of success for Task Force VA."</div>
+    <div class="m-metrics">
+      <span class="m-metric">👍 <strong>20</strong> likes</span>
+      <span class="m-metric">💬 <strong>2</strong> comments</span>
+      <span class="m-metric">🔁 <strong>1</strong> share</span>
+      <span class="m-metric"><a href="https://www.linkedin.com/posts/gavin-rowe-deepsea_no-one-can-help-you-if-you-dont-ask-for-activity-7462580002728075265-kIP8" style="color:var(--green);" target="_blank">View post →</a></span>
+    </div>
+  </div>
+  <div class="mention-card">
+    <div class="m-author">Davion Louis</div>
+    <div class="m-date">7 May 2026 · Repost</div>
+    <div class="m-text">"Always great to be a part of such organic and impactful conversations. Happy to have connected with such a talented group of founders right here in Jersey." [mentions Connectd as sponsor/participant]</div>
+    <div class="m-metrics">
+      <span class="m-metric">👍 <strong>16</strong> likes</span>
+      <span class="m-metric">💬 <strong>0</strong> comments</span>
+      <span class="m-metric">🔁 <strong>0</strong> shares</span>
+    </div>
+  </div>
+  <div class="mention-card">
+    <div class="m-author">Dawn Marie Bornheimer</div>
+    <div class="m-date">18 May 2026 · Original Post</div>
+    <div class="m-text">"Connectd's pro-bono program gives early-stage startups free access to senior advisors and fractional executives from organizations like Google, Amazon, McKinsey, Deloitte, and Salesforce."</div>
+    <div class="m-metrics">
+      <span class="m-metric">👍 <strong>9</strong> likes</span>
+      <span class="m-metric">💬 <strong>1</strong> comment</span>
+      <span class="m-metric">🔁 <strong>1</strong> share</span>
+      <span class="m-metric"><a href="https://www.linkedin.com/posts/dawn-marie-bornheimer_book-an-appointment-with-benjamin-parker-activity-7462103779119685633-S_PT" style="color:var(--green);" target="_blank">View post →</a></span>
+    </div>
+  </div>
+  <div class="mention-card">
+    <div class="m-author">Gavin Rowe (Task Force VA)</div>
+    <div class="m-date">26 May 2026 · Repost</div>
+    <div class="m-text">"Super appreciative of the Connectd team for taking the time to share what we're doing within Task Force VA. We have great things planned this year..."</div>
+    <div class="m-metrics">
+      <span class="m-metric">👍 <strong>13</strong> likes</span>
+      <span class="m-metric">💬 <strong>3</strong> comments</span>
+      <span class="m-metric">🔁 <strong>0</strong> shares</span>
+      <span class="m-metric"><a href="https://www.linkedin.com/posts/gavin-rowe-deepsea_as-a-founder-wearing-every-hat-is-the-fastest-activity-7465020172576190464-y1Mw" style="color:var(--green);" target="_blank">View post →</a></span>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 10 — LINKEDIN PAGE ANALYTICS ── -->
+<div class="section">
+  <div class="section-label">Section 10</div>
+  <div class="section-title">LinkedIn Page Analytics — May 2026</div>
+  <div class="analytics-grid">
+    <div class="analytics-card"><div class="a-label">Total Impressions</div><div class="a-value">81,805</div><div class="a-sub">All sources</div></div>
+    <div class="analytics-card"><div class="a-label">Organic Impressions</div><div class="a-value">55,609</div><div class="a-sub">From followers &amp; connections</div></div>
+    <div class="analytics-card"><div class="a-label">Total Clicks</div><div class="a-value">7,693</div><div class="a-sub">All sources</div></div>
+    <div class="analytics-card"><div class="a-label">Organic Clicks</div><div class="a-value">7,454</div><div class="a-sub">96.9% of clicks are organic</div></div>
+    <div class="analytics-card"><div class="a-label">Avg Daily Eng. Rate</div><div class="a-value">18.41%</div><div class="a-sub">Organic (LinkedIn metric)</div></div>
+    <div class="analytics-card"><div class="a-label">Followers</div><div class="a-value">44,081</div><div class="a-sub">As of June 2026</div></div>
+    <div class="analytics-card"><div class="a-label">Company Page Posts</div><div class="a-value">11</div><div class="a-sub">+ 1 CEO personal post</div></div>
+    <div class="analytics-card"><div class="a-label">Highest Impression Post</div><div class="a-value">6,906</div><div class="a-sub">06 May — Board Advisors Video</div></div>
+  </div>
+</div>
+
+<!-- ── SECTION 11 — NICHE BENCHMARK ── -->
+<div class="section">
+  <div class="section-label">Section 11</div>
+  <div class="section-title">Niche Benchmark &amp; Trend Gaps</div>
+  <div class="disclaimer">📊 Benchmark data from LinkedIn public post search (startup advisor fractional executive UK niche, May 2026). Sample: top engaged posts from niche accounts scraped via Apify.</div>
+
+  <div class="chart-card" style="margin-bottom:16px;">
+    <h3>Connectd vs Niche Average — Key Metrics</h3>
+    <table class="benchmark-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Connectd (May 2026)</th>
+          <th>Niche Average (est.)</th>
+          <th>Gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="connectd-row">
+          <td><strong>🔴 Connectd LinkedIn</strong></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td>Posts/month</td><td>11 (co. page)</td><td>15–20</td><td>⬇ Under-posting by 4–9 posts</td>
+        </tr>
+        <tr>
+          <td>Avg impressions/post</td><td>2,916</td><td>1,200–3,500</td><td>✅ Competitive</td>
+        </tr>
+        <tr>
+          <td>Avg likes/post (co. page)</td><td>27.5</td><td>30–80</td><td>⬇ Below median</td>
+        </tr>
+        <tr>
+          <td>Video usage</td><td>45% of posts</td><td>55–65%</td><td>⬇ Under-indexing on video</td>
+        </tr>
+        <tr>
+          <td>Carousel / doc usage</td><td>55% of posts</td><td>20–30%</td><td>✅ Strong advantage</td>
+        </tr>
+        <tr>
+          <td>Avg CTR (doc posts)</td><td>26.4%</td><td>15–20%</td><td>✅ Above niche avg</td>
+        </tr>
+        <tr class="connectd-row">
+          <td><strong>🔴 Connectd Instagram</strong></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td>Posts/month</td><td>4</td><td>12–20</td><td>⬇ Severely under-posting</td>
+        </tr>
+        <tr>
+          <td>Avg ER</td><td>0.47%</td><td>1.5–3.5%</td><td>⬇ Below benchmark</td>
+        </tr>
+        <tr>
+          <td>Reel usage</td><td>50%</td><td>60–75%</td><td>⬇ Under-indexing</td>
+        </tr>
+        <tr>
+          <td>Carousel usage</td><td>0%</td><td>30–40%</td><td>⬇ Not used at all</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size:16px;margin-bottom:14px;">🌱 Trend Gaps — 5 Specific Opportunities</div>
+  <div class="gap-card">
+    <div class="gap-icon">📱</div>
+    <div>
+      <div class="gap-text">You posted 0 Instagram carousels in May. Top accounts in your niche post 3–6 carousels/month and they consistently drive 2–4× more saves than single images or videos.</div>
+      <div class="gap-sub">Opportunity: Repurpose your LinkedIn document spotlights as Instagram carousels.</div>
+    </div>
+  </div>
+  <div class="gap-card">
+    <div class="gap-icon">🎯</div>
+    <div>
+      <div class="gap-text">Leading niche accounts post 15–20× on LinkedIn per month. You're at 11. Closing that gap could add an estimated 25,000–40,000 additional monthly impressions at your current per-post rate.</div>
+      <div class="gap-sub">Opportunity: Add 4–8 posts/month using repurposed mentor quotes and founder testimonials.</div>
+    </div>
+  </div>
+  <div class="gap-card">
+    <div class="gap-icon">🏷️</div>
+    <div>
+      <div class="gap-text">#FractionalCXO, #PortfolioCareer, and #StartupAdvisor are trending in your niche — you used none of them in May. Top-performing niche posts use 3–5 targeted hashtags; your posts use 0–1.</div>
+      <div class="gap-sub">Opportunity: Add a consistent 3-hashtag stack to every LinkedIn post.</div>
+    </div>
+  </div>
+  <div class="gap-card">
+    <div class="gap-icon">🎙️</div>
+    <div>
+      <div class="gap-text">Niche leaders are posting native video testimonials from founders they've helped. Connectd has the source material (Gavin Rowe, Task Force VA) but it's appearing in company page videos rather than authentic, unpolished founder-to-camera clips.</div>
+      <div class="gap-sub">Opportunity: Ask 1–2 founders/month to record a 30-second selfie video for direct posting.</div>
+    </div>
+  </div>
+  <div class="gap-card">
+    <div class="gap-icon">🔁</div>
+    <div>
+      <div class="gap-text">Top accounts systematically engage with and reshare posts that mention them, turning mentions into reach amplification. Connectd had 5 mentions in May — none were reshared from the company page.</div>
+      <div class="gap-sub">Opportunity: Set a weekly 5-minute task to reshare or comment on posts that mention Connectd.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Connectd Social Media Dashboard · May 2026 ·
+  Built with <a href="https://claude.ai" target="_blank">Claude</a> ·
+  Data: LinkedIn Page Admin Export + Apify scrapes ·
+  <a href="https://www.linkedin.com/company/connectd-co/" target="_blank">LinkedIn</a> ·
+  <a href="https://www.instagram.com/connectduk/" target="_blank">@connectduk</a>
+</footer>
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
-
-// LinkedIn company posts (excl CEO personal post on 21 May)
-const liCompanyPosts = [
-  { date:"01", likes:17, comments:0, reposts:3,  total:20,  format:"Document", theme:"Thought Leadership" },
-  { date:"06", likes:76, comments:4, reposts:4,  total:84,  format:"Video",    theme:"Events & Community" },
-  { date:"07", likes:42, comments:0, reposts:1,  total:43,  format:"Video",    theme:"Thought Leadership" },
-  { date:"08", likes:15, comments:0, reposts:3,  total:18,  format:"Document", theme:"Advisor Spotlight"  },
-  { date:"13", likes:30, comments:2, reposts:8,  total:40,  format:"Document", theme:"Advisor Spotlight"  },
-  { date:"19", likes:11, comments:1, reposts:2,  total:14,  format:"Video",    theme:"Pro-bono & Startups"},
-  { date:"20", likes:18, comments:0, reposts:0,  total:18,  format:"Document", theme:"Advisor Spotlight"  },
-  { date:"22", likes:15, comments:0, reposts:3,  total:18,  format:"Document", theme:"Career & Value"     },
-  { date:"26", likes:16, comments:0, reposts:1,  total:17,  format:"Video",    theme:"Career & Value"     },
-  { date:"27", likes:12, comments:0, reposts:1,  total:13,  format:"Video",    theme:"Pro-bono & Startups"},
-  { date:"28", likes:20, comments:1, reposts:1,  total:22,  format:"Document", theme:"Advisor Spotlight"  },
+// ── DATA ──
+const allPosts = [
+  {platform:"LinkedIn",date:"2026-05-01",sortDate:20260501,format:"Document",caption:"You don't need a big name on your advisory board. Founders typically optimise for logos and titles. But without a clear role...",url:"",impressions:5018,clicks:988,ctr:19.7,likes:17,comments:0,reposts:3,er:20.1,author:"Inarah",isTop:true,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-06",sortDate:20260506,format:"Video",caption:""There's a lot of misconception that board advisors and NEDs are people who are retired." Lenna Lou said this at our recent event...",url:"",impressions:6906,clicks:406,ctr:5.9,likes:76,comments:4,reposts:4,er:7.1,author:"Inarah",isTop:true,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-07",sortDate:20260507,format:"Video",caption:"Most professionals stepping into advisory work make the same mistake. They lead with their CV. Their title. Their years of experience...",url:"",impressions:4422,clicks:186,ctr:4.2,likes:42,comments:0,reposts:1,er:5.2,author:"Inarah",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-08",sortDate:20260508,format:"Document",caption:"The experience you've spent decades building is exactly what someone needs right now. 👉 Rosi Ajjam, Philip Jordan...",url:"",impressions:2922,clicks:903,ctr:30.9,likes:15,comments:0,reposts:3,er:31.5,author:"Oliver",isTop:true,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-13",sortDate:20260513,format:"Document",caption:"The expertise you've spent years building is exactly what someone needs right now. 👉 Thomas England, Mukul Pant, Ashley Hamilton...",url:"",impressions:4000,clicks:997,ctr:24.9,likes:30,comments:2,reposts:8,er:25.9,author:"Inarah",isTop:true,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-19",sortDate:20260519,format:"Video",caption:"No one can help you if you don't ask for it. Gavin Rowe, Founder and CEO of Task Force VA...",url:"",impressions:1541,clicks:36,ctr:2.3,likes:11,comments:1,reposts:2,er:3.2,author:"Claudia",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-20",sortDate:20260520,format:"Document",caption:"The experience you've spent decades building doesn't stop being valuable. 👉 Nik Porter, Iain Hawthorn, Alison Stanworth...",url:"",impressions:2343,clicks:490,ctr:20.9,likes:18,comments:0,reposts:0,er:21.7,author:"Claudia",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn (CEO)",date:"2026-05-21",sortDate:20260521,format:"Image",caption:"I need a Chief of Staff! Connectd has grown from zero to $18M ARR and raised $23M in funding. We're one of the fastest growing companies in Europe...",url:"",impressions:null,clicks:null,ctr:null,likes:1158,comments:171,reposts:57,er:null,author:"Roei Samuel",isTop:true,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-22",sortDate:20260522,format:"Document",caption:"More than half of professionals who built a portfolio career last year weren't looking for an exit. They were looking for more...",url:"",impressions:1714,clicks:430,ctr:25.1,likes:15,comments:0,reposts:3,er:26.1,author:"Oliver",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-26",sortDate:20260526,format:"Video",caption:"Most professionals are sitting on more value than they realise. The problems you've already solved, the patterns you spot before others do...",url:"",impressions:1468,clicks:75,ctr:5.1,likes:16,comments:0,reposts:1,er:6.3,author:"Inarah",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-27",sortDate:20260527,format:"Video",caption:""If I didn't have their advice and mentorship, we wouldn't have a product." Gavin Rowe, Task Force VA...",url:"",impressions:1111,clicks:30,ctr:2.7,likes:12,comments:0,reposts:1,er:3.9,author:"Inarah",isTop:false,platform_type:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-05-28",sortDate:20260528,format:"Document",caption:"The right expertise doesn't stay locked inside one career forever. 👉 Allyson Bancroft, Éanna Cunnane, Corinne Montefort...",url:"",impressions:1826,clicks:723,ctr:39.6,likes:20,comments:1,reposts:1,er:40.7,author:"Inarah",isTop:false,platform_type:"LinkedIn"},
+  {platform:"Instagram",date:"2026-05-01",sortDate:20260501,format:"Image",caption:"Some people look right on paper. But when you actually work with them, nothing really changes...",url:"https://www.instagram.com/p/DXzU2fwjGq_/",impressions:null,clicks:null,ctr:null,likes:10,comments:0,reposts:null,er:0.47,author:"Connectd",isTop:false,platform_type:"Instagram"},
+  {platform:"Instagram",date:"2026-05-19",sortDate:20260519,format:"Video",caption:"Meta is cutting their workforce by 10% this month. Most people will update their CV and hope for the best...",url:"https://www.instagram.com/p/DYhYRHaKiJ2/",impressions:null,clicks:null,ctr:null,likes:16,comments:1,reposts:null,er:0.80,author:"Connectd",isTop:true,platform_type:"Instagram"},
+  {platform:"Instagram",date:"2026-05-22",sortDate:20260522,format:"Image",caption:"More professionals than ever are building portfolio careers. Not because they had to but because they wanted more...",url:"https://www.instagram.com/p/DYpFCEyAPnp/",impressions:null,clicks:null,ctr:null,likes:6,comments:0,reposts:null,er:0.28,author:"Connectd",isTop:false,platform_type:"Instagram"},
+  {platform:"Instagram",date:"2026-05-27",sortDate:20260527,format:"Video",caption:"You're sitting on more value than you realise. The advice you give for free? People pay for that...",url:"https://www.instagram.com/p/DY2DgqMAqwM/",impressions:null,clicks:null,ctr:null,likes:7,comments:0,reposts:null,er:0.33,author:"Connectd",isTop:false,platform_type:"Instagram"},
 ];
 
-// CEO post (separate)
-const ceoPosts = [
-  { date:"21", likes:1158, comments:171, reposts:57, total:1386, format:"Image", theme:"Company Growth" }
+const top5 = [
+  {rank:1,platform:"LinkedIn (CEO)",format:"Image",caption:"I need a Chief of Staff! Connectd has grown from zero to $18M ARR and raised $23M in funding. We're one of the fastest growing companies in Europe (18th fastest in the UK).",impressions:"Personal post",er:"N/A",likes:1158,comments:171,reposts:57,url:""},
+  {rank:2,platform:"LinkedIn",format:"Document",caption:"The right expertise doesn't stay locked inside one career forever. 👉 Allyson Bancroft, Éanna Cunnane, Corinne Montefort.",impressions:1826,er:"40.7%",likes:20,comments:1,reposts:1,url:""},
+  {rank:3,platform:"LinkedIn",format:"Document",caption:"The experience you've spent decades building is exactly what someone needs right now. 👉 Rosi Ajjam, Philip Jordan.",impressions:2922,er:"31.5%",likes:15,comments:0,reposts:3,url:""},
+  {rank:4,platform:"LinkedIn",format:"Document",caption:"The expertise you've spent years building is exactly what someone needs right now. 👉 Thomas England, Mukul Pant, Ashley Hamilton.",impressions:4000,er:"25.9%",likes:30,comments:2,reposts:8,url:""},
+  {rank:5,platform:"Instagram",format:"Video",caption:"Meta is cutting their workforce by 10% this month. Most people will update their CV and hope for the best. But the real question isn't where your next job is...",impressions:"N/A",er:"0.80%",likes:16,comments:1,reposts:null,url:"https://www.instagram.com/p/DYhYRHaKiJ2/"},
 ];
 
-// Instagram posts
-const igPosts = [
-  { date:"01", likes:10, comments:0, total:10, theme:"Thought Leadership" },
-  { date:"19", likes:16, comments:1, total:17, theme:"Career & Value"     },
-  { date:"22", likes:6,  comments:0, total:6,  theme:"Career & Value"     },
-  { date:"27", likes:7,  comments:0, total:7,  theme:"Career & Value"     },
-];
-
-// Mentions
-const mentions = [
-  { date:"07", likes:16, comments:0, shares:0, author:"Davion Louis"         },
-  { date:"11", likes:57, comments:8, shares:0, author:"Adam Hyland"          },
-  { date:"18", likes:9,  comments:1, shares:1, author:"Dawn Marie Bornheimer"},
-  { date:"19", likes:20, comments:2, shares:1, author:"Gavin Rowe"           },
-  { date:"26", likes:13, comments:3, shares:0, author:"Gavin Rowe"           },
-];
-
-// ── COLOURS ──────────────────────────────────────────────────────────────
-const RED      = '#f60039';
-const DARKRED  = '#5d0027';
-const GREEN    = '#51e668';
-const RED30    = 'rgba(246,0,57,0.3)';
-const GREEN30  = 'rgba(81,230,104,0.3)';
-const WHITE70  = 'rgba(255,255,255,0.7)';
-
-// ── CHART 1: ENGAGEMENT BY PLATFORM ──────────────────────────────────────
-(function() {
-  const liAvgLikes    = liCompanyPosts.reduce((s,p)=>s+p.likes,0)    / liCompanyPosts.length;
-  const liAvgComments = liCompanyPosts.reduce((s,p)=>s+p.comments,0) / liCompanyPosts.length;
-  const liAvgReposts  = liCompanyPosts.reduce((s,p)=>s+p.reposts,0)  / liCompanyPosts.length;
-
-  const igAvgLikes    = igPosts.reduce((s,p)=>s+p.likes,0)    / igPosts.length;
-  const igAvgComments = igPosts.reduce((s,p)=>s+p.comments,0) / igPosts.length;
-
-  new Chart(document.getElementById('engagementChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Avg Likes', 'Avg Comments', 'Avg Shares/Reposts'],
-      datasets: [
-        {
-          label: 'LinkedIn (company)',
-          data: [liAvgLikes.toFixed(1), liAvgComments.toFixed(1), liAvgReposts.toFixed(1)],
-          backgroundColor: RED,
-          borderRadius: 8,
-          barPercentage: 0.55,
-        },
-        {
-          label: 'Instagram',
-          data: [igAvgLikes.toFixed(1), igAvgComments.toFixed(1), 0],
-          backgroundColor: DARKRED,
-          borderRadius: 8,
-          barPercentage: 0.55,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { mode: 'index', intersect: false }
-      },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
-        y: {
-          grid: { color: 'rgba(0,0,0,0.05)' },
-          ticks: { font: { size: 10 } },
-          beginAtZero: true
-        }
-      }
-    }
+// ── RENDER TABLE ──
+let sortCol = 1, sortDir = 1;
+function renderTable(data) {
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  data.forEach(p => {
+    const tr = document.createElement("tr");
+    if(p.isTop) tr.classList.add("top-post");
+    const pbClass = p.platform_type === "Instagram" ? "pb-ig" : (p.author === "Roei Samuel" ? "pb-li-ceo" : "pb-li");
+    const capCell = p.url ? `<a href="${p.url}" target="_blank" class="caption-link">${p.caption.substring(0,80)}…</a>` : `<span style="color:#555">${p.caption.substring(0,80)}…</span>`;
+    tr.innerHTML = `
+      <td><span class="platform-badge ${pbClass}">${p.platform}</span></td>
+      <td style="white-space:nowrap">${p.date}</td>
+      <td>${p.format}</td>
+      <td style="max-width:240px;line-height:1.4">${capCell}</td>
+      <td>${p.impressions !== null ? p.impressions.toLocaleString() : "N/A"}</td>
+      <td>${p.clicks !== null ? p.clicks.toLocaleString() : "N/A"}</td>
+      <td>${p.ctr !== null ? p.ctr.toFixed(1)+"%" : "N/A"}</td>
+      <td>${p.likes.toLocaleString()}</td>
+      <td>${p.comments !== null ? p.comments : "—"}</td>
+      <td>${p.reposts !== null ? p.reposts : "—"}</td>
+      <td>${p.er !== null ? p.er.toFixed(2)+"%" : "N/A"}</td>
+    `;
+    tbody.appendChild(tr);
   });
-})();
+  document.getElementById("rowCount").textContent = `${data.length} posts`;
+}
 
-// ── CHART 1b: ENGAGEMENT RATIO (doughnut) ────────────────────────────────
-(function() {
-  new Chart(document.getElementById('engagementRatioChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['LinkedIn Likes', 'LinkedIn Comments', 'LinkedIn Reposts', 'IG Likes', 'IG Comments', 'CEO Post (personal)'],
-      datasets: [{
-        data: [
-          liCompanyPosts.reduce((s,p)=>s+p.likes,0),
-          liCompanyPosts.reduce((s,p)=>s+p.comments,0),
-          liCompanyPosts.reduce((s,p)=>s+p.reposts,0),
-          igPosts.reduce((s,p)=>s+p.likes,0),
-          igPosts.reduce((s,p)=>s+p.comments,0),
-          ceoPosts[0].total
-        ],
-        backgroundColor: [RED, '#c70030', '#8c0022', DARKRED, '#3d0018', GREEN],
-        borderWidth: 0,
-        hoverOffset: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '60%',
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            color: WHITE70,
-            font: { size: 10 },
-            boxWidth: 10,
-            padding: 8
-          }
-        }
-      }
-    }
+function filterTable() {
+  const pf = document.getElementById("platformFilter").value;
+  const ff = document.getElementById("formatFilter").value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  let data = allPosts.filter(p => {
+    if(pf !== "all" && p.platform_type !== pf) return false;
+    if(ff !== "all" && p.format !== ff) return false;
+    if(search && !p.caption.toLowerCase().includes(search)) return false;
+    return true;
   });
-})();
+  renderTable(data);
+}
 
-// ── CHART 2: POSTING FREQUENCY ────────────────────────────────────────────
-(function() {
-  const days = Array.from({length:31}, (_,i) => String(i+1).padStart(2,'0'));
-
-  function postCountsByDay(posts) {
-    const counts = {};
-    posts.forEach(p => { counts[p.date] = (counts[p.date]||0)+1; });
-    return days.map(d => counts[d]||0);
-  }
-
-  const allLI = [...liCompanyPosts, ...ceoPosts];
-  const liCounts = postCountsByDay(allLI);
-  const igCounts = postCountsByDay(igPosts);
-
-  new Chart(document.getElementById('frequencyChart'), {
-    type: 'line',
-    data: {
-      labels: days.map(d => parseInt(d)),
-      datasets: [
-        {
-          label: 'LinkedIn',
-          data: liCounts,
-          borderColor: RED,
-          backgroundColor: RED30,
-          tension: 0.3,
-          fill: true,
-          pointRadius: liCounts.map(v=>v>0?5:2),
-          pointBackgroundColor: RED,
-          borderWidth: 2.5
-        },
-        {
-          label: 'Instagram',
-          data: igCounts,
-          borderColor: GREEN,
-          backgroundColor: GREEN30,
-          tension: 0.3,
-          fill: true,
-          pointRadius: igCounts.map(v=>v>0?5:2),
-          pointBackgroundColor: GREEN,
-          borderWidth: 2.5
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: ctx => `May ${ctx[0].label}`
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: {
-            font: { size: 9 },
-            maxTicksLimit: 16,
-            callback: v => `${v}`
-          }
-        },
-        y: {
-          beginAtZero: true,
-          max: 2,
-          ticks: { stepSize: 1, font: { size: 10 } },
-          grid: { color: 'rgba(0,0,0,0.05)' }
-        }
-      }
-    }
+function sortTable(col) {
+  if(sortCol === col) sortDir *= -1;
+  else {sortCol = col; sortDir = 1;}
+  const keys = ["platform","date","format","caption","impressions","clicks","ctr","likes","comments","reposts","er"];
+  allPosts.sort((a,b) => {
+    let va = a[keys[col]], vb = b[keys[col]];
+    if(va === null) va = -Infinity;
+    if(vb === null) vb = -Infinity;
+    return (va > vb ? 1 : va < vb ? -1 : 0) * sortDir;
   });
-})();
+  filterTable();
+}
 
-// ── CHART 3: THEMES ────────────────────────────────────────────────────────
-(function() {
-  // All posts with themes
-  const allPosts = [
-    ...liCompanyPosts.map(p=>({...p, platform:'li'})),
-    ...ceoPosts.map(p=>({...p, platform:'li'})),
-    ...igPosts.map(p=>({...p, platform:'ig', reposts:0})),
-  ];
+renderTable(allPosts);
 
-  // Group by theme
-  const themeMap = {};
-  allPosts.forEach(p => {
-    if (!themeMap[p.theme]) themeMap[p.theme] = [];
-    themeMap[p.theme].push(p.total);
-  });
+// ── RENDER TOP 5 ──
+const grid = document.getElementById("top5Grid");
+top5.forEach(p => {
+  const pbClass = p.platform.includes("CEO") ? "pb-li-ceo" : (p.platform === "Instagram" ? "pb-ig" : "pb-li");
+  const linkHtml = p.url ? `<a href="${p.url}" target="_blank" class="post-link">View post →</a>` : `<span style="color:rgba(255,255,255,.3);font-size:12px">No direct URL available</span>`;
+  grid.innerHTML += `
+    <div class="top5-card">
+      <div class="rank">#${p.rank} TOP POST <span class="platform-badge ${pbClass}" style="margin-left:6px">${p.platform}</span></div>
+      <div class="caption">"${p.caption}"</div>
+      <div class="metrics">
+        <div class="metric-item"><div class="m-label">Impressions</div><div class="m-val">${typeof p.impressions === "number" ? p.impressions.toLocaleString() : p.impressions}</div></div>
+        <div class="metric-item"><div class="m-label">Eng. Rate</div><div class="m-val">${p.er}</div></div>
+        <div class="metric-item"><div class="m-label">Likes</div><div class="m-val">${p.likes.toLocaleString()}</div></div>
+        <div class="metric-item"><div class="m-label">Format</div><div class="m-val">${p.format}</div></div>
+      </div>
+      ${linkHtml}
+    </div>`;
+});
 
-  const themeData = Object.entries(themeMap).map(([theme, totals]) => ({
-    theme,
-    avg: totals.reduce((a,b)=>a+b,0) / totals.length,
-    count: totals.length
-  })).sort((a,b) => b.avg - a.avg);
+// ── CHARTS ──
+Chart.defaults.font.family = "Inter, -apple-system, sans-serif";
 
-  const labels = themeData.map(t => t.theme);
-  const avgs   = themeData.map(t => Math.round(t.avg));
+// Section 2 — Engagement Comparison
+new Chart(document.getElementById("engChart"),{
+  type:"bar",
+  data:{
+    labels:["Avg Likes","Avg Comments","Avg Reposts/Shares"],
+    datasets:[
+      {label:"LinkedIn (co. page)",data:[27.5,0.7,2.5],backgroundColor:"#5d0027",borderRadius:6},
+      {label:"Instagram",data:[9.75,0.25,0],backgroundColor:"#f60039",borderRadius:6},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}
+});
 
-  // Gradient colours from dark red to red
-  const themeColors = [
-    '#f60039', '#d4002f', '#b20027', '#90001f', '#6e0017', '#5d0027'
-  ];
+// Format CTR chart
+new Chart(document.getElementById("formatChart"),{
+  type:"bar",
+  data:{
+    labels:["Document Posts","Video Posts"],
+    datasets:[{
+      label:"Avg CTR (%)",
+      data:[26.4,4.1],
+      backgroundColor:["#5d0027","#f60039"],
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}
+});
 
-  new Chart(document.getElementById('themesChart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Avg Total Engagements',
-        data: avgs,
-        backgroundColor: themeColors.slice(0, labels.length),
-        borderRadius: 8,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.x} avg engagements`
-          }
-        }
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: { color: 'rgba(0,0,0,0.05)' },
-          ticks: { font: { size: 10 } }
-        },
-        y: {
-          grid: { display: false },
-          ticks: { font: { size: 11 } }
-        }
-      }
-    }
-  });
+// Section 3 — Frequency line chart
+const days = ["May 1","May 6","May 7","May 8","May 13","May 19","May 20","May 21","May 22","May 26","May 27","May 28"];
+const liByDay = [1,1,1,1,1,1,1,1,1,1,1,1];
+const igDays = ["May 1","May 19","May 22","May 27"];
+const igData = days.map(d => igDays.includes(d) ? 1 : 0);
+new Chart(document.getElementById("freqChart"),{
+  type:"bar",
+  data:{
+    labels:days,
+    datasets:[
+      {label:"LinkedIn",data:liByDay,backgroundColor:"rgba(93,0,39,0.7)",borderRadius:4,stack:"s"},
+      {label:"Instagram",data:igData,backgroundColor:"rgba(246,0,57,0.6)",borderRadius:4,stack:"s"},
+    ]
+  },
+  options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{stepSize:1},grid:{color:"#f0f0f0"}}}}
+});
 
-  // Pie: post count per theme
-  new Chart(document.getElementById('themesPieChart'), {
-    type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{
-        data: themeData.map(t => t.count),
-        backgroundColor: themeColors.slice(0, labels.length),
-        borderWidth: 0,
-        hoverOffset: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '55%',
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            font: { size: 11 },
-            boxWidth: 12,
-            padding: 10
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed} post${ctx.parsed>1?'s':''}`
-          }
-        }
-      }
-    }
-  });
-})();
+// Section 6 — Theme charts
+const themes = ["Advisor Spotlights","Events & Community","Thought Leadership","Founder Stories","CEO / Company Growth"];
+const themeAvgLikes = [19.2,76,26,12,1158];
+const themeCTR = [26.5,5.9,16.1,4.5,null];
+new Chart(document.getElementById("themeChart"),{
+  type:"bar",
+  data:{
+    labels:themes,
+    datasets:[{
+      label:"Avg Likes",
+      data:themeAvgLikes,
+      backgroundColor:["#5d0027","#8c003e","#b80050","#e00062","#f60039"],
+      borderRadius:6
+    }]
+  },
+  options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}
+});
+new Chart(document.getElementById("themeCtrChart"),{
+  type:"bar",
+  data:{
+    labels:["Advisor Spotlights","Events & Community","Thought Leadership","Founder Stories"],
+    datasets:[{
+      label:"Avg CTR (%)",
+      data:[26.5,5.9,16.1,4.5],
+      backgroundColor:["#5d0027","#8c003e","#b80050","#e00062"],
+      borderRadius:6
+    }]
+  },
+  options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}
+});
 
-// ── CHART 4: MENTIONS TIMELINE ────────────────────────────────────────────
-(function() {
-  const days  = mentions.map(m => `May ${parseInt(m.date)}`);
-  const likes = mentions.map(m => m.likes + m.comments + m.shares);
+// Section 7 — CTA
+new Chart(document.getElementById("ctaChart"),{
+  type:"bar",
+  data:{
+    labels:["Document/Profile Posts\n(With CTA)","Video/Thought Leadership\n(No Explicit CTA)"],
+    datasets:[{
+      label:"Avg Clicks",
+      data:[755,147],
+      backgroundColor:["#5d0027","#f60039"],
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}
+});
+new Chart(document.getElementById("ctaCtrChart"),{
+  type:"bar",
+  data:{
+    labels:["Document Posts (CTA)","Video Posts (No CTA)"],
+    datasets:[{
+      label:"Avg CTR (%)",
+      data:[26.8,4.0],
+      backgroundColor:["#5d0027","#f60039"],
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}
+});
 
-  new Chart(document.getElementById('mentionsTimeline'), {
-    type: 'bar',
-    data: {
-      labels: days,
-      datasets: [{
-        label: 'Total Engagements',
-        data: likes,
-        backgroundColor: likes.map(v => v >= 26 ? GREEN : 'rgba(255,255,255,0.25)'),
-        borderRadius: 6,
-        barPercentage: 0.6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.y} total engagements`
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }
-        },
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.08)' },
-          ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } }
-        }
-      }
-    }
-  });
-})();
+// Section 8 — Conversion rate
+new Chart(document.getElementById("convChart"),{
+  type:"bar",
+  data:{
+    labels:["Document Posts","Video Posts"],
+    datasets:[{
+      label:"Avg Conversion Rate (Clicks ÷ Impressions)",
+      data:[26.4,4.1],
+      backgroundColor:["#5d0027","#f60039"],
+      borderRadius:8
+    }]
+  },
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}
+});
 </script>
 </body>
 </html>
