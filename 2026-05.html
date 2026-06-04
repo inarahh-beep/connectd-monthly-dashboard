@@ -473,27 +473,29 @@ fetch('months.json').then(r=>r.json()).then(months=>{
 <div class="section">
   <div class="section-label">Section 11</div>
   <div class="section-title">Niche Benchmark &amp; Trend Gaps</div>
-  <div class="meta-source">📊 Benchmark ranges estimated from Apify LinkedIn public post search (startup advisor fractional executive UK niche, May 2026) + industry norms for accounts at similar follower counts.</div>
-  <div class="chart-card" style="margin-bottom:16px;">
-    <h3>Connectd vs Niche Average — Key Metrics</h3>
+  <div class="meta-source">📊 Real competitor data from LinkedIn Page Analytics export — May 1–31, 2026. * Toptal (712K) and Wellfound (146K, 1 post) excluded from charts due to size/posting frequency differences.</div>
+  <div class="chart-card" style="margin-bottom:16px;overflow-x:auto;">
+    <h3>Competitor Overview — May 2026 (LinkedIn)</h3>
     <table class="benchmark-table">
-      <thead><tr><th>Metric</th><th>Connectd (May 2026)</th><th>Niche Average (est.)</th><th>Status</th></tr></thead>
+      <thead><tr><th>Company</th><th>Total Followers</th><th>New Followers</th><th>Engagements</th><th>Posts</th><th>Eng / Post</th><th>Follower Growth</th></tr></thead>
       <tbody>
-        <tr class="connectd-row"><td><strong>🔴 LinkedIn</strong></td><td></td><td></td><td></td></tr>
-        <tr><td>Posts/month</td><td>11</td><td>15–20</td><td>⬇ Under-posting by 4–9</td></tr>
-        <tr><td>Avg impressions/post</td><td>2,916</td><td>1,200–3,500</td><td>✅ Competitive range</td></tr>
-        <tr><td>Avg likes/post (co. page)</td><td>27.5</td><td>30–80</td><td>⬇ Below median</td></tr>
-        <tr><td>Document/carousel %</td><td>55%</td><td>20–30%</td><td>✅ Strong differentiator</td></tr>
-        <tr><td>Avg document CTR</td><td>26.4%</td><td>15–20%</td><td>✅ Above niche average</td></tr>
-        <tr><td>Hashtags per post</td><td>0–1</td><td>3–5</td><td>⬇ Under-using hashtags</td></tr>
-        <tr class="connectd-row"><td><strong>🔴 Instagram</strong></td><td></td><td></td><td></td></tr>
-        <tr><td>Posts/month</td><td>5 (incl. duplicate)</td><td>12–20</td><td>⬇ Severely under-posting</td></tr>
-        <tr><td>Avg reach per post</td><td>196</td><td>500–2,000</td><td>⬇ Low reach</td></tr>
-        <tr><td>Avg ER (reach-based)</td><td>4.56%</td><td>3–6%</td><td>✅ Within range</td></tr>
-        <tr><td>Carousel usage</td><td>40%</td><td>30–40%</td><td>✅ Good — increase volume</td></tr>
-        <tr><td>Saves rate</td><td>0.20%</td><td>1–3%</td><td>⬇ Very low save signal</td></tr>
+        <tr><td>NEDonBoard</td><td>8,785</td><td>114</td><td>155</td><td>14</td><td>11.1</td><td>1.3%</td></tr>
+        <tr><td>Go Fractional</td><td>6,269</td><td>379</td><td>277</td><td>22</td><td>12.6</td><td>6.1%</td></tr>
+        <tr><td>Nurole</td><td>14,115</td><td>237</td><td>312</td><td>17</td><td>18.4</td><td>1.7%</td></tr>
+        <tr><td>Boardsi</td><td>77,591</td><td>634</td><td>188</td><td>43</td><td>4.4</td><td>0.8%</td></tr>
+        <tr><td>Jack &amp; Jill</td><td>32,563</td><td>2,645</td><td>537</td><td>21</td><td>25.6</td><td>8.1%</td></tr>
+        <tr><td>Intro</td><td>54,667</td><td>897</td><td>1,206</td><td>20</td><td>60.3</td><td>1.6%</td></tr>
+        <tr class="connectd-row"><td><strong>Connectd ◀</strong></td><td><strong>44,085</strong></td><td><strong>1,593</strong></td><td><strong>355</strong></td><td><strong>12</strong></td><td><strong>29.6</strong></td><td><strong>3.6%</strong></td></tr>
+        <tr><td>Actuate Global</td><td>6,144</td><td>652</td><td>1,781</td><td>58</td><td>30.7</td><td>10.6%</td></tr>
+        <tr><td>Wellfound *</td><td>146,234</td><td>2,295</td><td>44</td><td>1</td><td>44.0</td><td>1.6%</td></tr>
+        <tr><td>Toptal *</td><td>712,393</td><td>6,790</td><td>742</td><td>3</td><td>247.3</td><td>1.0%</td></tr>
       </tbody>
     </table>
+  </div>
+  <div class="three-col" style="margin-bottom:24px;">
+    <div class="chart-card"><h3>New Followers in May</h3><div><canvas id="compFollowersChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Total Engagements in May</h3><div><canvas id="compEngChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Engagement per Post</h3><div><canvas id="compEngPerPostChart" height="280"></canvas></div></div>
   </div>
   <div class="section-title" style="font-size:16px;margin-bottom:14px;">🌱 Trend Gaps — 5 Specific Opportunities</div>
   <div class="gap-card"><div class="gap-icon">📱</div><div><div class="gap-text">Carousels are already your highest-ER format on Instagram (6.78% avg) and you're only posting 2/month. Top niche accounts post 4–8 carousels/month and generate 5–10× more saves.</div><div class="gap-sub">Action: Repurpose your LinkedIn advisor spotlight documents as Instagram carousels — the content is already made.</div></div></div>
@@ -501,6 +503,47 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   <div class="gap-card"><div class="gap-icon">🏷️</div><div><div class="gap-text">#FractionalCXO, #PortfolioCareer, and #StartupAdvisor are trending in your niche — you used none of them in May. Top posts use 3–5 targeted hashtags.</div><div class="gap-sub">Action: Add a 3-hashtag stack to every LinkedIn post. Takes 10 seconds per post.</div></div></div>
   <div class="gap-card"><div class="gap-icon">🎙️</div><div><div class="gap-text">Niche leaders post authentic founder-to-camera testimonials. Connectd has great source material (Gavin Rowe, Adam Hyland) but it's appearing as polished company video, not raw UGC-style clips.</div><div class="gap-sub">Action: Ask 1 founder/month to record a 30-second selfie video you can post natively.</div></div></div>
   <div class="gap-card"><div class="gap-icon">🔁</div><div><div class="gap-text">Top accounts in the advisor/startup niche systematically reshare posts that mention them. Connectd got 5 mentions in May — 0 were reshared from the company page despite combined 131 engagements on those posts.</div><div class="gap-sub">Action: Set a 5-minute weekly habit to check and reshare/comment on company mentions.</div></div></div>
+</div>
+
+<!-- S12 DEMOGRAPHICS -->
+<div class="section">
+  <div class="section-label">Section 12</div>
+  <div class="section-title">Audience Demographics &amp; Geography</div>
+
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--red);color:#fff;border-radius:6px;padding:3px 10px;">Instagram</span> @connectduk &nbsp;·&nbsp; 2,112 followers &nbsp;·&nbsp; Lifetime audience data</div>
+  <div class="three-col" style="margin-bottom:24px;">
+    <div class="chart-card"><h3>Age &amp; Gender Breakdown</h3><div><canvas id="igAgeGenderChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Top 10 Cities</h3><div><canvas id="igCitiesChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Top 10 Countries</h3><div><canvas id="igCountriesChart" height="280"></canvas></div></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--dark);color:#fff;border-radius:6px;padding:3px 10px;">LinkedIn</span> connectd-co &nbsp;·&nbsp; 44,081 followers</div>
+  <div class="three-col" style="margin-bottom:16px;">
+    <div class="chart-card"><h3>Followers by Seniority</h3><div><canvas id="liSeniorityChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Followers by Company Size</h3><div><canvas id="liCompanySizeChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Top 5 Locations</h3><div><canvas id="liLocationsChart" height="280"></canvas></div></div>
+  </div>
+  <div class="two-col" style="margin-bottom:16px;">
+    <div class="chart-card"><h3>Followers by Job Function (Top 10)</h3><div><canvas id="liJobChart" height="320"></canvas></div></div>
+    <div class="chart-card"><h3>Followers by Industry (Top 10)</h3><div><canvas id="liIndustryChart" height="320"></canvas></div></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:16px;">
+    <h3>LinkedIn — New Followers per Day (May 2026)</h3>
+    <div><canvas id="liFollowerGrowthChart" height="160"></canvas></div>
+    <div class="callout-box" style="margin-top:12px;">May 21 — CEO job post — drove <em>313 new followers</em> in a single day, 6× the daily average of ~55. May 6 (Board Advisors video) also spiked at <em>209</em>. Both correlate directly with high-engagement posts.</div>
+  </div>
+
+  <div style="background:var(--dark);border-radius:var(--radius);padding:28px 32px;border-left:6px solid var(--green);">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:14px;">🔍 Cross-Platform Audience Insight</div>
+    <div style="font-size:15px;font-weight:600;color:#fff;line-height:1.8;">
+      <span style="color:var(--green);">Your Instagram audience is 64.6% male and concentrated in the 25–44 bracket (71.8% of followers)</span> — professionals still building their careers. Your LinkedIn audience skews decisively more senior: Senior, Director, CXO, and VP levels together represent over 56% of followers.
+      <br><br>
+      <span style="color:var(--green);">You're reaching the same professional world at two different career stages.</span> Instagram catches them when they're growing; LinkedIn reaches them when they're deciding. Content strategy should reflect this split: Instagram = career growth, aspiration, and relatable moments; LinkedIn = peer-level expertise, proof, and ROI.
+      <br><br>
+      Both audiences are heavily UK-based (Instagram 60.6% UK, LinkedIn ~30% London area), with India as a consistent #2 on both platforms — a potential growth market worth considering.
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -607,6 +650,27 @@ new Chart(document.getElementById("igThemeChart"),{type:"bar",data:{labels:["Por
 // S7 CTA
 new Chart(document.getElementById("ctaChart"),{type:"bar",data:{labels:["Document (with CTA)","Video (no CTA)"],datasets:[{label:"Avg Clicks",data:[755,147],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
 new Chart(document.getElementById("ctaCtrChart"),{type:"bar",data:{labels:["Document (with CTA)","Video (no CTA)"],datasets:[{label:"Avg CTR (%)",data:[26.8,4.0],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+
+// S11 Competitor charts
+const compLabels=["NEDonBoard","Go Fractional","Nurole","Boardsi","Jack & Jill","Intro","Connectd","Actuate Global"];
+const compColors=compLabels.map(l=>l==="Connectd"?"#51e668":"rgba(93,0,39,0.7)");
+new Chart(document.getElementById("compFollowersChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"New Followers",data:[114,379,237,634,2645,897,1593,652],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.parsed.y.toLocaleString()+" new followers"}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("compEngChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Total Engagements",data:[155,277,312,188,537,1206,355,1781],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("compEngPerPostChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Eng / Post",data:[11.1,12.6,18.4,4.4,25.6,60.3,29.6,30.7],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+
+// S12 Demographics
+new Chart(document.getElementById("igAgeGenderChart"),{type:"bar",data:{labels:["18–24","25–34","35–44","45–54","55–64","65+"],datasets:[{label:"Women",data:[1.4,8.8,14.8,7.5,2.3,0.6],backgroundColor:"#f60039",borderRadius:4,stack:"s"},{label:"Men",data:[5.9,22.3,20.8,10.2,4.4,1.0],backgroundColor:"#5d0027",borderRadius:4,stack:"s"}]},options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("igCitiesChart"),{type:"bar",data:{labels:["London","Dubai, UAE","Birmingham","New York","Mumbai","Dublin","Manchester","Bristol","Delhi","Salford"],datasets:[{label:"% of followers",data:[18.8,1.0,0.9,0.9,0.8,0.7,0.7,0.7,0.6,0.6],backgroundColor:"#f60039",borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("igCountriesChart"),{type:"bar",data:{labels:["United Kingdom","India","United States","Ireland","UAE","Germany","South Africa","Spain","France","Australia"],datasets:[{label:"% of followers",data:[60.6,10.8,9.5,1.3,1.3,0.9,0.8,0.8,0.8,0.7],backgroundColor:"#5d0027",borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("liSeniorityChart"),{type:"bar",data:{labels:["Senior","Entry","Director","Owner","CXO","Manager","VP","Partner"],datasets:[{label:"Followers",data:[13138,6896,6798,3481,2860,2364,2191,921],backgroundColor:["#5d0027","#7a003a","#8c003e","#9e0045","#b8004f","#d4005c","#f60039","#ff4d6d"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("liCompanySizeChart"),{type:"bar",data:{labels:["2–10","11–50","51–200","10,001+","1,001–5,000","201–500","501–1,000","5,001–10,000","Solo (1)"],datasets:[{label:"Followers",data:[6751,6289,5621,5248,4106,3003,2302,1429,1099],backgroundColor:"#5d0027",borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("liLocationsChart"),{type:"bar",data:{labels:["London Area, UK","New York Metro","Greater Bengaluru","Greater Delhi","Manchester Area"],datasets:[{label:"Followers",data:[13478,1775,904,897,788],backgroundColor:["#5d0027","#8c003e","#b80050","#d4005c","#f60039"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("liJobChart"),{type:"bar",data:{labels:["Business Development","Sales","Operations","Marketing","Finance","IT","Engineering","Human Resources","Consulting","Product Management"],datasets:[{label:"Followers",data:[10362,4160,2862,2412,1870,1679,1608,1381,1213,853],backgroundColor:"#5d0027",borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("liIndustryChart"),{type:"bar",data:{labels:["Software Development","IT Services & Consulting","Business Consulting","Financial Services","Tech, Info & Internet","Advertising Services","Staffing & Recruiting","Higher Education","Marketing Services","Investment Management"],datasets:[{label:"Followers",data:[4027,3376,2407,2231,2079,1231,978,766,661,652],backgroundColor:"#f60039",borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()},grid:{color:"#f0f0f0"}}}}});
+const followerDates=["May 4","May 5","May 6","May 7","May 8","May 9","May 10","May 11","May 12","May 13","May 14","May 15","May 16","May 17","May 18","May 19","May 20","May 21","May 22","May 23","May 24","May 25","May 26","May 27","May 28","May 29","May 30","May 31"];
+const followerCounts=[43,116,209,41,33,7,17,44,73,75,54,49,26,21,50,48,36,313,66,20,15,23,33,20,48,35,13,18];
+const followerBarColors=followerCounts.map(v=>v>=200?"#51e668":v>=100?"#ffd166":"rgba(93,0,39,0.7)");
+new Chart(document.getElementById("liFollowerGrowthChart"),{type:"bar",data:{labels:followerDates,datasets:[{label:"New followers",data:followerCounts,backgroundColor:followerBarColors,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
 
 // S8 saves
 new Chart(document.getElementById("savesChart"),{type:"bar",data:{labels:["May 1 Carousel","May 19 Reel ✅","May 21 Reel (dup)","May 22 Carousel","May 27 Reel"],datasets:[{label:"Saves",data:[0,2,0,0,0],backgroundColor:["#5d0027","#51e668","#ffd166","#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1},grid:{color:"#f0f0f0"}}}}});
