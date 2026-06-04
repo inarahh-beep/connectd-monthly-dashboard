@@ -353,9 +353,29 @@ fetch('months.json').then(r=>r.json()).then(months=>{
 <div class="section">
   <div class="section-label">Section 6</div>
   <div class="section-title">Content Theme Analysis</div>
-  <div class="two-col">
+
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--dark);color:#fff;border-radius:6px;padding:3px 10px;">LinkedIn</span></div>
+  <div class="two-col" style="margin-bottom:24px;">
     <div class="chart-card"><h3>LinkedIn — Avg Likes by Content Theme</h3><div><canvas id="themeChart" height="280"></canvas></div></div>
     <div class="chart-card"><h3>LinkedIn — Avg CTR by Content Theme</h3><div><canvas id="themeCtrChart" height="280"></canvas></div></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--red);color:#fff;border-radius:6px;padding:3px 10px;">Instagram</span></div>
+  <div class="two-col">
+    <div class="chart-card"><h3>Instagram — Avg ER by Content Theme (reach-based, excl. duplicate)</h3><div><canvas id="igThemeChart" height="280"></canvas></div></div>
+    <div class="chart-card">
+      <h3>Instagram — Theme Breakdown</h3>
+      <table class="day-table">
+        <thead><tr><th>Theme</th><th>Posts</th><th>Format</th><th>Avg ER</th></tr></thead>
+        <tbody>
+          <tr><td>Portfolio Careers</td><td>1</td><td>Carousel</td><td><strong style="color:var(--dark)">7.61%</strong> <span class="pill pill-best">BEST</span></td></tr>
+          <tr><td>Hiring &amp; People</td><td>1</td><td>Carousel</td><td><strong>5.95%</strong></td></tr>
+          <tr><td>Industry News</td><td>1</td><td>Reel</td><td><strong>5.88%</strong></td></tr>
+          <tr><td>Value &amp; Advisory</td><td>1</td><td>Reel</td><td><strong>2.59%</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="callout-box" style="margin-top:14px;">Portfolio Career and Hiring content drives the highest ER on Instagram — both are <em>Carousels</em>. Your two reels averaged 4.24% ER vs <em>6.78% for carousels</em>. The theme and format are aligned: carousels work best for thought leadership topics.</div>
+    </div>
   </div>
 </div>
 
@@ -581,6 +601,8 @@ new Chart(document.getElementById("freqChart"),{type:"bar",data:{labels:allDates
 // S6 themes
 new Chart(document.getElementById("themeChart"),{type:"bar",data:{labels:["Advisor Spotlights","Events & Community","Thought Leadership","Founder Stories","CEO Content"],datasets:[{label:"Avg Likes",data:[19.2,76,26,12,1158],backgroundColor:["#5d0027","#8c003e","#b80050","#e00062","#f60039"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
 new Chart(document.getElementById("themeCtrChart"),{type:"bar",data:{labels:["Advisor Spotlights","Events & Community","Thought Leadership","Founder Stories"],datasets:[{label:"Avg CTR (%)",data:[26.5,5.9,16.1,4.5],backgroundColor:["#5d0027","#8c003e","#b80050","#e00062"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+
+new Chart(document.getElementById("igThemeChart"),{type:"bar",data:{labels:["Portfolio Careers","Hiring & People","Industry News","Value & Advisory"],datasets:[{label:"Avg ER % (reach-based)",data:[7.61,5.95,5.88,2.59],backgroundColor:["#5d0027","#8c003e","#b80050","#e00062"],borderRadius:8}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
 
 // S7 CTA
 new Chart(document.getElementById("ctaChart"),{type:"bar",data:{labels:["Document (with CTA)","Video (no CTA)"],datasets:[{label:"Avg Clicks",data:[755,147],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
