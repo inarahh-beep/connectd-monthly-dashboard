@@ -1,0 +1,188 @@
+{
+  "months": [
+    {
+      "label": "April 2026",
+      "year_month": "2026-04",
+      "url": "2026-04.html",
+      "linkedin": {
+        "organic_impressions": 33183,
+        "new_followers": 917,
+        "posts": 12,
+        "avg_er": 17.1,
+        "total_clicks": 5460,
+        "total_likes": 318,
+        "total_comments": 19,
+        "total_shares": 39,
+        "total_reactions": 337
+      },
+      "instagram": null,
+      "combined": {
+        "li_organic_impressions": 33183,
+        "total_shares": 39,
+        "total_reactions": 337,
+        "li_avg_er": 17.1,
+        "ig_avg_er": null
+      },
+      "competitors": {
+        "NEDonBoard": {
+          "followers": 8825,
+          "new": 113,
+          "eng": 182,
+          "posts": 17
+        },
+        "Go Fractional": {
+          "followers": 6376,
+          "new": 380,
+          "eng": 245,
+          "posts": 22
+        },
+        "Nurole": {
+          "followers": 14203,
+          "new": 306,
+          "eng": 264,
+          "posts": 22
+        },
+        "Boardsi": {
+          "followers": 77820,
+          "new": 483,
+          "eng": 179,
+          "posts": 36
+        },
+        "Jack & Jill": {
+          "followers": 33981,
+          "new": 2665,
+          "eng": 546,
+          "posts": 14
+        },
+        "Intro": {
+          "followers": 55013,
+          "new": 940,
+          "eng": 1152,
+          "posts": 20
+        },
+        "Connectd": {
+          "followers": 44826,
+          "new": 917,
+          "eng": 441,
+          "posts": 13
+        },
+        "Wellfound": {
+          "followers": 147127,
+          "new": 2994,
+          "eng": 221,
+          "posts": 23
+        },
+        "Actuate Global": {
+          "followers": 6399,
+          "new": 482,
+          "eng": 1027,
+          "posts": 43
+        },
+        "Toptal": {
+          "followers": 714635,
+          "new": 7433,
+          "eng": 326,
+          "posts": 4
+        }
+      }
+    },
+    {
+      "label": "May 2026",
+      "year_month": "2026-05",
+      "url": "2026-05.html",
+      "linkedin": {
+        "organic_impressions": 55609,
+        "total_impressions": 81805,
+        "new_followers": 1593,
+        "posts": 12,
+        "avg_er": 17.4,
+        "total_clicks": 7454,
+        "total_likes": 1430,
+        "total_comments": 179,
+        "total_shares": 84,
+        "total_reactions": 1609
+      },
+      "instagram": {
+        "total_views": 1549,
+        "total_reach": 982,
+        "total_likes": 40,
+        "total_comments": 1,
+        "total_saves": 2,
+        "total_shares": 2,
+        "avg_er": 4.56,
+        "posts": 5,
+        "followers": 2112
+      },
+      "combined": {
+        "li_organic_impressions": 55609,
+        "total_impressions": 83354,
+        "total_shares": 86,
+        "total_reactions": 1652,
+        "li_avg_er": 17.4,
+        "ig_avg_er": 4.56
+      },
+      "competitors": {
+        "NEDonBoard": {
+          "followers": 8785,
+          "new": 114,
+          "eng": 155,
+          "posts": 14
+        },
+        "Go Fractional": {
+          "followers": 6269,
+          "new": 379,
+          "eng": 277,
+          "posts": 22
+        },
+        "Nurole": {
+          "followers": 14115,
+          "new": 237,
+          "eng": 312,
+          "posts": 17
+        },
+        "Boardsi": {
+          "followers": 77591,
+          "new": 634,
+          "eng": 188,
+          "posts": 43
+        },
+        "Jack & Jill": {
+          "followers": 32563,
+          "new": 2645,
+          "eng": 537,
+          "posts": 21
+        },
+        "Intro": {
+          "followers": 54667,
+          "new": 897,
+          "eng": 1206,
+          "posts": 20
+        },
+        "Connectd": {
+          "followers": 44085,
+          "new": 1593,
+          "eng": 355,
+          "posts": 12
+        },
+        "Wellfound": {
+          "followers": 146234,
+          "new": 2295,
+          "eng": 44,
+          "posts": 1
+        },
+        "Actuate Global": {
+          "followers": 6144,
+          "new": 652,
+          "eng": 1781,
+          "posts": 58
+        },
+        "Toptal": {
+          "followers": 712393,
+          "new": 6790,
+          "eng": 742,
+          "posts": 3
+        }
+      }
+    }
+  ]
+}
