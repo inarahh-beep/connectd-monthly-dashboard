@@ -1,4 +1,4 @@
 [
-  {"label": "May 2026", "url": "2026-05.html", "current": false},
-  {"label": "April 2026", "url": "2026-04.html", "current": true}
+  {"label": "May 2026", "url": "2026-05.html"},
+  {"label": "April 2026", "url": "2026-04.html"}
 ]

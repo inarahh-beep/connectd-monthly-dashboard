@@ -134,7 +134,18 @@ footer a{color:var(--red);text-decoration:none;font-weight:600;}
 </div>
 <script>
 function jumpToSection(id){if(!id)return;var el=document.getElementById(id);if(el){var navH=document.getElementById("monthNav").offsetHeight;var y=el.getBoundingClientRect().top+window.scrollY-navH-12;window.scrollTo({top:y,behavior:"smooth"});}}
-fetch("months.json").then(r=>r.json()).then(months=>{var sel=document.getElementById("monthSelect");sel.innerHTML="";months.forEach(m=>{var o=document.createElement("option");o.value=m.url;o.textContent=m.label;if(m.current)o.selected=true;sel.appendChild(o);});}).catch(()=>{document.getElementById("monthSelect").innerHTML="<option>Apr 2026</option>";});
+fetch("months.json").then(r=>r.json()).then(months=>{
+  var sel=document.getElementById("monthSelect");
+  sel.innerHTML="";
+  var page=window.location.pathname.split("/").pop()||"index.html";
+  months.forEach(m=>{
+    var o=document.createElement("option");
+    o.value=m.url;
+    o.textContent=m.label;
+    if(m.url===page||(page==="index.html"&&m.url==="2026-05.html")||(page===""&&m.url==="2026-05.html"))o.selected=true;
+    sel.appendChild(o);
+  });
+}).catch(()=>{document.getElementById("monthSelect").innerHTML="<option>Loading…</option>";});
 </script>
 
 <div class="page-content">
