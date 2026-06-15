@@ -1,6 +1,102 @@
 {
   "months": [
     {
+      "label": "January 2026",
+      "year_month": "2026-01",
+      "url": "2026-01.html",
+      "linkedin": {
+        "organic_impressions": 43083,
+        "new_followers": 1230,
+        "posts": 16,
+        "avg_er": 17.8,
+        "total_clicks": 5925,
+        "total_likes": 566,
+        "total_comments": 32,
+        "total_shares": 79,
+        "total_reactions": 598
+      },
+      "instagram": {
+        "posts": 9,
+        "total_views": 6335,
+        "total_reach": 2544,
+        "total_likes": 123,
+        "total_comments": 6,
+        "total_saves": 6,
+        "total_shares": 9,
+        "avg_er": 5.99,
+        "followers": 2112
+      },
+      "combined": {
+        "li_organic_impressions": 43083,
+        "total_shares": 88,
+        "total_reactions": 733,
+        "li_avg_er": 17.8,
+        "ig_avg_er": 5.99
+      },
+      "competitors": {
+        "NEDonBoard": {
+          "followers": 8825,
+          "new": 190,
+          "eng": 269,
+          "posts": 19
+        },
+        "Go Fractional": {
+          "followers": 6375,
+          "new": 322,
+          "eng": 227,
+          "posts": 22
+        },
+        "Nurole": {
+          "followers": 14204,
+          "new": 302,
+          "eng": 198,
+          "posts": 18
+        },
+        "Boardsi": {
+          "followers": 77820,
+          "new": 558,
+          "eng": 119,
+          "posts": 20
+        },
+        "Jack & Jill": {
+          "followers": 33986,
+          "new": 5343,
+          "eng": 404,
+          "posts": 24
+        },
+        "Intro": {
+          "followers": 55013,
+          "new": 850,
+          "eng": 1419,
+          "posts": 23
+        },
+        "Connectd": {
+          "followers": 44826,
+          "new": 1230,
+          "eng": 637,
+          "posts": 16
+        },
+        "Wellfound": {
+          "followers": 147129,
+          "new": 2442,
+          "eng": 155,
+          "posts": 19
+        },
+        "Actuate Global": {
+          "followers": 6400,
+          "new": 503,
+          "eng": 837,
+          "posts": 14
+        },
+        "Toptal": {
+          "followers": 714642,
+          "new": 9914,
+          "eng": 1320,
+          "posts": 8
+        }
+      }
+    },
+    {
       "label": "February 2026",
       "year_month": "2026-02",
       "url": "2026-02.html",
