@@ -6,103 +6,134 @@
 <title>Connectd — May 2026 Social Media Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#f7f6f5;--red:#f60039;--dark:#5d0027;--green:#51e668;--text:#202020;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--radius:18px;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --bg:#f0eeeb;--surface:#ffffff;--red:#f60039;--dark:#5d0027;--green:#51e668;
+  --text:#1a1a1a;--text-muted:#6b7280;--border:#e8e5e0;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --radius:20px;--radius-sm:12px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.05);
+  --shadow:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07);
+  --shadow-lg:0 4px 16px rgba(0,0,0,.08),0 16px 48px rgba(0,0,0,.1);
+  --transition:all .18s cubic-bezier(.4,0,.2,1);
+}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:32px 20px;}
-.page-header{text-align:center;margin-bottom:40px;}
-.page-header h1{font-size:28px;font-weight:800;color:var(--dark);margin-bottom:6px;}
-.page-header .sub{font-size:14px;color:#888;margin-bottom:4px;}
-.badge{display:inline-block;background:var(--dark);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px;letter-spacing:.5px;margin-top:8px;}
-.section{margin-bottom:48px;}
-.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
-.section-title{font-size:20px;font-weight:800;color:var(--dark);margin-bottom:20px;}
-.findings-card{background:var(--dark);border-radius:var(--radius);padding:32px 36px;margin-bottom:12px;}
-.findings-card h2{font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;opacity:.7;text-transform:uppercase;letter-spacing:1px;}
-.finding{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.1);}
-.finding:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
-.finding-bar{width:4px;min-width:4px;background:var(--red);border-radius:2px;min-height:40px;}
-.finding-text{font-size:15px;font-weight:600;color:#fff;line-height:1.5;}
-.finding-text em{color:var(--green);font-style:normal;}
-.finding-text .warn{color:#ffd166;font-style:normal;}
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
-.stat-card{background:var(--dark);border-radius:var(--radius);padding:24px;border-left:4px solid var(--red);}
-.stat-card .label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;}
-.stat-card .value{font-size:26px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px;}
-.stat-card .sub-val{font-size:12px;color:rgba(255,255,255,.45);}
-.chart-card{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;}
-.chart-card h3{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:20px;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 48px;}
+::selection{background:var(--red);color:#fff;}
+.page-header{text-align:center;padding:64px 20px 48px;max-width:900px;margin:0 auto;}
+.page-header h1{font-size:32px;font-weight:900;color:var(--dark);margin-bottom:8px;letter-spacing:-.5px;line-height:1.15;}
+.page-header .sub{font-size:14px;color:var(--text-muted);margin-bottom:4px;line-height:1.6;}
+.badge{display:inline-block;background:var(--dark);color:#fff;font-size:11px;font-weight:700;padding:5px 16px;border-radius:999px;letter-spacing:.5px;margin-top:10px;}
+.page-content{max-width:1280px;margin:0 auto;padding:0 24px;}
+.section{margin-bottom:56px;}
+.section-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.section-title{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:24px;letter-spacing:-.3px;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.stat-card{background:var(--dark);border-radius:var(--radius);padding:24px 22px;border-left:4px solid var(--red);box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:rgba(255,255,255,.03);border-radius:50%;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.stat-card .label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;display:flex;align-items:center;gap:5px;}
+.stat-card .value{font-size:28px;font-weight:900;color:#fff;line-height:1.05;margin-bottom:5px;letter-spacing:-.5px;}
+.stat-card .sub-val{font-size:12px;color:rgba(255,255,255,.4);line-height:1.4;}
+.chart-card{background:var(--surface);border-radius:var(--radius);padding:28px 28px 24px;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition);}
+.chart-card:hover{box-shadow:var(--shadow-lg);}
+.chart-card h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:20px;display:flex;align-items:center;gap:6px;letter-spacing:-.1px;}
+.findings-card{background:var(--dark);border-radius:var(--radius);padding:36px 40px;margin-bottom:12px;box-shadow:var(--shadow-lg);}
+.findings-card h2{font-size:11px;font-weight:800;color:rgba(255,255,255,.45);margin-bottom:24px;text-transform:uppercase;letter-spacing:2px;}
+.finding{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.07);}
+.finding:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.finding-bar{width:3px;min-width:3px;background:var(--red);border-radius:2px;min-height:44px;flex-shrink:0;}
+.finding-text{font-size:15px;font-weight:500;color:rgba(255,255,255,.88);line-height:1.65;}
+.finding-text em{color:var(--green);font-style:normal;font-weight:700;}
+.finding-text .warn{color:#ffd166;font-style:normal;font-weight:700;}
 .day-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px;}
-.day-table th{text-align:left;padding:8px 12px;color:#666;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
-.day-table td{padding:10px 12px;border-top:1px solid #f0f0f0;}
+.day-table th{text-align:left;padding:8px 12px;color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.day-table td{padding:10px 12px;border-top:1px solid var(--border);}
 .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
-.pill-best{background:var(--green);color:var(--dark);}
-.pill-worst{background:var(--red);color:#fff;}
-.pill-warn{background:#ffd166;color:#333;}
-.callout-box{background:var(--dark);color:#fff;border-radius:12px;padding:16px 20px;font-size:13px;font-weight:600;margin-top:12px;line-height:1.6;}
-.callout-box em{color:var(--green);font-style:normal;}
-.callout-box .warn{color:#ffd166;}
+.pill-best{background:#dcfce7;color:#166534;}
+.pill-worst{background:#fee2e2;color:#991b1b;}
+.pill-warn{background:#fef9c3;color:#713f12;}
+.callout-box{background:var(--dark);color:#fff;border-radius:var(--radius-sm);padding:18px 22px;font-size:13px;font-weight:500;margin-top:14px;line-height:1.65;box-shadow:var(--shadow-sm);}
+.callout-box em{color:var(--green);font-style:normal;font-weight:700;}
+.callout-box .warn{color:#ffd166;font-weight:700;}
+.meta-source{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:12px 16px;font-size:12px;color:#1e40af;margin-bottom:16px;line-height:1.5;}
 .filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
-.filter-bar select,.filter-bar input{padding:8px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;font-family:var(--font);background:#fff;outline:none;}
-.filter-bar select:focus,.filter-bar input:focus{border-color:var(--red);}
+.filter-bar select,.filter-bar input{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font);background:#fff;outline:none;color:var(--text);transition:var(--transition);}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(246,0,57,.08);}
 .data-table{width:100%;border-collapse:collapse;font-size:12px;}
-.data-table th{text-align:left;padding:10px 12px;background:var(--dark);color:#fff;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;user-select:none;white-space:nowrap;}
+.data-table th{text-align:left;padding:11px 14px;background:var(--dark);color:rgba(255,255,255,.9);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.8px;cursor:pointer;user-select:none;white-space:nowrap;}
 .data-table th:hover{background:#7a003a;}
-.data-table th .sort-icon{margin-left:4px;opacity:.5;}
-.data-table td{padding:10px 12px;border-top:1px solid #f0f0f0;vertical-align:top;}
-.data-table tr.top-post td:first-child{border-left:4px solid var(--green);}
-.data-table tr.top-post td{background:#f0fff4;}
-.data-table tr.duplicate-post td{background:#fff8e1;}
-.data-table tr.duplicate-post td:first-child{border-left:4px solid #ffd166;}
+.data-table th .sort-icon{margin-left:4px;opacity:.4;}
+.data-table td{padding:11px 14px;border-top:1px solid var(--border);vertical-align:top;color:var(--text);}
+.data-table tr.top-post td:first-child{border-left:3px solid var(--green);}
+.data-table tr.top-post td{background:#f0fdf4;}
+.data-table tr.duplicate-post td{background:#fffbeb;}
+.data-table tr.duplicate-post td:first-child{border-left:3px solid #fbbf24;}
 .data-table tr:hover td{background:#fafafa;}
-.platform-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;}
+.platform-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;}
 .pb-li{background:var(--dark);color:#fff;}
 .pb-ig{background:var(--red);color:#fff;}
 .pb-li-ceo{background:#9b1a4a;color:#fff;}
-.caption-link{color:var(--dark);text-decoration:none;font-weight:500;}
-.caption-link:hover{color:var(--red);text-decoration:underline;}
+.caption-link{color:var(--dark);text-decoration:none;font-weight:500;transition:var(--transition);}
+.caption-link:hover{color:var(--red);}
 .top5-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
-.top5-card{background:var(--dark);border-radius:var(--radius);padding:24px;border-left:4px solid var(--green);}
-.top5-card .rank{font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;}
-.top5-card .caption{font-size:13px;color:rgba(255,255,255,.85);line-height:1.5;margin-bottom:14px;}
-.top5-card .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.top5-card .metric-item{background:rgba(255,255,255,.07);border-radius:8px;padding:8px 10px;}
-.top5-card .metric-item .m-label{font-size:10px;color:rgba(255,255,255,.45);margin-bottom:2px;}
-.top5-card .metric-item .m-val{font-size:14px;font-weight:700;color:#fff;}
-.top5-card .post-link{font-size:12px;color:var(--green);text-decoration:none;}
-.mentions-section{background:var(--dark);border-radius:var(--radius);padding:32px;}
+.top5-card{background:var(--dark);border-radius:var(--radius);padding:26px;border-left:4px solid var(--green);box-shadow:var(--shadow);transition:var(--transition);}
+.top5-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.top5-card .rank{font-size:10px;font-weight:800;color:var(--green);letter-spacing:1.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.top5-card .caption{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:16px;}
+.top5-card .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.top5-card .metric-item{background:rgba(255,255,255,.06);border-radius:8px;padding:9px 12px;}
+.top5-card .metric-item .m-label{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:3px;letter-spacing:.5px;}
+.top5-card .metric-item .m-val{font-size:15px;font-weight:800;color:#fff;}
+.top5-card .post-link{font-size:12px;color:var(--green);text-decoration:none;font-weight:600;letter-spacing:.2px;transition:var(--transition);}
+.top5-card .post-link:hover{opacity:.8;}
+.mentions-section{background:var(--dark);border-radius:var(--radius);padding:36px;box-shadow:var(--shadow-lg);}
 .mentions-section .section-title{color:#fff;}
-.mentions-section .section-label{color:rgba(255,255,255,.5);}
-.mention-card{background:rgba(255,255,255,.06);border-radius:12px;padding:16px 20px;margin-bottom:12px;border-left:3px solid rgba(255,255,255,.15);}
+.mentions-section .section-label{color:rgba(255,255,255,.4);}
+.mention-card{background:rgba(255,255,255,.05);border-radius:var(--radius-sm);padding:18px 22px;margin-bottom:12px;border-left:3px solid rgba(255,255,255,.1);transition:var(--transition);}
+.mention-card:hover{background:rgba(255,255,255,.08);}
 .mention-card.above-avg{border-left-color:var(--green);}
 .mention-card .m-author{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
-.mention-card .m-date{font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px;}
-.mention-card .m-text{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:10px;}
+.mention-card .m-date{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:8px;}
+.mention-card .m-text{font-size:12px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:10px;}
 .mention-card .m-metrics{display:flex;gap:16px;flex-wrap:wrap;}
-.mention-card .m-metric{font-size:12px;color:rgba(255,255,255,.6);}
+.mention-card .m-metric{font-size:12px;color:rgba(255,255,255,.5);}
 .mention-card .m-metric strong{color:var(--green);}
-.mention-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
-.mention-stat{background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center;}
-.mention-stat .ms-val{font-size:24px;font-weight:800;color:#fff;}
-.mention-stat .ms-label{font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;}
-.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
-.analytics-card{background:#fff;border-radius:14px;padding:20px;border-top:4px solid var(--red);box-shadow:0 2px 8px rgba(0,0,0,.05);}
-.analytics-card .a-label{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-.analytics-card .a-value{font-size:22px;font-weight:800;color:var(--dark);}
-.analytics-card .a-sub{font-size:11px;color:#bbb;margin-top:3px;}
+.mention-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.mention-stat{background:rgba(255,255,255,.07);border-radius:var(--radius-sm);padding:18px;text-align:center;}
+.mention-stat .ms-val{font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;}
+.mention-stat .ms-label{font-size:11px;color:rgba(255,255,255,.4);margin-top:5px;letter-spacing:.3px;}
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.analytics-card{background:var(--surface);border-radius:var(--radius);padding:22px 20px;border-top:4px solid var(--red);box-shadow:var(--shadow);border:1px solid var(--border);border-top-width:4px;transition:var(--transition);}
+.analytics-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.analytics-card .a-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.analytics-card .a-value{font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-.5px;}
+.analytics-card .a-sub{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4;}
 .benchmark-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
-.benchmark-table th{padding:10px 14px;background:var(--dark);color:#fff;font-size:11px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
-.benchmark-table td{padding:10px 14px;border-top:1px solid #eee;}
+.benchmark-table th{padding:11px 16px;background:var(--dark);color:rgba(255,255,255,.9);font-size:10px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+.benchmark-table th:first-child{border-radius:var(--radius-sm) 0 0 0;}
+.benchmark-table th:last-child{border-radius:0 var(--radius-sm) 0 0;}
+.benchmark-table td{padding:11px 16px;border-top:1px solid var(--border);}
 .benchmark-table tr.connectd-row td{background:#fff7f7;font-weight:700;color:var(--dark);}
-.gap-card{background:var(--dark);border-radius:12px;padding:16px 20px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;}
-.gap-card .gap-icon{font-size:18px;}
-.gap-card .gap-text{font-size:13px;color:var(--green);font-weight:600;line-height:1.5;}
-.gap-card .gap-sub{font-size:12px;color:rgba(255,255,255,.55);margin-top:3px;}
-.meta-source{background:#e8f4fd;border:1px solid #90cdf4;border-radius:10px;padding:10px 14px;font-size:12px;color:#2c5282;margin-bottom:16px;}
-footer{text-align:center;padding:32px 0;font-size:12px;color:#bbb;border-top:1px solid #e8e8e8;margin-top:48px;}
-footer a{color:var(--red);text-decoration:none;}
-@media(max-width:760px){.two-col,.three-col{grid-template-columns:1fr;}.top5-grid{grid-template-columns:1fr;}}
+.gap-card{background:var(--dark);border-radius:var(--radius-sm);padding:18px 22px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;box-shadow:var(--shadow-sm);transition:var(--transition);}
+.gap-card:hover{box-shadow:var(--shadow);}
+.gap-card .gap-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.gap-card .gap-text{font-size:13px;color:var(--green);font-weight:600;line-height:1.55;}
+.gap-card .gap-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:5px;line-height:1.5;}
+/* ── TOOLTIP SYSTEM ── */
+.info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.18);color:rgba(255,255,255,.7);font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:var(--transition);flex-shrink:0;position:relative;}
+.info-icon.dark{background:rgba(93,0,39,.1);color:var(--dark);border-color:rgba(93,0,39,.2);}
+.info-icon:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.tooltip-box{display:none;position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;border-radius:var(--radius-sm);padding:14px 16px;width:260px;font-size:12px;line-height:1.6;box-shadow:var(--shadow-lg);z-index:999;pointer-events:none;border:1px solid rgba(255,255,255,.1);}
+.tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1a1a1a;}
+.tooltip-box strong{color:var(--green);display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.info-icon:hover .tooltip-box{display:block;}
+footer{text-align:center;padding:32px 0;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:48px;}
+footer a{color:var(--red);text-decoration:none;font-weight:600;}
+@media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr;}.top5-grid{grid-template-columns:1fr;}}
+@media(max-width:600px){.findings-card{padding:24px 20px;}.page-header{padding:40px 20px 32px;}}
 </style>
 </head>
 <body>
@@ -198,7 +229,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
 });
 </script>
 
-<header class="page-header">
+<div class="page-content"><header class="page-header">
   <div style="display:inline-block;background:var(--dark);color:#fff;border-radius:14px;padding:12px 20px;margin-bottom:20px;">
     <span style="font-size:24px;margin-right:8px;">📊</span>
     <span style="font-size:16px;font-weight:800;vertical-align:middle;">Connectd</span>
@@ -232,9 +263,9 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   <div class="section-title">Summary Stats — May 2026</div>
   <div class="cards-grid">
     <div class="stat-card"><div class="label">Total Posts Analysed</div><div class="value">17</div><div class="sub-val">12 LinkedIn · 5 Instagram</div></div>
-    <div class="stat-card"><div class="label">Avg LinkedIn Eng. Rate</div><div class="value">17.4%</div><div class="sub-val">Company page (LinkedIn native metric)</div></div>
-    <div class="stat-card"><div class="label">Avg Instagram ER (reach)</div><div class="value">4.56%</div><div class="sub-val">(likes+comments+saves+shares)÷reach</div></div>
-    <div class="stat-card"><div class="label">Total IG Reach</div><div class="value">982</div><div class="sub-val">Avg 196/post · 9.3% of followers</div></div>
+    <div class="stat-card"><div class="label">Avg LinkedIn Eng. Rate <span class="info-icon">ℹ<div class="tooltip-box"><strong>LinkedIn Engagement Rate</strong>LinkedIn's native metric. (likes + comments + clicks + shares) ÷ impressions × 100. Averaged across all company page posts for the month.</div></span></div><div class="value">17.4%</div><div class="sub-val">Company page (LinkedIn native metric)</div></div>
+    <div class="stat-card"><div class="label">Avg Instagram ER (reach) <span class="info-icon">ℹ<div class="tooltip-box"><strong>Instagram ER (reach-based)</strong>(likes + comments + saves + shares) ÷ reach × 100. Uses reach (unique accounts) rather than impressions — the industry standard for Instagram.</div></span></div><div class="value">4.56%</div><div class="sub-val">(likes+comments+saves+shares)÷reach</div></div>
+    <div class="stat-card"><div class="label">Total IG Reach <span class="info-icon">ℹ<div class="tooltip-box"><strong>Instagram Reach</strong>Unique accounts that saw your content at least once. Different from views/impressions — one person can generate multiple views but counts as one reach.</div></span></div><div class="value">982</div><div class="sub-val">Avg 196/post · 9.3% of followers</div></div>
     <div class="stat-card"><div class="label">Total IG Views</div><div class="value">1,549</div><div class="sub-val">Across 5 posts incl. duplicate reel</div></div>
     <div class="stat-card"><div class="label">Top Content Theme</div><div class="value">Advisor Profiles</div><div class="sub-val">6 LinkedIn docs · avg CTR 26.4%</div></div>
     <div class="stat-card"><div class="label">LinkedIn Public Mentions</div><div class="value">5</div><div class="sub-val">115 likes · 14 comments · 2 shares</div></div>
@@ -605,12 +636,12 @@ fetch('months.json').then(r=>r.json()).then(months=>{
     <div class="analytics-card"><div class="a-label">Organic Impressions</div><div class="a-value">55,609</div><div class="a-sub">From followers &amp; connections</div></div>
     <div class="analytics-card"><div class="a-label">Total Clicks</div><div class="a-value">7,693</div><div class="a-sub">All sources</div></div>
     <div class="analytics-card"><div class="a-label">Organic Clicks</div><div class="a-value">7,454</div><div class="a-sub">96.9% of all clicks are organic</div></div>
-    <div class="analytics-card"><div class="a-label">Avg Daily Eng. Rate</div><div class="a-value">18.41%</div><div class="a-sub">Organic (LinkedIn native metric)</div></div>
+    <div class="analytics-card"><div class="a-label">Avg Daily Eng. Rate <span class="info-icon dark">ℹ<div class="tooltip-box"><strong>Avg Daily Engagement Rate</strong>LinkedIn's organic engagement rate metric averaged across all posting days. Formula: organic engagements ÷ organic impressions × 100, as reported in the LinkedIn Page Admin export.</div></span></div><div class="a-value">18.41%</div><div class="a-sub">Organic (LinkedIn native metric)</div></div>
     <div class="analytics-card"><div class="a-label">Page Followers</div><div class="a-value">44,081</div><div class="a-sub">As of June 2026</div></div>
     <div class="analytics-card"><div class="a-label">Company Page Posts</div><div class="a-value">11</div><div class="a-sub">+ 1 CEO personal post</div></div>
     <div class="analytics-card"><div class="a-label">Peak Impression Post</div><div class="a-value">6,906</div><div class="a-sub">06 May — Board Advisors Video</div></div>
     <div class="analytics-card"><div class="a-label">Peak CTR Post</div><div class="a-value">39.6%</div><div class="a-sub">28 May — Community Highlights Doc</div></div>
-    <div class="analytics-card"><div class="a-label">Doc Avg CTR</div><div class="a-value">26.4%</div><div class="a-sub">vs 4.1% for video posts</div></div>
+    <div class="analytics-card"><div class="a-label">Doc Avg CTR <span class="info-icon dark">ℹ<div class="tooltip-box"><strong>Document CTR</strong>Clicks ÷ impressions × 100, averaged across Document-format posts only. LinkedIn counts every page turn and open as a click event.</div></span></div><div class="a-value">26.4%</div><div class="a-sub">vs 4.1% for video posts</div></div>
   </div>
 
   <!-- Instagram -->
@@ -625,7 +656,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Likes</div><div class="a-value">40</div><div class="a-sub">Avg 8/post</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Saves</div><div class="a-value">2</div><div class="a-sub">Both from May 19 reel</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Shares</div><div class="a-value">2</div><div class="a-sub">Carousel &amp; reel, 1 each</div></div>
-    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg ER (reach-based)</div><div class="a-value">4.56%</div><div class="a-sub">(likes+cmts+saves+shares)÷reach</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg ER (reach-based) <span class="info-icon dark">ℹ<div class="tooltip-box"><strong>Instagram ER (reach-based)</strong>(likes+comments+saves+shares) ÷ reach × 100, averaged across all 5 posts. The duplicate reel is included but flagged — excluding it raises the avg to ~5.48%.</div></span></div><div class="a-value">4.56%</div><div class="a-sub">(likes+cmts+saves+shares)÷reach</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Follows from Posts</div><div class="a-value">1</div><div class="a-sub">New follower gained from content</div></div>
   </div>
 </div>
@@ -657,7 +688,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   <div class="three-col" style="margin-bottom:24px;">
     <div class="chart-card"><h3>New Followers in May</h3><div><canvas id="compFollowersChart" height="280"></canvas></div></div>
     <div class="chart-card"><h3>Total Engagements in May</h3><div><canvas id="compEngChart" height="280"></canvas></div></div>
-    <div class="chart-card"><h3>Engagement per Post</h3><div><canvas id="compEngPerPostChart" height="280"></canvas></div></div>
+    <div class="chart-card"><h3>Engagement per Post <span class="info-icon dark">ℹ<div class="tooltip-box"><strong>Engagement per Post</strong>Total post engagements ÷ posts published, from the LinkedIn competitor analytics export.</div></span></h3><div><canvas id="compEngPerPostChart" height="280"></canvas></div></div>
   </div>
   <div class="section-title" style="font-size:16px;margin-bottom:14px;">🌱 Trend Gaps — 5 Specific Opportunities</div>
   <div class="gap-card"><div class="gap-icon">📱</div><div><div class="gap-text">Carousels are already your highest-ER format on Instagram (6.78% avg) and you're only posting 2/month. Top niche accounts post 4–8 carousels/month and generate 5–10× more saves.</div><div class="gap-sub">Action: Repurpose your LinkedIn advisor spotlight documents as Instagram carousels — the content is already made.</div></div></div>
@@ -709,6 +740,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   </div>
 </div>
 
+</div>
 <footer>
   Connectd Social Media Dashboard · May 2026 ·
   Built with <a href="https://claude.ai" target="_blank">Claude</a> ·
