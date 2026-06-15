@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Connectd — March 2026 Social Media Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#f0eeeb;--surface:#ffffff;--red:#f60039;--dark:#5d0027;--green:#51e668;--text:#1a1a1a;--text-muted:#6b7280;--border:#e8e5e0;--font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--radius:20px;--radius-sm:12px;--shadow-sm:0 1px 3px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.05);--shadow:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07);--shadow-lg:0 4px 16px rgba(0,0,0,.08),0 16px 48px rgba(0,0,0,.1);--transition:all .18s cubic-bezier(.4,0,.2,1);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 48px;}
+.page-content{max-width:1280px;margin:0 auto;padding:0 24px;}
+.page-header{text-align:center;padding:64px 20px 48px;}
+.page-header h1{font-size:32px;font-weight:900;color:var(--dark);margin-bottom:8px;letter-spacing:-.5px;}
+.page-header .sub{font-size:14px;color:var(--text-muted);margin-bottom:4px;line-height:1.6;}
+.badge{display:inline-block;background:var(--dark);color:#fff;font-size:11px;font-weight:700;padding:5px 16px;border-radius:999px;letter-spacing:.5px;margin-top:10px;}
+.section{margin-bottom:56px;}
+.section-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.section-title{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:24px;letter-spacing:-.3px;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.stat-card{background:var(--dark);border-radius:var(--radius);padding:24px 22px;border-left:4px solid var(--red);box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.stat-card .label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;}
+.stat-card .value{font-size:28px;font-weight:900;color:#fff;line-height:1.05;margin-bottom:5px;letter-spacing:-.5px;}
+.stat-card .sub-val{font-size:12px;color:rgba(255,255,255,.4);line-height:1.4;}
+.chart-card{background:var(--surface);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition);}
+.chart-card:hover{box-shadow:var(--shadow-lg);}
+.chart-card h3{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:20px;letter-spacing:-.1px;}
+.findings-card{background:var(--dark);border-radius:var(--radius);padding:36px 40px;margin-bottom:12px;box-shadow:var(--shadow-lg);}
+.findings-card h2{font-size:11px;font-weight:800;color:rgba(255,255,255,.45);margin-bottom:24px;text-transform:uppercase;letter-spacing:2px;}
+.finding{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.07);}
+.finding:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.finding-bar{width:3px;min-width:3px;background:var(--red);border-radius:2px;min-height:44px;flex-shrink:0;}
+.finding-text{font-size:15px;font-weight:500;color:rgba(255,255,255,.88);line-height:1.65;}
+.finding-text em{color:var(--green);font-style:normal;font-weight:700;}
+.finding-text .warn{color:#ffd166;font-style:normal;font-weight:700;}
+.day-table{width:100%;border-collapse:collapse;font-size:13px;}
+.day-table th{padding:8px 12px;color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.8px;text-align:left;}
+.day-table td{padding:10px 12px;border-top:1px solid var(--border);}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.pill-best{background:#dcfce7;color:#166534;}
+.pill-worst{background:#fee2e2;color:#991b1b;}
+.callout-box{background:var(--dark);color:#fff;border-radius:var(--radius-sm);padding:18px 22px;font-size:13px;font-weight:500;margin-top:14px;line-height:1.65;}
+.callout-box em{color:var(--green);font-style:normal;font-weight:700;}
+.callout-box .warn{color:#ffd166;font-weight:700;}
+.meta-source{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:12px 16px;font-size:12px;color:#1e40af;margin-bottom:16px;}
+.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.filter-bar select,.filter-bar input{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font);background:#fff;outline:none;color:var(--text);transition:var(--transition);}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--red);}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{text-align:left;padding:11px 14px;background:var(--dark);color:rgba(255,255,255,.9);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.8px;cursor:pointer;user-select:none;white-space:nowrap;}
+.data-table th:hover{background:#7a003a;}
+.data-table th .sort-icon{margin-left:4px;opacity:.4;}
+.data-table td{padding:11px 14px;border-top:1px solid var(--border);vertical-align:top;}
+.data-table tr.top-post td:first-child{border-left:3px solid var(--green);}
+.data-table tr.top-post td{background:#f0fdf4;}
+.data-table tr:hover td{background:#fafafa;}
+.platform-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;}
+.pb-li{background:var(--dark);color:#fff;}
+.pb-ig{background:var(--red);color:#fff;}
+.caption-link{color:var(--dark);text-decoration:none;font-weight:500;}
+.caption-link:hover{color:var(--red);}
+.top5-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.top5-card{background:var(--dark);border-radius:var(--radius);padding:26px;border-left:4px solid var(--green);box-shadow:var(--shadow);transition:var(--transition);}
+.top5-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.top5-card .rank{font-size:10px;font-weight:800;color:var(--green);letter-spacing:1.5px;margin-bottom:10px;}
+.top5-card .caption{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:16px;}
+.top5-card .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.top5-card .metric-item{background:rgba(255,255,255,.06);border-radius:8px;padding:9px 12px;}
+.top5-card .metric-item .m-label{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.top5-card .metric-item .m-val{font-size:15px;font-weight:800;color:#fff;}
+.top5-card .post-link{font-size:12px;color:var(--green);text-decoration:none;font-weight:600;}
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.analytics-card{background:var(--surface);border-radius:var(--radius);padding:22px 20px;border-top:4px solid var(--red);box-shadow:var(--shadow);border:1px solid var(--border);border-top-width:4px;transition:var(--transition);}
+.analytics-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.analytics-card .a-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.analytics-card .a-value{font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-.5px;}
+.analytics-card .a-sub{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.4;}
+.benchmark-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.benchmark-table th{padding:11px 16px;background:var(--dark);color:rgba(255,255,255,.9);font-size:10px;text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+.benchmark-table td{padding:11px 16px;border-top:1px solid var(--border);}
+.benchmark-table tr.connectd-row td{background:#fff7f7;font-weight:700;color:var(--dark);}
+footer{text-align:center;padding:32px 0;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:48px;}
+footer a{color:var(--red);text-decoration:none;font-weight:600;}
+@media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr;}.top5-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate" style="position:fixed;inset:0;background:var(--dark);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="text-align:center;margin-bottom:8px;"><span style="font-size:32px;">📊</span><div style="font-size:20px;font-weight:800;color:#fff;margin-top:8px;">Connectd Dashboard</div><div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px;">Enter password to continue</div></div>
+  <div style="display:flex;gap:10px;align-items:center;"><input id="pwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" style="padding:12px 16px;border-radius:10px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:15px;outline:none;width:220px;" autofocus/><button onclick="checkPw()" style="padding:12px 20px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">Go</button></div>
+  <div id="pwError" style="color:#ffd166;font-size:13px;display:none;">Incorrect password — try again.</div>
+</div>
+<script>(function(){if(sessionStorage.getItem("cdAuth")==="ok"){document.getElementById("passwordGate").style.display="none";}})();function checkPw(){var val=document.getElementById("pwInput").value;if(val==="connectdsocials"){sessionStorage.setItem("cdAuth","ok");document.getElementById("passwordGate").style.display="none";}else{document.getElementById("pwError").style.display="block";document.getElementById("pwInput").value="";document.getElementById("pwInput").focus();}}</script>
+
+<!-- MONTH NAV -->
+<div id="monthNav" style="background:var(--dark);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);flex-wrap:wrap;gap:8px;">
+  <span style="color:rgba(255,255,255,.6);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">📊 Connectd Dashboard</span>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <label style="color:rgba(255,255,255,.5);font-size:12px;">Jump to:</label>
+      <select id="sectionJump" onchange="jumpToSection(this.value);this.value='';" style="background:#fff;color:var(--dark);border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;outline:none;max-width:220px;">
+        <option value="">— Section —</option>
+        <option value="s0">0 · Headline Findings</option>
+        <option value="s1">1 · Summary Stats</option>
+        <option value="s2">2 · Engagement</option>
+        <option value="s3">3 · Posting Frequency</option>
+        <option value="s4">4 · All Posts</option>
+        <option value="s5">5 · Top Posts</option>
+        <option value="s6">6 · Content Themes</option>
+        <option value="s7">7 · CTA Analysis</option>
+        <option value="s10">10 · Page Analytics</option>
+        <option value="s11">11 · Competitors</option>
+      </select>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <label for="monthSelect" style="color:rgba(255,255,255,.5);font-size:12px;">Month:</label>
+      <select id="monthSelect" onchange="if(this.value)window.location.href=this.value;" style="background:#fff;color:var(--dark);border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;outline:none;">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+  </div>
+</div>
+<script>
+function jumpToSection(id){if(!id)return;var el=document.getElementById(id);if(el){var navH=document.getElementById("monthNav").offsetHeight;var y=el.getBoundingClientRect().top+window.scrollY-navH-12;window.scrollTo({top:y,behavior:"smooth"});}}
+fetch("months.json").then(r=>r.json()).then(months=>{
+  const sel=document.getElementById("monthSelect");
+  sel.innerHTML="";
+  const page=window.location.pathname.split("/").pop()||"index.html";
+  months.forEach(m=>{
+    const o=document.createElement("option");
+    o.value=m.url;o.textContent=m.label;
+    if(m.url===page)o.selected=true;
+    sel.appendChild(o);
+  });
+}).catch(()=>{document.getElementById("monthSelect").innerHTML="<option>Mar 2026</option>";});
+</script>
+
+
+<div class="page-content">
+<header class="page-header">
+  <div style="display:inline-flex;align-items:center;gap:10px;background:var(--dark);color:#fff;border-radius:14px;padding:12px 20px;margin-bottom:24px;box-shadow:var(--shadow);">
+    <span style="font-size:24px;">📊</span><span style="font-size:16px;font-weight:800;">Connectd</span>
+  </div>
+  <h1>Social Media Analytics Dashboard</h1>
+  <p class="sub">March 2026 · LinkedIn Company Page &amp; Instagram @connectduk</p>
+  <p class="sub">LinkedIn followers: ~43,500 &nbsp;·&nbsp; Instagram followers: 2,112</p>
+  <span class="badge">Data: LinkedIn Page Admin Export + Meta Business Suite · March 2026</span>
+</header>
+
+<div id="s0"></div>
+<div class="section">
+  <div class="section-label">Section 0</div>
+  <div class="section-title">Headline Findings — March 2026</div>
+  <div class="findings-card">
+    <h2>🔍 Critical Insights — Act on These</h2>
+    <div class="finding"><div class="finding-bar"></div><div class="finding-text"><em>March was Connectd's most active month</em> — 23 LinkedIn posts + 11 Instagram posts = 34 total pieces of content. Despite the volume, avg LinkedIn ER held at 15.2% and avg Instagram ER at 5.63%, both strong for the frequency.</div></div>
+    <div class="finding"><div class="finding-bar"></div><div class="finding-text"><em>Two major press announcements in one month:</em> FT 1000 Europe's Fastest-Growing Companies (#67, Mar 3) and Sifted 100 (Mar 18). The FT post drove 94 likes and 14 reposts — the most reshared single post in March — but only 2.0% CTR, suggesting press content gets shared but not clicked.</div></div>
+    <div class="finding"><div class="finding-bar"></div><div class="finding-text">The Mar 31 Document "Most advisory roles don't come from a job description" hit <em>50.1% CTR</em> — matching April's record. This is the second time this exact content format (advisor spotlight with a CTA to book a call) has crossed 50% CTR.</div></div>
+    <div class="finding"><div class="finding-bar"></div><div class="finding-text">March had a <em>US event push</em> (Tampa Mar 17, Miami Mar 19, Dallas Mar 10, NYC recap Mar 19). The Florida events drove 4 LinkedIn posts, generating strong follower spikes — <em>149 new followers on Mar 26 alone</em>, the highest single-day count this quarter.</div></div>
+    <div class="finding"><div class="finding-bar"></div><div class="finding-text">Instagram performed <em>consistently better in March</em> than subsequent months: 11 posts, avg ER 5.63%, 5 saves, 9 shares. The Sifted 100 carousel (13.04% ER) and Times Square carousel (10.93%) show that milestone/event content drives the highest Instagram engagement.</div></div>
+  </div>
+</div>
+
+<div id="s1"></div>
+<div class="section">
+  <div class="section-label">Section 1</div>
+  <div class="section-title">Summary Stats — March 2026</div>
+  <div class="cards-grid">
+    <div class="stat-card"><div class="label">Total Posts</div><div class="value">34</div><div class="sub-val">23 LinkedIn · 11 Instagram</div></div>
+    <div class="stat-card"><div class="label">Avg LinkedIn ER</div><div class="value">15.2%</div><div class="sub-val">Organic avg across 23 posts</div></div>
+    <div class="stat-card"><div class="label">Avg Instagram ER</div><div class="value">5.63%</div><div class="sub-val">(likes+comments+saves+shares)÷reach</div></div>
+    <div class="stat-card"><div class="label">Total IG Views</div><div class="value">4,538</div><div class="sub-val">Across 11 posts</div></div>
+    <div class="stat-card"><div class="label">Total IG Reach</div><div class="value">2,574</div><div class="sub-val">Avg 234/post · 11.1% of followers</div></div>
+    <div class="stat-card"><div class="label">LinkedIn New Followers</div><div class="value">1,313</div><div class="sub-val">All organic · peak 149 on Mar 26</div></div>
+    <div class="stat-card"><div class="label">LI Organic Impressions</div><div class="value">52,803</div><div class="sub-val">23 organic posts</div></div>
+    <div class="stat-card"><div class="label">Peak CTR Post</div><div class="value">50.1%</div><div class="sub-val">Mar 31 · "Advisory roles" Document</div></div>
+    <div class="stat-card"><div class="label">Doc Avg CTR</div><div class="value">17.2%</div><div class="sub-val">vs 3.7% for video posts</div></div>
+    <div class="stat-card"><div class="label">Top IG Post ER</div><div class="value">13.04%</div><div class="sub-val">Mar 18 · Sifted 100 Carousel</div></div>
+    <div class="stat-card"><div class="label">Total IG Saves</div><div class="value">5</div><div class="sub-val">Best month so far</div></div>
+    <div class="stat-card"><div class="label">Total LI Reposts</div><div class="value">87</div><div class="sub-val">FT 1000 (14) & Sifted 100 (16) led</div></div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:-24px;">
+  <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:10px;">Cross-Platform Combined Totals</div>
+  <div class="meta-source" style="margin-bottom:14px;">📅 March 2026 is the earliest month in the dashboard — used as the first data point for trend tracking.</div>
+  <div class="cards-grid">
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">LI Organic Impressions</div><div class="value">52,803</div><div class="sub-val">23 posts across the month</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">⚑ EARLIEST MONTH</span></div></div>
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Total Shares</div><div class="value">96</div><div class="sub-val">LinkedIn 87 reposts · Instagram 9</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">⚑ EARLIEST MONTH</span></div></div>
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Total Reactions</div><div class="value">962</div><div class="sub-val">LI 840 · IG 122 (likes+cmts+saves)</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">⚑ EARLIEST MONTH</span></div></div>
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Avg Engagement Rate</div><div class="value" style="font-size:18px;line-height:1.3;">15.2% · 5.63%</div><div class="sub-val">LinkedIn native · Instagram reach-based</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">⚑ EARLIEST MONTH</span></div></div>
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">LI Follower Growth</div><div class="value">+1,313</div><div class="sub-val">New followers in March 2026</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">⚑ EARLIEST MONTH</span></div></div>
+  </div>
+</div>
+
+<div id="s2"></div>
+<div class="section">
+  <div class="section-label">Section 2</div>
+  <div class="section-title">Engagement by Platform</div>
+  <div class="three-col">
+    <div class="chart-card"><h3>Avg Engagement — LinkedIn vs Instagram</h3><canvas id="engChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>LinkedIn — Format CTR</h3><canvas id="formatChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>Instagram — Format Avg ER</h3><canvas id="igFormatChart" height="280"></canvas></div>
+  </div>
+</div>
+
+<div id="s3"></div>
+<div class="section">
+  <div class="section-label">Section 3</div>
+  <div class="section-title">Posting Frequency — March 2026</div>
+  <div class="chart-card" style="margin-bottom:16px;"><h3>Posts per Day — March 2026</h3><canvas id="freqChart" height="200"></canvas></div>
+  <div class="callout-box">March had the highest posting volume this quarter. <em>Two posts on Mar 3 and Mar 18</em> (press announcements + event content). The US events tour drove a cluster of posts between Mar 10–19.</div>
+</div>
+
+<div id="s4"></div>
+<div class="section">
+  <div class="section-label">Section 4</div>
+  <div class="section-title">All Posts — March 2026</div>
+  <div class="chart-card" style="overflow-x:auto;">
+    <div class="filter-bar">
+      <select id="platformFilter" onchange="filterTable()"><option value="all">All Platforms</option><option value="LinkedIn">LinkedIn</option><option value="Instagram">Instagram</option></select>
+      <select id="formatFilter" onchange="filterTable()"><option value="all">All Formats</option><option value="Document">Document</option><option value="Video">Video</option><option value="Video/Reel">Video/Reel</option><option value="Carousel">Carousel</option><option value="Image">Image</option></select>
+      <input id="searchInput" type="text" placeholder="Search captions…" oninput="filterTable()"/>
+      <span id="rowCount" style="font-size:12px;color:#999;margin-left:auto;"></span>
+    </div>
+    <table class="data-table" id="postTable">
+      <thead><tr>
+        <th onclick="sortTable(0)">Platform <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(1)">Date <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(2)">Format <span class="sort-icon">↕</span></th>
+        <th>Caption</th>
+        <th onclick="sortTable(4)">Imp/Views <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(5)">Reach <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(6)">CTR/ER <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(7)">Likes <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(8)">Comments <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(9)">Saves <span class="sort-icon">↕</span></th>
+        <th onclick="sortTable(10)">Shares <span class="sort-icon">↕</span></th>
+      </tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div style="font-size:11px;color:#aaa;margin-top:10px;">🟢 Top post</div>
+  </div>
+</div>
+
+<div id="s5"></div>
+<div class="section">
+  <div class="section-label">Section 5</div>
+  <div class="section-title">Top 5 Posts — March 2026</div>
+  <div class="top5-grid" id="top5Grid"></div>
+</div>
+
+<div id="s6"></div>
+<div class="section">
+  <div class="section-label">Section 6</div>
+  <div class="section-title">Content Theme Analysis</div>
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--dark);color:#fff;border-radius:6px;padding:3px 10px;">LinkedIn</span></div>
+  <div class="two-col" style="margin-bottom:24px;">
+    <div class="chart-card"><h3>LinkedIn — Avg CTR by Theme</h3><canvas id="themeChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>LinkedIn — Avg ER by Theme</h3><canvas id="themeCtrChart" height="280"></canvas></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--red);color:#fff;border-radius:6px;padding:3px 10px;">Instagram</span></div>
+  <div class="two-col">
+    <div class="chart-card"><h3>Instagram — Avg ER by Content Theme</h3><canvas id="igThemeChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>Instagram — Avg ER by Format</h3><canvas id="igFormatThemeChart" height="280"></canvas></div>
+  </div>
+</div>
+
+<div id="s7"></div>
+<div class="section">
+  <div class="section-label">Section 7</div>
+  <div class="section-title">CTA Effect Analysis — LinkedIn</div>
+  <div class="two-col">
+    <div class="chart-card"><h3>Avg Clicks: Document vs Video Posts</h3><canvas id="ctaChart" height="240"></canvas><div class="callout-box" style="margin-top:12px;">Document posts averaged <em>370 clicks</em> vs 96 for videos in March. The gap narrows vs April (578 doc avg) because March had more event/announcement docs with lower CTR (press posts, event promos).</div></div>
+    <div class="chart-card"><h3>Avg CTR: Document vs Video Posts</h3><canvas id="ctaCtrChart" height="240"></canvas></div>
+  </div>
+</div>
+
+<div id="s10"></div>
+<div class="section">
+  <div class="section-label">Section 10</div>
+  <div class="section-title">Page Analytics — March 2026</div>
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--dark);color:#fff;border-radius:6px;padding:3px 10px;">LinkedIn</span></div>
+  <div class="meta-source">⚠️ March included a sponsored campaign (Mar 9–16) inflating total impressions. Organic figures used for consistency.</div>
+  <div class="analytics-grid" style="margin-bottom:32px;">
+    <div class="analytics-card"><div class="a-label">Organic Impressions</div><div class="a-value">52,803</div><div class="a-sub">23 organic posts</div></div>
+    <div class="analytics-card"><div class="a-label">Total Organic Clicks</div><div class="a-value">6,784</div><div class="a-sub">Avg 295/post</div></div>
+    <div class="analytics-card"><div class="a-label">Avg Organic ER</div><div class="a-value">15.2%</div><div class="a-sub">Avg across 23 posts</div></div>
+    <div class="analytics-card"><div class="a-label">New Followers</div><div class="a-value">1,313</div><div class="a-sub">Peak 149 on Mar 26</div></div>
+    <div class="analytics-card"><div class="a-label">Posts Published</div><div class="a-value">23</div><div class="a-sub">Busiest month on record</div></div>
+    <div class="analytics-card"><div class="a-label">Peak CTR Post</div><div class="a-value">50.1%</div><div class="a-sub">Mar 31 — Advisory Roles Doc</div></div>
+    <div class="analytics-card"><div class="a-label">Doc Avg CTR</div><div class="a-value">17.2%</div><div class="a-sub">vs 3.7% for video</div></div>
+    <div class="analytics-card"><div class="a-label">Total Likes</div><div class="a-value">799</div><div class="a-sub">Avg 34.7/post</div></div>
+    <div class="analytics-card"><div class="a-label">Total Reposts</div><div class="a-value">87</div><div class="a-sub">Highest share month</div></div>
+    <div class="analytics-card"><div class="a-label">Major Announcements</div><div class="a-value">2</div><div class="a-sub">FT 1000 (#67) · Sifted 100</div></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--red);color:#fff;border-radius:6px;padding:3px 10px;">Instagram</span> @connectduk &nbsp;·&nbsp; 2,112 followers</div>
+  <div class="analytics-grid">
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Posts Published</div><div class="a-value">11</div><div class="a-sub">Most active IG month</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Views</div><div class="a-value">4,538</div><div class="a-sub">Across all 11 posts</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Reach</div><div class="a-value">2,574</div><div class="a-sub">Unique accounts</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg Reach / Post</div><div class="a-value">234</div><div class="a-sub">11.1% of followers</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Likes</div><div class="a-value">112</div><div class="a-sub">Avg 10.2/post</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Saves</div><div class="a-value">5</div><div class="a-sub">Best saves month (Q1)</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Shares</div><div class="a-value">9</div><div class="a-sub">Best shares month (Q1)</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg ER (reach-based)</div><div class="a-value">5.63%</div><div class="a-sub">Best ER month (Q1)</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Top Post ER</div><div class="a-value">13.04%</div><div class="a-sub">Mar 18 Sifted 100 Carousel</div></div>
+  </div>
+</div>
+
+<div id="s11"></div>
+<div class="section">
+  <div class="section-label">Section 11</div>
+  <div class="section-title">Competitor Benchmark — March 2026</div>
+  <div class="meta-source">📊 Data from LinkedIn Page Analytics competitor export — March 1–31, 2026.</div>
+  <div class="chart-card" style="margin-bottom:16px;overflow-x:auto;">
+    <h3>Competitor Overview — March 2026 (LinkedIn)</h3>
+    <table class="benchmark-table">
+      <thead><tr><th>Company</th><th>Total Followers</th><th>New Followers</th><th>Engagements</th><th>Posts</th><th>Eng / Post</th><th>Growth</th></tr></thead>
+      <tbody>
+        <tr><td>NEDonBoard</td><td>8,825</td><td>129</td><td>265</td><td>18</td><td>14.7</td><td>1.5%</td></tr>
+        <tr><td>Go Fractional</td><td>6,375</td><td>452</td><td>426</td><td>22</td><td>19.4</td><td>7.1%</td></tr>
+        <tr><td>Nurole</td><td>14,203</td><td>340</td><td>502</td><td>24</td><td>20.9</td><td>2.4%</td></tr>
+        <tr><td>Boardsi</td><td>77,820</td><td>557</td><td>188</td><td>28</td><td>6.7</td><td>0.7%</td></tr>
+        <tr><td>Jack &amp; Jill</td><td>33,981</td><td>3,790</td><td>1,113</td><td>14</td><td>79.5</td><td>11.2%</td></tr>
+        <tr><td>Intro</td><td>55,013</td><td>651</td><td>1,185</td><td>25</td><td>47.4</td><td>1.2%</td></tr>
+        <tr class="connectd-row"><td><strong>Connectd ◀</strong></td><td><strong>44,826</strong></td><td><strong>1,313</strong></td><td><strong>969</strong></td><td><strong>24</strong></td><td><strong>40.4</strong></td><td><strong>2.9%</strong></td></tr>
+        <tr><td>Actuate Global</td><td>6,399</td><td>376</td><td>661</td><td>33</td><td>20.0</td><td>5.9%</td></tr>
+        <tr><td>Wellfound</td><td>147,127</td><td>2,481</td><td>229</td><td>31</td><td>7.4</td><td>1.7%</td></tr>
+        <tr><td>Toptal</td><td>714,638</td><td>6,952</td><td>303</td><td>1</td><td>303.0</td><td>1.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="three-col">
+    <div class="chart-card"><h3>New Followers in March</h3><canvas id="compFollowersChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>Total Engagements in March</h3><canvas id="compEngChart" height="280"></canvas></div>
+    <div class="chart-card"><h3>Engagement per Post</h3><canvas id="compEngPerPostChart" height="280"></canvas></div>
+  </div>
+</div>
+
+</div>
+<footer>Connectd Social Media Dashboard · March 2026 · Built with <a href="https://claude.ai" target="_blank">Claude</a> · Data: LinkedIn Page Admin Export · Meta Business Suite · <a href="https://www.linkedin.com/company/connectd-co/" target="_blank">linkedin.com/company/connectd-co</a> · <a href="https://www.instagram.com/connectduk/" target="_blank">@connectduk</a></footer>
+
+<script>
+const allPosts=[
+  // LinkedIn (23 posts)
+  {platform:"LinkedIn",date:"2026-03-02",sDate:20260302,format:"Document",caption:"Some careers are built inside one company, while others are built across many. On March 10 in Dallas...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7434283553758257152",imp:1730,reach:1730,clicks:372,ctr:21.5,likes:31,comments:0,saves:null,shares:2,er:23.4,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-03",sDate:20260303,format:"Document",caption:"Connectd has been ranked 67th on the Financial Times 1000: Europe's Fastest-Growing Companies 2026 🎉",url:"https://www.linkedin.com/feed/update/urn:li:activity:7434600891455844352",imp:5178,reach:5178,clicks:104,ctr:2.0,likes:94,comments:6,saves:null,shares:14,er:4.2,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-03",sDate:20260303,format:"Document",caption:"What a great night with the Jameson Legal network last Wednesday...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7434568318780444672",imp:1719,reach:1719,clicks:349,ctr:20.3,likes:30,comments:0,saves:null,shares:1,er:22.1,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-05",sDate:20260305,format:"Document",caption:"Most startups don't realise they've outgrown their own structure until they're already inside the problem...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7435293115625771010",imp:1579,reach:1579,clicks:303,ctr:19.2,likes:23,comments:0,saves:null,shares:2,er:20.8,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-06",sDate:20260306,format:"Document",caption:"Florida, we're coming your way. Over the next few weeks, we're hosting two conversations across Tampa and Miami...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7435730966146416640",imp:1867,reach:1867,clicks:328,ctr:17.6,likes:38,comments:4,saves:null,shares:9,er:20.3,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-08",sDate:20260308,format:"Document",caption:"Strong founders recognise they need support. This International Women's Day...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7436380207810244609",imp:2350,reach:2350,clicks:276,ctr:11.7,likes:30,comments:4,saves:null,shares:3,er:13.3,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-10",sDate:20260310,format:"Document",caption:"We're seeing more members step into fractional and advisory roles at different stages of a company's growth...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7437180545052295169",imp:1953,reach:1953,clicks:553,ctr:28.3,likes:22,comments:0,saves:null,shares:2,er:29.5,isTop:true,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-11",sDate:20260311,format:"Document",caption:"Most paid advisory roles don't start with a job description. They start with conversations...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7437542935946035200",imp:1930,reach:1930,clicks:89,ctr:4.6,likes:22,comments:0,saves:null,shares:2,er:5.9,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-12",sDate:20260312,format:"Video",caption:"Liking your job doesn't automatically mean feeling secure long term...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7437829792231649283",imp:2171,reach:2171,clicks:67,ctr:3.1,likes:28,comments:0,saves:null,shares:3,er:4.5,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-13",sDate:20260313,format:"Video",caption:"Growing a company means facing decisions you haven't encountered before. Rodney from PLUGG...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7438267665548271616",imp:2144,reach:2144,clicks:130,ctr:6.1,likes:36,comments:3,saves:null,shares:2,er:8.0,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-16",sDate:20260316,format:"Document",caption:"3 days until we're in Miami. Spots are filling up, so if you're planning to join us...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7439359197252685826",imp:1725,reach:1725,clicks:60,ctr:3.5,likes:29,comments:1,saves:null,shares:4,er:5.4,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-17",sDate:20260317,format:"Document",caption:"Demand for fractional executive roles has grown by 260%...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7439717195745660928",imp:1536,reach:1536,clicks:345,ctr:22.5,likes:16,comments:0,saves:null,shares:3,er:23.7,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-18",sDate:20260318,format:"Document",caption:"Connectd is on this year's Sifted 100 list 🎉 What started in a basement office...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7440030253537800192",imp:4133,reach:4133,clicks:106,ctr:2.6,likes:80,comments:9,saves:null,shares:16,er:5.1,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-18",sDate:20260318,format:"Document",caption:"Our Startup Mixer is back 👀 After seeing how valuable these conversations have been...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7440079638841880577",imp:1764,reach:1764,clicks:230,ctr:13.0,likes:42,comments:3,saves:null,shares:1,er:15.6,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-19",sDate:20260319,format:"Document",caption:"The ambiguity is okay. You'll find your place. Last month in New York, Roei Samuel...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7440442033808277504",imp:1511,reach:1511,clicks:157,ctr:10.4,likes:19,comments:0,saves:null,shares:2,er:11.8,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-20",sDate:20260320,format:"Image",caption:"Eid Mubarak from Connectd 🌙 Eid is a reminder of the value of community, generosity...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7440683890651840513",imp:1287,reach:1287,clicks:18,ctr:1.4,likes:20,comments:0,saves:null,shares:0,er:3.0,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-23",sDate:20260323,format:"Video",caption:"The world of work is changing. Jobs are being redefined and more experienced experts are choosing...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7441891550382641154",imp:1728,reach:1728,clicks:52,ctr:3.0,likes:16,comments:0,saves:null,shares:2,er:4.1,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-24",sDate:20260324,format:"Video",caption:"Even with 20 years of experience, new situations can still throw you off. Hidai Degani shared something...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7442253934049591297",imp:4590,reach:4590,clicks:215,ctr:4.7,likes:89,comments:5,saves:null,shares:7,er:6.9,isTop:true,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-25",sDate:20260325,format:"Document",caption:"Across our Connectd community, we're seeing how startups are thinking more carefully about who they bring in...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7442616293695983616",imp:2095,reach:2095,clicks:555,ctr:26.5,likes:24,comments:2,saves:null,shares:2,er:27.8,isTop:true,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-26",sDate:20260326,format:"Document",caption:"It's incredible how much of your credibility is tied up in those logos. Earlier this month in London...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7442978755297316864",imp:3268,reach:3268,clicks:448,ctr:13.7,likes:43,comments:2,saves:null,shares:3,er:15.2,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-27",sDate:20260327,format:"Video",caption:"One of the harder parts of building a company is knowing what you're actually missing. Al W., co-founder of ingomu...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7443341126457147394",imp:1158,reach:1158,clicks:18,ctr:1.6,likes:9,comments:0,saves:null,shares:2,er:2.5,isTop:false,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-30",sDate:20260330,format:"Document",caption:"Last week's Founder Mixer at our new office did exactly what it was meant to 🤩...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7444415361115992064",imp:2698,reach:2698,clicks:663,ctr:24.6,likes:34,comments:0,saves:null,shares:1,er:25.9,isTop:true,pt:"LinkedIn"},
+  {platform:"LinkedIn",date:"2026-03-31",sDate:20260331,format:"Document",caption:"Most advisory roles don't come from a job description. They come from understanding what a business needs...",url:"https://www.linkedin.com/feed/update/urn:li:activity:7444775552730746880",imp:2689,reach:2689,clicks:1346,ctr:50.0,likes:24,comments:2,saves:null,shares:4,er:51.2,isTop:true,pt:"LinkedIn"},
+  // Instagram (11 posts)
+  {platform:"Instagram",date:"2026-03-02",sDate:20260302,format:"Carousel",caption:"Seeing the Connectd team in Times Square last week felt different 🗽...",url:"https://www.instagram.com/p/DVY9lkyDCV2/",imp:575,reach:247,clicks:null,ctr:null,likes:25,comments:0,saves:1,shares:1,er:10.93,isTop:true,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-05",sDate:20260305,format:"Image",caption:"Connectd has been ranked 67th on the @financialtimes 1000: Europe's Fastest-Growing Companies...",url:"https://www.instagram.com/p/DVgqt_qjII6/",imp:619,reach:392,clicks:null,ctr:null,likes:6,comments:0,saves:0,shares:3,er:2.30,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-08",sDate:20260308,format:"Carousel",caption:"Strong founders know they don't build alone. This International Women's Day...",url:"https://www.instagram.com/p/DVn2ffOAKMi/",imp:327,reach:136,clicks:null,ctr:null,likes:9,comments:0,saves:0,shares:1,er:7.35,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-12",sDate:20260312,format:"Video/Reel",caption:"You can like your job and still wonder what your backup plan is...",url:"https://www.instagram.com/reel/DVyr8lgK4Gh/",imp:467,reach:326,clicks:null,ctr:null,likes:11,comments:0,saves:2,shares:1,er:4.29,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-13",sDate:20260313,format:"Video/Reel",caption:"Growing a company means facing decisions you haven't navigated before. Rodney...",url:"https://www.instagram.com/reel/DV1Qz42jAVe/",imp:307,reach:254,clicks:null,ctr:null,likes:6,comments:1,saves:0,shares:0,er:2.76,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-17",sDate:20260317,format:"Carousel",caption:"Every startup eventually faces decisions it hasn't navigated before. That's why...",url:"https://www.instagram.com/p/DV_j_S7DIJv/",imp:273,reach:125,clicks:null,ctr:null,likes:10,comments:0,saves:0,shares:0,er:8.00,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-18",sDate:20260318,format:"Carousel",caption:"Connectd is on this year's @siftedeu 100 list 🎉...",url:"https://www.instagram.com/p/DWB65FCjBzS/",imp:533,reach:207,clicks:null,ctr:null,likes:22,comments:4,saves:0,shares:1,er:13.04,isTop:true,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-19",sDate:20260319,format:"Carousel",caption:"Every startup eventually hits moments it hasn't seen before. That's when bringing in...",url:"https://www.instagram.com/p/DWEtl9FDCiZ/",imp:348,reach:153,clicks:null,ctr:null,likes:5,comments:0,saves:0,shares:1,er:3.92,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-24",sDate:20260324,format:"Video/Reel",caption:"You don't always need a full-time hire. Sometimes you just need the right expert...",url:"https://www.instagram.com/reel/DWRljbIKYW5/",imp:350,reach:280,clicks:null,ctr:null,likes:6,comments:0,saves:1,shares:1,er:2.86,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-26",sDate:20260326,format:"Carousel",caption:"Some of the biggest decisions in a startup don't come with a playbook...",url:"https://www.instagram.com/p/DWWvIAyDHOb/",imp:396,reach:177,clicks:null,ctr:null,likes:8,comments:0,saves:1,shares:0,er:5.08,isTop:false,pt:"Instagram"},
+  {platform:"Instagram",date:"2026-03-27",sDate:20260327,format:"Video/Reel",caption:"One of the harder parts of building a startup is knowing what you're missing...",url:"https://www.instagram.com/reel/DWZTWGJDJA8/",imp:343,reach:277,clicks:null,ctr:null,likes:4,comments:0,saves:0,shares:0,er:1.44,isTop:false,pt:"Instagram"},
+];
+
+const top5=[
+  {rank:1,platform:"LinkedIn",format:"Document",caption:"Most advisory roles don't come from a job description. They come from understanding what a business needs and stepping in at the right time.",imp:2689,er:"51.2%",likes:24,comments:2,saves:"N/A",url:"https://www.linkedin.com/feed/update/urn:li:activity:7444775552730746880"},
+  {rank:2,platform:"LinkedIn",format:"Document",caption:"We're seeing more members step into fractional and advisory roles. Julie McFadden joined Otterkin, Tolga Gemicioglu joined Continue...",imp:1953,er:"29.5%",likes:22,comments:0,saves:"N/A",url:"https://www.linkedin.com/feed/update/urn:li:activity:7437180545052295169"},
+  {rank:3,platform:"LinkedIn",format:"Document",caption:"Across our Connectd community, we're seeing how startups are thinking more carefully about who they bring in. Grant Keller, Ivan Sierra, Pascal Kornfuehrer...",imp:2095,er:"27.8%",likes:24,comments:2,saves:"N/A",url:"https://www.linkedin.com/feed/update/urn:li:activity:7442616293695983616"},
+  {rank:4,platform:"Instagram",format:"Carousel",caption:"Connectd is on this year's @siftedeu 100 list 🎉 What started in a basement office...",imp:"Views: 533",er:"13.04%",likes:22,comments:4,saves:0,url:"https://www.instagram.com/p/DWB65FCjBzS/"},
+  {rank:5,platform:"Instagram",format:"Carousel",caption:"Seeing the Connectd team in Times Square last week felt different 🗽 When we started, it was a small team with a clear focus...",imp:"Views: 575",er:"10.93%",likes:25,comments:0,saves:1,url:"https://www.instagram.com/p/DVY9lkyDCV2/"},
+];
+
+let sortCol=1,sortDir=1;
+function renderTable(data){
+  const tbody=document.getElementById("tableBody");tbody.innerHTML="";
+  data.forEach(p=>{
+    const tr=document.createElement("tr");
+    if(p.isTop)tr.classList.add("top-post");
+    const pbClass=p.pt==="Instagram"?"pb-ig":"pb-li";
+    const capCell=p.url?`<a href="${p.url}" target="_blank" class="caption-link">${p.caption.substring(0,70)}…</a>`:`<span>${p.caption.substring(0,70)}…</span>`;
+    tr.innerHTML=`<td><span class="platform-badge ${pbClass}">${p.platform}</span></td><td style="white-space:nowrap">${p.date}</td><td>${p.format}</td><td style="max-width:200px;line-height:1.4">${capCell}</td><td>${p.imp!==null?p.imp.toLocaleString():"N/A"}</td><td>${p.reach!==null?p.reach.toLocaleString():"N/A"}</td><td>${p.ctr!==null?p.ctr.toFixed(1)+"%":p.er!==null?p.er.toFixed(2)+"%":"N/A"}</td><td>${p.likes}</td><td>${p.comments}</td><td>${p.saves!==null?p.saves:"N/A"}</td><td>${p.shares!==null?p.shares:"N/A"}</td>`;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("rowCount").textContent=`${data.length} posts`;
+}
+function filterTable(){
+  const pf=document.getElementById("platformFilter").value;
+  const ff=document.getElementById("formatFilter").value;
+  const search=document.getElementById("searchInput").value.toLowerCase();
+  renderTable(allPosts.filter(p=>{
+    if(pf!=="all"&&p.pt!==pf)return false;
+    if(ff!=="all"&&p.format!==ff)return false;
+    if(search&&!p.caption.toLowerCase().includes(search))return false;
+    return true;
+  }));
+}
+function sortTable(col){
+  if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
+  const keys=["platform","date","format","caption","imp","reach","ctr","likes","comments","saves","shares"];
+  allPosts.sort((a,b)=>{let va=a[keys[col]],vb=b[keys[col]];if(va===null)va=-Infinity;if(vb===null)vb=-Infinity;return(va>vb?1:va<vb?-1:0)*sortDir;});
+  filterTable();
+}
+renderTable(allPosts);
+
+const grid=document.getElementById("top5Grid");
+top5.forEach(p=>{
+  const pbClass=p.platform==="Instagram"?"pb-ig":"pb-li";
+  const linkHtml=p.url?`<a href="${p.url}" target="_blank" class="post-link">View post →</a>`:`<span style="color:rgba(255,255,255,.3);font-size:12px">No URL</span>`;
+  grid.innerHTML+=`<div class="top5-card"><div class="rank">#${p.rank} TOP POST <span class="platform-badge ${pbClass}" style="margin-left:6px">${p.platform}</span></div><div class="caption">"${p.caption}"</div><div class="metrics"><div class="metric-item"><div class="m-label">Imp/Views</div><div class="m-val">${typeof p.imp==="number"?p.imp.toLocaleString():p.imp}</div></div><div class="metric-item"><div class="m-label">Eng. Rate</div><div class="m-val">${p.er}</div></div><div class="metric-item"><div class="m-label">Likes</div><div class="m-val">${p.likes}</div></div><div class="metric-item"><div class="m-label">Saves</div><div class="m-val">${p.saves}</div></div></div>${linkHtml}</div>`;
+});
+
+Chart.defaults.font.family="Inter,-apple-system,sans-serif";
+
+// Posting frequency
+const liDates=["Mar 2","Mar 3","Mar 3","Mar 5","Mar 6","Mar 8","Mar 10","Mar 11","Mar 12","Mar 13","Mar 16","Mar 17","Mar 18","Mar 18","Mar 19","Mar 20","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 30","Mar 31"];
+const igDates=["Mar 2","Mar 5","Mar 8","Mar 12","Mar 13","Mar 17","Mar 18","Mar 19","Mar 24","Mar 26","Mar 27"];
+const allDays=["Mar 2","Mar 3","Mar 5","Mar 6","Mar 8","Mar 10","Mar 11","Mar 12","Mar 13","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 30","Mar 31"];
+const liCounts=allDays.map(d=>liDates.filter(x=>x===d).length);
+const igCounts=allDays.map(d=>igDates.filter(x=>x===d).length);
+new Chart(document.getElementById("freqChart"),{type:"bar",data:{labels:allDays,datasets:[{label:"LinkedIn",data:liCounts,backgroundColor:"rgba(93,0,39,0.7)",borderRadius:4,stack:"s"},{label:"Instagram",data:igCounts,backgroundColor:"rgba(246,0,57,0.6)",borderRadius:4,stack:"s"}]},options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{stepSize:1},grid:{color:"#f0f0f0"}}}}});
+
+// Engagement comparison
+new Chart(document.getElementById("engChart"),{type:"bar",data:{labels:["Avg Likes","Avg Comments","Avg Saves","Avg Shares"],datasets:[{label:"LinkedIn",data:[34.7,1.8,0,3.8],backgroundColor:"#5d0027",borderRadius:6},{label:"Instagram",data:[10.2,0.5,0.5,0.8],backgroundColor:"#f60039",borderRadius:6}]},options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("formatChart"),{type:"bar",data:{labels:["Document","Video","Image"],datasets:[{label:"Avg CTR %",data:[17.2,3.7,1.4],backgroundColor:["#5d0027","#f60039","#9b1a4a"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("igFormatChart"),{type:"bar",data:{labels:["Carousel","Video/Reel","Image"],datasets:[{label:"Avg ER %",data:[8.05,2.64,2.30],backgroundColor:["#5d0027","#f60039","#9b1a4a"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+
+// Content themes
+new Chart(document.getElementById("themeChart"),{type:"bar",data:{labels:["Advisor Spotlights","Event Recaps","Event Promos","Press/Milestones","Thought Leadership","Founder Stories"],datasets:[{label:"Avg CTR %",data:[30.4,19.1,7.3,4.3,10.0,4.7],backgroundColor:["#5d0027","#8c003e","#b80050","#d4005c","#e50062","#f60039"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("themeCtrChart"),{type:"bar",data:{labels:["Advisor Spotlights","Event Recaps","Event Promos","Press/Milestones","Thought Leadership","Founder Stories"],datasets:[{label:"Avg ER %",data:[25.9,17.6,8.8,4.4,15.7,6.9],backgroundColor:["#5d0027","#8c003e","#b80050","#d4005c","#e50062","#f60039"],borderRadius:6}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("igThemeChart"),{type:"bar",data:{labels:["Press/Milestone","Advisory Value","IWD / Cultural","Thought Leadership","Founder Story"],datasets:[{label:"Avg ER %",data:[11.99,6.54,7.35,3.38,2.10],backgroundColor:["#5d0027","#8c003e","#b80050","#d4005c","#f60039"],borderRadius:8}]},options:{indexAxis:"y",responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("igFormatThemeChart"),{type:"bar",data:{labels:["Carousel (6 posts)","Video/Reel (4 posts)","Image (1 post)"],datasets:[{label:"Avg ER %",data:[8.05,2.64,2.30],backgroundColor:["#5d0027","#f60039","#9b1a4a"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+
+// CTA analysis
+new Chart(document.getElementById("ctaChart"),{type:"bar",data:{labels:["Document","Video"],datasets:[{label:"Avg Clicks",data:[370,96],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("ctaCtrChart"),{type:"bar",data:{labels:["Document","Video"],datasets:[{label:"Avg CTR %",data:[17.2,3.7],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
+
+// Competitors
+const compLabels=["NEDonBoard","Go Fractional","Nurole","Boardsi","Jack & Jill","Intro","Connectd","Actuate Global"];
+const compColors=compLabels.map(l=>l==="Connectd"?"#51e668":"rgba(93,0,39,0.7)");
+new Chart(document.getElementById("compFollowersChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"New Followers",data:[129,452,340,557,3790,651,1313,376],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("compEngChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Total Eng.",data:[265,426,502,188,1113,1185,969,661],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+new Chart(document.getElementById("compEngPerPostChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Eng/Post",data:[14.7,19.4,20.9,6.7,79.5,47.4,40.4,20.0],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
+</script>
+</body>
+</html>
