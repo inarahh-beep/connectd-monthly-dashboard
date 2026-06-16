@@ -872,36 +872,44 @@ new Chart(document.getElementById("savesChart"),{type:"bar",data:{labels:["May 1
 new Chart(document.getElementById("convChart"),{type:"bar",data:{labels:["Document Posts","Video Posts"],datasets:[{label:"Avg Conversion Rate (Clicks ÷ Impressions)",data:[26.4,4.1],backgroundColor:["#5d0027","#f60039"],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"},grid:{color:"#f0f0f0"}}}}});
 </script>
 
-<div id="tt-popup" style="display:none"></div>
+<div id="tt-popup" style="display:none;position:fixed;background:#1a1a1a;color:#fff;border-radius:14px;padding:16px 18px;width:300px;font-size:12px;line-height:1.7;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:99999;border:1px solid rgba(255,255,255,.15);"></div>
 <script>
 (function(){
-  var popup = document.getElementById('tt-popup');
-  var current = null;
-  document.addEventListener('mouseover', function(e){
-    var icon = e.target.closest('.info-icon');
-    if(!icon) return;
-    var box = icon.querySelector('.tooltip-box');
-    if(!box) return;
-    popup.innerHTML = box.innerHTML;
-    popup.style.display = 'block';
-    var r = icon.getBoundingClientRect();
-    var pw = 280, ph = popup.offsetHeight || 120;
-    var left = r.left + r.width/2 - 20;
-    var top = r.top - ph - 12 + window.scrollY;
-    if(left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
-    if(left < 8) left = 8;
-    if(top < window.scrollY + 8) top = r.bottom + 12 + window.scrollY;
-    popup.style.left = left + 'px';
-    popup.style.top = top + 'px';
-    current = icon;
-  });
-  document.addEventListener('mouseout', function(e){
-    var icon = e.target.closest('.info-icon');
-    if(!icon) return;
-    if(!icon.contains(e.relatedTarget)){
-      popup.style.display = 'none';
-      current = null;
+  var pop=document.getElementById('tt-popup');
+  var active=null;
+  document.addEventListener('click',function(e){
+    var icon=e.target.closest('.info-icon');
+    if(icon){
+      e.stopPropagation();
+      if(active===icon){pop.style.display='none';icon.style.background='';icon.style.color='';active=null;return;}
+      if(active){active.style.background='';active.style.color='';}
+      var box=icon.querySelector('.tooltip-box');
+      if(!box)return;
+      pop.innerHTML=box.innerHTML;
+      pop.style.display='block';active=icon;
+      icon.style.background='#f60039';icon.style.color='#fff';
+      pop.style.left='0px';pop.style.top='0px';
+      var r=icon.getBoundingClientRect(),pw=300,ph=pop.offsetHeight||140;
+      var left=r.left+r.width/2-pw/2;
+      var top=r.top-ph-14+window.scrollY;
+      if(left+pw>window.innerWidth-10)left=window.innerWidth-pw-10;
+      if(left<8)left=8;
+      if(top<window.scrollY+60)top=r.bottom+14+window.scrollY;
+      pop.style.left=left+'px';pop.style.top=top+'px';
+    } else {
+      if(active){active.style.background='';active.style.color='';active=null;}
+      pop.style.display='none';
     }
+  });
+  document.addEventListener('mouseover',function(e){
+    var icon=e.target.closest('.info-icon');
+    if(!icon||icon===active)return;
+    icon.style.background='rgba(246,0,57,.7)';icon.style.color='#fff';
+  });
+  document.addEventListener('mouseout',function(e){
+    var icon=e.target.closest('.info-icon');
+    if(!icon||icon===active)return;
+    icon.style.background='';icon.style.color='';
   });
 })();
 </script>
