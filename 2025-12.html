@@ -76,11 +76,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);padding:0 0 
 .benchmark-table tr.connectd-row td{background:#fff7f7;font-weight:700;color:var(--dark);}
 footer{text-align:center;padding:32px 0;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:48px;}
 footer a{color:var(--red);text-decoration:none;font-weight:600;}
-.info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.18);color:rgba(255,255,255,.7);font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.2);transition:all .18s ease;flex-shrink:0;}
-.info-icon.dark{background:rgba(93,0,39,.1);color:#5d0027;border-color:rgba(93,0,39,.2);}
-.info-icon:hover{background:#f60039;color:#fff;border-color:#f60039;}
-.tooltip-box{display:none;}
+.info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.25);flex-shrink:0;vertical-align:middle;margin-left:4px;}
+.info-icon.dark{background:rgba(93,0,39,.1);color:#5d0027;border-color:rgba(93,0,39,.22);}
+.info-icon.tip-on,.info-icon:hover{background:#f60039 !important;color:#fff !important;border-color:#f60039 !important;}
+.tooltip-box{display:none !important;}
 @media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr;}.top5-grid{grid-template-columns:1fr;}}
+
+/* ── TOOLTIP ICONS ── */
+.info-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.2);color:rgba(255,255,255,.8);font-size:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.25);flex-shrink:0;vertical-align:middle;margin-left:4px;}
+.info-icon.dark{background:rgba(93,0,39,.1);color:#5d0027;border-color:rgba(93,0,39,.22);}
+.info-icon.tip-on,.info-icon:hover{background:#f60039 !important;color:#fff !important;border-color:#f60039 !important;}
+.tooltip-box{display:none !important;}
 </style>
 </head>
 <body>
@@ -140,14 +146,14 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
   <div class="section-title">Summary Stats — December 2025</div>
   <div class="cards-grid">
     <div class="stat-card"><div class="label">Total Posts</div><div class="value">21</div><div class="sub-val">13 LinkedIn · 8 Instagram</div></div>
-    <div class="stat-card"><div class="label">Avg LI Eng. Rate <span class="info-icon">ℹ<span class="tooltip-box"><strong>Avg LinkedIn Engagement Rate</strong>The average LinkedIn engagement rate measures the percentage of viewers who actively interact with your content.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × (reactions + comments + reposts + clicks + new follows) ÷ Impressions</span></span></div><div class="value">17.5%</div><div class="sub-val">9 docs · 4 videos</div></div>
-    <div class="stat-card"><div class="label">Avg IG Eng. Rate <span class="info-icon">ℹ<span class="tooltip-box"><strong>Avg Instagram Engagement Rate</strong>The percentage of your audience that actively interacts with your content.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × total engagement ÷ total reach</span></span></div><div class="value">3.51%</div><div class="sub-val">(likes+cmts+saves+shares)÷reach</div></div>
+    <div class="stat-card"><div class="label">Avg LI Eng. Rate <span class="info-icon" data-tooltip="<strong>Avg LinkedIn Engagement Rate</strong><br>The average LinkedIn engagement rate measures the percentage of viewers who actively interact with your content.<br><br><span style='color:#ffd166;font-size:10px;font-weight:700;'>FORMULA</span><br>100 × (reactions + comments + reposts + clicks + new follows) ÷ Impressions">ℹ</span></div><div class="value">17.5%</div><div class="sub-val">9 docs · 4 videos</div></div>
+    <div class="stat-card"><div class="label">Avg IG Eng. Rate <span class="info-icon" data-tooltip="<strong>Avg Instagram Engagement Rate</strong><br>The percentage of your audience that actively interacts with your content.<br><br><span style='color:#ffd166;font-size:10px;font-weight:700;'>FORMULA</span><br>100 × total engagement ÷ total reach">ℹ</span></div><div class="value">3.51%</div><div class="sub-val">(likes+cmts+saves+shares)÷reach</div></div>
     <div class="stat-card"><div class="label">Total IG Views</div><div class="value">15,551</div><div class="sub-val">Best views month of the dataset</div></div>
-    <div class="stat-card"><div class="label">Total IG Reach <span class="info-icon">ℹ<span class="tooltip-box"><strong>Total IG Reach</strong>The total number of unique user accounts that viewed your content (posts, stories, or reels) at least once within a specific timeframe.</span></span></div><div class="value">3,380</div><div class="sub-val">Avg 423/post · 20.0% of followers</div></div>
-    <div class="stat-card"><div class="label">New LI Followers <span class="info-icon">ℹ<span class="tooltip-box"><strong>New LinkedIn Followers</strong>The total number of new followers gained on the LinkedIn Company Page during this month. All organic unless stated otherwise.</span></span></div><div class="value">965</div><div class="sub-val">All organic</div></div>
-    <div class="stat-card"><div class="label">LI Org. Impressions <span class="info-icon">ℹ<span class="tooltip-box"><strong>LI Organic Impressions</strong>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions). Sourced from LinkedIn Page Admin export.</span></span></div><div class="value">46,391</div><div class="sub-val">13 posts · excl. sponsored</div></div>
+    <div class="stat-card"><div class="label">Total IG Reach <span class="info-icon" data-tooltip="<strong>Total IG Reach</strong><br>The total number of unique user accounts that viewed your content (posts, stories, or reels) at least once within a specific timeframe.">ℹ</span></div><div class="value">3,380</div><div class="sub-val">Avg 423/post · 20.0% of followers</div></div>
+    <div class="stat-card"><div class="label">New LI Followers <span class="info-icon" data-tooltip="<strong>New LinkedIn Followers</strong><br>The total number of new followers gained on the LinkedIn Company Page during this month. All organic unless stated otherwise.">ℹ</span></div><div class="value">965</div><div class="sub-val">All organic</div></div>
+    <div class="stat-card"><div class="label">LI Org. Impressions <span class="info-icon" data-tooltip="<strong>LI Organic Impressions</strong><br>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions).">ℹ</span></div><div class="value">46,391</div><div class="sub-val">13 posts · excl. sponsored</div></div>
     <div class="stat-card"><div class="label">Peak CTR Post</div><div class="value">37.7%</div><div class="sub-val">Dec 31 · Year-end Document</div></div>
-    <div class="stat-card"><div class="label">Doc Avg CTR <span class="info-icon">ℹ<span class="tooltip-box"><strong>Document Avg CTR</strong>Measures how often people click on your document posts relative to how many times it was shown.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × Total interactions (Likes + Comments + Shares + Clicks) ÷ Total impressions</span></span></div><div class="value">22.0%</div><div class="sub-val">vs 3.3% for video posts</div></div>
+    <div class="stat-card"><div class="label">Doc Avg CTR <span class="info-icon" data-tooltip="<strong>Document Avg CTR</strong><br>Measures how often people click on your document posts relative to how many times it was shown.<br><br><span style='color:#ffd166;font-size:10px;font-weight:700;'>FORMULA</span><br>100 × Total interactions (Likes + Comments + Shares + Clicks) ÷ Total impressions">ℹ</span></div><div class="value">22.0%</div><div class="sub-val">vs 3.3% for video posts</div></div>
     <div class="stat-card"><div class="label">Total IG Saves</div><div class="value">8</div><div class="sub-val">Joint-best with March</div></div>
     <div class="stat-card"><div class="label">Partnerships Announced</div><div class="value">2</div><div class="sub-val">QPR FC · SyndicateRoom</div></div>
     <div class="stat-card"><div class="label">Total LI Clicks</div><div class="value">7,175</div><div class="sub-val">Dec 31 drove 2,130 alone</div></div>
@@ -157,7 +163,7 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
   <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:10px;">Cross-Platform Combined Totals</div>
   <div class="meta-source" style="margin-bottom:14px;">📅 December 2025 is the earliest month in the dashboard.</div>
   <div class="cards-grid">
-    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">LI Org. Impressions <span class="info-icon">ℹ<span class="tooltip-box"><strong>LI Organic Impressions</strong>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions). Sourced from LinkedIn Page Admin export.</span></span></div><div class="value">46,391</div><div class="sub-val">13 posts · excl. 190K sponsored</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:#f60039;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px;">↓ 27.9% vs Nov · Nov had 24 posts vs 13</span></div></div>
+    <div class="stat-card" style="border-left-color:var(--green);"><div class="label">LI Org. Impressions <span class="info-icon" data-tooltip="<strong>LI Organic Impressions</strong><br>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions).">ℹ</span></div><div class="value">46,391</div><div class="sub-val">13 posts · excl. 190K sponsored</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:#f60039;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px;">↓ 27.9% vs Nov · Nov had 24 posts vs 13</span></div></div>
     <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Total Shares</div><div class="value">79</div><div class="sub-val">LinkedIn 69 · Instagram 10</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:#f60039;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px;">↓ 48.4% vs Nov · Dec 79 vs Nov 153</span></div></div>
     <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Total Reactions</div><div class="value">599</div><div class="sub-val">LI 494 · IG 105 (likes+cmts+saves)</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:#f60039;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px;">↓ 43.4% vs Nov · Dec 599 vs Nov 1,059</span></div></div>
     <div class="stat-card" style="border-left-color:var(--green);"><div class="label">Avg Engagement Rate</div><div class="value" style="font-size:18px;line-height:1.3;">17.5% · 3.51%</div><div class="sub-val">LinkedIn native · Instagram reach-based</div><div style="margin-top:10px;"><span style="background:rgba(255,255,255,.1);color:#51e668;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px;">↑ +20.7% vs Nov · Dec 17.5% vs Nov 14.5%</span>
@@ -196,13 +202,13 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
   <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span style="background:var(--dark);color:#fff;border-radius:6px;padding:3px 10px;">LinkedIn</span></div>
   <div class="meta-source">⚠️ December included a large sponsored campaign (Dec 8–22) for The Telegraph article, reaching 190K impressions. Organic figures shown for consistency.</div>
   <div class="analytics-grid" style="margin-bottom:32px;">
-    <div class="analytics-card"><div class="a-label">LI Org. Impressions <span class="info-icon dark">ℹ<span class="tooltip-box"><strong>LI Organic Impressions</strong>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions). Sourced from LinkedIn Page Admin export.</span></span></div><div class="a-value">46,391</div><div class="a-sub">13 organic posts</div></div>
+    <div class="analytics-card"><div class="a-label">LI Org. Impressions <span class="info-icon dark" data-tooltip="<strong>LI Organic Impressions</strong><br>The total number of times your LinkedIn posts were shown to users organically (excluding paid/sponsored impressions).">ℹ</span></div><div class="a-value">46,391</div><div class="a-sub">13 organic posts</div></div>
     <div class="analytics-card"><div class="a-label">Total LI Clicks</div><div class="a-value">7,175</div><div class="a-sub">Avg 552/post</div></div>
-    <div class="analytics-card"><div class="a-label">Avg LI ER <span class="info-icon dark">ℹ<span class="tooltip-box"><strong>Avg LI Engagement Rate</strong>Measures how actively your audience interacts with your posted content, as reported in the LinkedIn Page Admin export.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × (reactions + comments + reposts + clicks) ÷ Impressions</span></span></div><div class="a-value">17.5%</div><div class="a-sub">Avg across 13 posts</div></div>
+    <div class="analytics-card"><div class="a-label">Avg LI ER <span class="info-icon dark" data-tooltip="<strong>Avg LI Engagement Rate</strong><br>Measures how actively your audience interacts with your posted content, as reported in the LinkedIn Page Admin export.">ℹ</span></div><div class="a-value">17.5%</div><div class="a-sub">Avg across 13 posts</div></div>
     <div class="analytics-card"><div class="a-label">New Followers</div><div class="a-value">965</div><div class="a-sub">All organic</div></div>
     <div class="analytics-card"><div class="a-label">Posts Published</div><div class="a-value">13</div><div class="a-sub">9 docs · 4 videos</div></div>
     <div class="analytics-card"><div class="a-label">Peak CTR Post</div><div class="a-value">37.7%</div><div class="a-sub">Dec 31 — Year-end Doc</div></div>
-    <div class="analytics-card"><div class="a-label">Doc Avg CTR <span class="info-icon dark">ℹ<span class="tooltip-box"><strong>Document Avg CTR</strong>Measures how often people click on your document posts relative to how many times it was shown.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × Total interactions (Likes + Comments + Shares + Clicks) ÷ Total impressions</span></span></div><div class="a-value">22.0%</div><div class="a-sub">vs 3.3% for video</div></div>
+    <div class="analytics-card"><div class="a-label">Doc Avg CTR <span class="info-icon dark" data-tooltip="<strong>Document Avg CTR</strong><br>Measures how often people click on your document posts relative to how many times it was shown.<br><br><span style='color:#ffd166;font-size:10px;font-weight:700;'>FORMULA</span><br>100 × Total interactions (Likes + Comments + Shares + Clicks) ÷ Total impressions">ℹ</span></div><div class="a-value">22.0%</div><div class="a-sub">vs 3.3% for video</div></div>
     <div class="analytics-card"><div class="a-label">Total Likes</div><div class="a-value">467</div><div class="a-sub">Telegraph article led (97)</div></div>
     <div class="analytics-card"><div class="a-label">Total Reposts</div><div class="a-value">69</div><div class="a-sub">QPR (16) + Telegraph (16) led</div></div>
     <div class="analytics-card"><div class="a-label">Partnerships</div><div class="a-value">QPR + SyndicateRoom</div><div class="a-sub">Both announced in December</div></div>
@@ -216,7 +222,7 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Likes</div><div class="a-value">96</div><div class="a-sub">Avg 12/post</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Saves</div><div class="a-value">8</div><div class="a-sub">Joint-best with March</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Total Shares</div><div class="a-value">10</div><div class="a-sub">QPR reel drove 9 shares</div></div>
-    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg IG ER (reach) <span class="info-icon dark">ℹ<span class="tooltip-box"><strong>Avg IG ER (reach-based)</strong>The percentage of your audience that actively interacts with your content.<br><br><strong style="color:#ffd166;font-size:10px;">FORMULA</strong><br>100 × total engagement ÷ total reach</span></span></div><div class="a-value">3.51%</div><div class="a-sub">Carousels 3.88% vs Reels 2.77%</div></div>
+    <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Avg IG ER (reach) <span class="info-icon dark" data-tooltip="<strong>Avg IG ER (reach-based)</strong><br>The percentage of your audience that actively interacts with your content.<br><br><span style='color:#ffd166;font-size:10px;font-weight:700;'>FORMULA</span><br>100 × total engagement ÷ total reach">ℹ</span></div><div class="a-value">3.51%</div><div class="a-sub">Carousels 3.88% vs Reels 2.77%</div></div>
     <div class="analytics-card" style="border-top-color:var(--red);"><div class="a-label">Peak IG Post</div><div class="a-value">7.93%</div><div class="a-sub">Dec 31 year-end carousel</div></div>
   </div>
 </div>
@@ -297,45 +303,34 @@ new Chart(document.getElementById("compFollowersChart"),{type:"bar",data:{labels
 new Chart(document.getElementById("compEngChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Total Eng.",data:[242,222,175,240,671,572,471],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
 new Chart(document.getElementById("compEngPerPostChart"),{type:"bar",data:{labels:compLabels,datasets:[{label:"Eng/Post",data:[14.2,9.7,8.3,26.7,33.6,44.0,31.4],backgroundColor:compColors,borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#f0f0f0"}}}}});
 </script>
-<div id="tt-popup" style="display:none;position:fixed;background:#1a1a1a;color:#fff;border-radius:14px;padding:16px 18px;width:300px;font-size:12px;line-height:1.7;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:99999;border:1px solid rgba(255,255,255,.15);"></div>
+<div id="tt-popup" style="display:none;position:fixed;background:#1a1a1a;color:#fff;border-radius:14px;padding:16px 18px;width:300px;font-size:12.5px;line-height:1.7;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:99999;border:1px solid rgba(255,255,255,.15);"></div>
 <script>
 (function(){
   var pop=document.getElementById('tt-popup');
   if(!pop)return;
   var active=null;
+  function show(icon){
+    var c=icon.getAttribute('data-tooltip');
+    if(!c)return;
+    pop.innerHTML=c;pop.style.display='block';
+    if(active)active.classList.remove('tip-on');
+    active=icon;icon.classList.add('tip-on');
+    pop.style.left='0';pop.style.top='0';
+    var r=icon.getBoundingClientRect(),pw=300,ph=pop.offsetHeight||140;
+    var L=r.left+r.width/2-pw/2,T=r.top-ph-12+window.scrollY;
+    if(L+pw>window.innerWidth-8)L=window.innerWidth-pw-8;
+    if(L<8)L=8;
+    if(T<window.scrollY+60)T=r.bottom+12+window.scrollY;
+    pop.style.left=L+'px';pop.style.top=T+'px';
+  }
+  function hide(){
+    pop.style.display='none';
+    if(active){active.classList.remove('tip-on');active=null;}
+  }
   document.addEventListener('click',function(e){
-    var icon=e.target.closest('.info-icon');
-    if(icon){
-      e.stopPropagation();
-      if(active===icon){pop.style.display='none';icon.style.background='';icon.style.color='';active=null;return;}
-      if(active){active.style.background='';active.style.color='';}
-      var box=icon.querySelector('.tooltip-box');
-      if(!box)return;
-      pop.innerHTML=box.innerHTML;
-      pop.style.display='block';active=icon;
-      icon.style.background='#f60039';icon.style.color='#fff';
-      pop.style.left='0px';pop.style.top='0px';
-      var r=icon.getBoundingClientRect(),pw=300,ph=pop.offsetHeight||140;
-      var left=r.left+r.width/2-pw/2;
-      var top=r.top-ph-14+window.scrollY;
-      if(left+pw>window.innerWidth-10)left=window.innerWidth-pw-10;
-      if(left<8)left=8;
-      if(top<window.scrollY+60)top=r.bottom+14+window.scrollY;
-      pop.style.left=left+'px';pop.style.top=top+'px';
-    } else {
-      if(active){active.style.background='';active.style.color='';active=null;}
-      pop.style.display='none';
-    }
-  });
-  document.addEventListener('mouseover',function(e){
-    var icon=e.target.closest('.info-icon');
-    if(!icon||icon===active)return;
-    icon.style.background='rgba(246,0,57,.7)';icon.style.color='#fff';
-  });
-  document.addEventListener('mouseout',function(e){
-    var icon=e.target.closest('.info-icon');
-    if(!icon||icon===active)return;
-    icon.style.background='';icon.style.color='';
+    var icon=e.target.closest('[data-tooltip]');
+    if(icon){e.stopPropagation();if(icon===active)hide();else show(icon);}
+    else hide();
   });
 })();
 </script>
