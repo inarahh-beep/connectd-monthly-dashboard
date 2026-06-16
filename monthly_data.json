@@ -1,6 +1,102 @@
 {
   "months": [
     {
+      "label": "November 2025",
+      "year_month": "2025-11",
+      "url": "2025-11.html",
+      "linkedin": {
+        "organic_impressions": 64302,
+        "new_followers": 1023,
+        "posts": 24,
+        "avg_er": 14.5,
+        "total_clicks": 8290,
+        "total_likes": 839,
+        "total_comments": 141,
+        "total_shares": 146,
+        "total_reactions": 980
+      },
+      "instagram": {
+        "posts": 7,
+        "total_views": 10478,
+        "total_reach": 1945,
+        "total_likes": 77,
+        "total_comments": 0,
+        "total_saves": 2,
+        "total_shares": 7,
+        "avg_er": 4.48,
+        "followers": 2112
+      },
+      "combined": {
+        "li_organic_impressions": 64302,
+        "total_shares": 153,
+        "total_reactions": 1059,
+        "li_avg_er": 14.5,
+        "ig_avg_er": 4.48
+      },
+      "competitors": {
+        "NEDonBoard": {
+          "followers": 8827,
+          "new": 118,
+          "eng": 251,
+          "posts": 21
+        },
+        "Go Fractional": {
+          "followers": 6379,
+          "new": 192,
+          "eng": 206,
+          "posts": 20
+        },
+        "Nurole": {
+          "followers": 14211,
+          "new": 234,
+          "eng": 69,
+          "posts": 17
+        },
+        "Boardsi": {
+          "followers": 77845,
+          "new": 397,
+          "eng": 101,
+          "posts": 15
+        },
+        "Jack & Jill": {
+          "followers": 34153,
+          "new": 2417,
+          "eng": 556,
+          "posts": 4
+        },
+        "Intro": {
+          "followers": 55021,
+          "new": 751,
+          "eng": 945,
+          "posts": 22
+        },
+        "Connectd": {
+          "followers": 44856,
+          "new": 1228,
+          "eng": 1226,
+          "posts": 27
+        },
+        "Wellfound": {
+          "followers": 147148,
+          "new": 2417,
+          "eng": 274,
+          "posts": 32
+        },
+        "Actuate Global": {
+          "followers": 6414,
+          "new": 179,
+          "eng": 303,
+          "posts": 19
+        },
+        "Toptal": {
+          "followers": 714812,
+          "new": 8647,
+          "eng": 601,
+          "posts": 5
+        }
+      }
+    },
+    {
       "label": "December 2025",
       "year_month": "2025-12",
       "url": "2025-12.html",
