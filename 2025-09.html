@@ -318,10 +318,10 @@ function showTip(el,e){
   pop.style.left='0';pop.style.top='0';
   var ph=pop.offsetHeight||140;
   var L=r.left+r.width/2-pw/2;
-  var T=r.top-ph-12+window.scrollY;
+  var T=r.top-ph-12;
   if(L+pw>window.innerWidth-8)L=window.innerWidth-pw-8;
   if(L<8)L=8;
-  if(T<window.scrollY+60)T=r.bottom+12+window.scrollY;
+  if(T<60)T=r.bottom+12;
   pop.style.left=L+'px';
   pop.style.top=T+'px';
 }
