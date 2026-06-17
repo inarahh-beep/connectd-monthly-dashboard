@@ -305,5 +305,46 @@ new Chart(document.getElementById("compEngPerPostChart"),{type:"bar",data:{label
 </script>
 <div id="tt-popup" style="display:none;position:fixed;background:#1a1a1a;color:#fff;border-radius:14px;padding:16px 18px;width:300px;font-size:12.5px;line-height:1.7;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:99999;border:1px solid rgba(255,255,255,.15);"></div>
 
+<script>
+function showTip(el,e){
+  e.stopPropagation();
+  var pop=document.getElementById('tt-popup');
+  if(!pop)return;
+  var tip=el.getAttribute('data-tooltip');
+  if(!tip)return;
+  // Toggle
+  if(el._open){
+    el._open=false;
+    el.classList.remove('tip-on');
+    pop.style.display='none';
+    return;
+  }
+  // Close any other open
+  document.querySelectorAll('.tip-on').forEach(function(x){x._open=false;x.classList.remove('tip-on');});
+  // Show
+  pop.innerHTML=tip;
+  pop.style.display='block';
+  el._open=true;
+  el.classList.add('tip-on');
+  // Position
+  var r=el.getBoundingClientRect(),pw=300;
+  pop.style.left='0';pop.style.top='0';
+  var ph=pop.offsetHeight||140;
+  var L=r.left+r.width/2-pw/2;
+  var T=r.top-ph-12+window.scrollY;
+  if(L+pw>window.innerWidth-8)L=window.innerWidth-pw-8;
+  if(L<8)L=8;
+  if(T<window.scrollY+60)T=r.bottom+12+window.scrollY;
+  pop.style.left=L+'px';
+  pop.style.top=T+'px';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.info-icon')){
+    document.querySelectorAll('.tip-on').forEach(function(x){x._open=false;x.classList.remove('tip-on');});
+    var pop=document.getElementById('tt-popup');
+    if(pop)pop.style.display='none';
+  }
+});
+</script>
 </body>
 </html>
