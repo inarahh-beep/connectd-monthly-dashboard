@@ -1153,6 +1153,92 @@
           "posts": 3
         }
       }
+    },
+    {
+      "label": "June 2026",
+      "year_month": "2026-06",
+      "url": "2026-06.html",
+      "linkedin": {
+        "organic_impressions": 27948,
+        "total_impressions": 27948,
+        "new_followers": 1504,
+        "posts": 9,
+        "avg_er": 15.77,
+        "total_clicks": 4130,
+        "total_likes": 229,
+        "total_comments": 13,
+        "total_shares": 82,
+        "total_reactions": 229
+      },
+      "instagram": {
+        "total_views": 1274,
+        "total_reach": 713,
+        "total_likes": 26,
+        "total_comments": 0,
+        "total_saves": 1,
+        "total_shares": 1,
+        "avg_er": 3.93,
+        "posts": 7,
+        "followers": 2112
+      },
+      "combined": {
+        "li_organic_impressions": 27948,
+        "total_impressions": 29222,
+        "total_shares": 83,
+        "total_reactions": 269,
+        "li_avg_er": 15.77,
+        "ig_avg_er": 3.93
+      },
+      "competitors": {
+        "NEDonBoard": {
+          "followers": 8975,
+          "new": 137,
+          "eng": 269,
+          "posts": 21
+        },
+        "Go Fractional": {
+          "followers": 6756,
+          "new": 310,
+          "eng": 174,
+          "posts": 22
+        },
+        "Nurole": {
+          "followers": 14447,
+          "new": 239,
+          "eng": 238,
+          "posts": 17
+        },
+        "Boardsi": {
+          "followers": 78388,
+          "new": 577,
+          "eng": 227,
+          "posts": 38
+        },
+        "Jack & Jill": {
+          "followers": 37580,
+          "new": 4114,
+          "eng": 407,
+          "posts": 17
+        },
+        "Intro": {
+          "followers": 55655,
+          "new": 859,
+          "eng": 845,
+          "posts": 20
+        },
+        "Connectd": {
+          "followers": 46081,
+          "new": 1504,
+          "eng": 266,
+          "posts": 9
+        },
+        "Wellfound": {
+          "followers": 149457,
+          "new": 2840,
+          "eng": 16,
+          "posts": 1
+        }
+      }
     }
   ]
 }
