@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Connectd — Trends & Comparisons</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{
+  --bg:#f0eeeb;--surface:#ffffff;--red:#f60039;--dark:#5d0027;--green:#51e668;
+  --text:#1a1a1a;--text-muted:#6b7280;--border:#e8e5e0;
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --radius:20px;--radius-sm:12px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.05);
+  --shadow:0 2px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07);
+  --shadow-lg:0 4px 16px rgba(0,0,0,.08),0 16px 48px rgba(0,0,0,.1);
+  --transition:all .18s cubic-bezier(.4,0,.2,1);
+  --up:#22c55e;--down:#ef4444;--neutral:#6b7280;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:0 0 64px;}
+::selection{background:var(--red);color:#fff;}
+
+/* NAV */
+.page-nav{background:var(--dark);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);flex-wrap:wrap;gap:8px;}
+.nav-logo{color:rgba(255,255,255,.6);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-decoration:none;}
+.nav-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.nav-select{background:#fff;color:var(--dark);border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;outline:none;}
+.nav-pill{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:var(--transition);}
+.nav-pill:hover,.nav-pill.active{background:var(--red);color:#fff;}
+
+/* LAYOUT */
+.page-header{text-align:center;padding:56px 20px 40px;max-width:800px;margin:0 auto;}
+.page-header h1{font-size:30px;font-weight:900;color:var(--dark);letter-spacing:-.5px;margin-bottom:8px;}
+.page-header p{font-size:14px;color:var(--text-muted);line-height:1.6;}
+.page-content{max-width:1300px;margin:0 auto;padding:0 24px;}
+.section{margin-bottom:56px;}
+.section-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.section-title{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:24px;letter-spacing:-.3px;}
+
+/* TOGGLE BAR */
+.toggle-bar{display:flex;background:var(--dark);border-radius:14px;padding:6px;gap:4px;width:fit-content;margin:0 auto 40px;}
+.toggle-btn{padding:10px 32px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:var(--transition);color:rgba(255,255,255,.5);background:transparent;letter-spacing:.2px;}
+.toggle-btn.active{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(246,0,57,.35);}
+.toggle-btn:hover:not(.active){color:#fff;}
+
+/* COMPARISON HEADER */
+.compare-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.compare-period{font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;}
+.compare-period strong{color:var(--dark);font-weight:800;}
+.compare-period .arrow{color:var(--red);font-size:16px;}
+.period-selector{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.period-selector label{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.period-selector select{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:600;background:#fff;outline:none;color:var(--text);transition:var(--transition);cursor:pointer;}
+.period-selector select:focus{border-color:var(--red);}
+
+/* DELTA CARDS */
+.delta-section-title{font-size:11px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+.delta-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.delta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:8px;}
+.delta-card{background:var(--surface);border-radius:var(--radius-sm);padding:18px 20px;border:1.5px solid var(--border);transition:var(--transition);position:relative;overflow:hidden;}
+.delta-card:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
+.delta-card.normalized{border-style:dashed;}
+.delta-card .dc-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.delta-card .dc-values{display:flex;align-items:flex-end;gap:8px;margin-bottom:8px;}
+.delta-card .dc-curr{font-size:26px;font-weight:900;color:var(--dark);letter-spacing:-.5px;line-height:1;}
+.delta-card .dc-prev{font-size:12px;color:var(--text-muted);line-height:1;padding-bottom:2px;}
+.delta-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.2px;}
+.delta-badge.up{background:#dcfce7;color:#166534;}
+.delta-badge.down{background:#fee2e2;color:#991b1b;}
+.delta-badge.neutral{background:#f3f4f6;color:#4b5563;}
+.delta-card .dc-note{font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.4;}
+.delta-card .dc-accent{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:4px 0 0 4px;}
+.dc-accent.up{background:var(--up);}
+.dc-accent.down{background:var(--down);}
+.dc-accent.neutral{background:var(--neutral);}
+
+/* INSIGHT BOX */
+.insight-box{background:var(--dark);border-radius:var(--radius);padding:28px 32px;margin:28px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.insight-item{display:flex;gap:12px;align-items:flex-start;}
+.insight-bar{width:3px;min-width:3px;border-radius:2px;min-height:40px;flex-shrink:0;}
+.insight-bar.up{background:var(--green);}
+.insight-bar.down{background:#fbbf24;}
+.insight-bar.warn{background:var(--red);}
+.insight-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;}
+.insight-text strong{color:#fff;font-weight:700;}
+.insight-text em{color:var(--green);font-style:normal;font-weight:700;}
+.insight-text .warn{color:#ffd166;font-style:normal;font-weight:700;}
+
+/* TREND TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);}
+.trend-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
+.trend-table thead th{background:var(--dark);color:rgba(255,255,255,.9);padding:11px 14px;text-align:right;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
+.trend-table thead th:first-child{text-align:left;border-radius:var(--radius-sm) 0 0 0;}
+.trend-table thead th:last-child{border-radius:0 var(--radius-sm) 0 0;}
+.trend-table thead .group-li{border-top:3px solid var(--red);}
+.trend-table thead .group-ig{border-top:3px solid #e1306c;}
+.trend-table thead .group-norm{border-top:3px solid var(--green);font-style:italic;}
+.trend-table tbody td{padding:10px 14px;border-top:1px solid var(--border);text-align:right;vertical-align:middle;}
+.trend-table tbody td:first-child{text-align:left;font-weight:700;color:var(--dark);font-size:12px;}
+.trend-table tbody tr:hover td{background:#fafafa;}
+.trend-table tbody tr.highlight-row td{background:#fff7f0;}
+.trend-table tbody tr.highlight-row td:first-child{border-left:3px solid var(--red);}
+.mom-delta{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:4px;}
+.mom-delta.up{background:#dcfce7;color:#166534;}
+.mom-delta.down{background:#fee2e2;color:#991b1b;}
+.mom-delta.neutral{background:#f3f4f6;color:#6b7280;}
+.trend-table .val-dim{color:var(--text-muted);}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.chart-card{background:var(--surface);border-radius:var(--radius);padding:28px 28px 24px;box-shadow:var(--shadow);border:1px solid var(--border);}
+.chart-card h3{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:6px;letter-spacing:-.1px;}
+.chart-card p{font-size:11px;color:var(--text-muted);margin-bottom:20px;line-height:1.5;}
+.chart-card canvas{max-height:220px;}
+
+/* YOY SIDE BY SIDE */
+.yoy-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:0;background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);}
+.yoy-col{padding:32px 28px;}
+.yoy-col.left{background:#fff;}
+.yoy-col.middle{background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:32px 20px;gap:12px;min-width:100px;}
+.yoy-col.right{background:#fff8f8;}
+.yoy-year{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;}
+.yoy-col.left .yoy-year{color:var(--text-muted);}
+.yoy-col.right .yoy-year{color:var(--red);}
+.yoy-metric{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.yoy-metric:last-child{border-bottom:none;}
+.yoy-metric .ym-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.yoy-metric .ym-val{font-size:16px;font-weight:900;color:var(--dark);}
+.yoy-metric-mid{display:flex;flex-direction:column;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);}
+.yoy-metric-mid:last-child{border-bottom:none;}
+.yoy-metric-mid .ym-delta{font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;}
+.yoy-metric-mid .ym-delta.up{background:#dcfce7;color:#166534;}
+.yoy-metric-mid .ym-delta.down{background:#fee2e2;color:#991b1b;}
+.yoy-metric-mid .ym-delta.neutral{background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);}
+.yoy-label-mid{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;}
+
+/* NO DATA */
+.no-yoy{text-align:center;padding:48px;color:var(--text-muted);font-size:14px;}
+.no-yoy strong{display:block;font-size:18px;color:var(--dark);margin-bottom:8px;}
+
+/* FOOTER */
+footer{text-align:center;padding:32px 0;font-size:12px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:48px;}
+footer a{color:var(--red);text-decoration:none;font-weight:600;}
+
+@media(max-width:900px){.charts-grid{grid-template-columns:1fr;}.yoy-compare{grid-template-columns:1fr;}.yoy-col.middle{padding:16px;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;}.yoy-metric-mid{flex-direction:row;gap:8px;align-items:center;}}
+@media(max-width:600px){.delta-grid{grid-template-columns:1fr 1fr;}.toggle-btn{padding:10px 20px;font-size:13px;}}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="passwordGate" style="position:fixed;inset:0;background:var(--dark);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+  <div style="text-align:center;margin-bottom:8px;">
+    <span style="font-size:32px;">📊</span>
+    <div style="font-size:20px;font-weight:800;color:#fff;margin-top:8px;">Connectd Dashboard</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px;">Enter password to continue</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <input id="pwInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" style="padding:12px 16px;border-radius:10px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;font-size:15px;outline:none;width:220px;" autofocus/>
+    <button onclick="checkPw()" style="padding:12px 20px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">Go</button>
+  </div>
+  <div id="pwError" style="color:#ffd166;font-size:13px;display:none;">Incorrect password — try again.</div>
+</div>
+<script>
+(function(){if(sessionStorage.getItem('cdAuth')==='ok'){document.getElementById('passwordGate').style.display='none';}})();
+function checkPw(){const val=document.getElementById('pwInput').value;if(val==='connectdsocials'){sessionStorage.setItem('cdAuth','ok');document.getElementById('passwordGate').style.display='none';}else{document.getElementById('pwError').style.display='block';document.getElementById('pwInput').value='';document.getElementById('pwInput').focus();}}
+</script>
+
+<!-- NAV -->
+<nav class="page-nav">
+  <a href="2026-06.html" class="nav-logo">📊 Connectd Dashboard</a>
+  <div class="nav-controls">
+    <a href="trends.html" class="nav-pill active">Trends & Comparisons</a>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <label style="color:rgba(255,255,255,.5);font-size:12px;">Month:</label>
+      <select id="monthSelect" class="nav-select" onchange="if(this.value)window.location.href=this.value;">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+  </div>
+</nav>
+<script>
+fetch('months.json').then(r=>r.json()).then(months=>{
+  const sel=document.getElementById('monthSelect');
+  sel.innerHTML='<option value="">— Jump to month —</option>';
+  months.forEach(m=>{const o=document.createElement('option');o.value=m.url;o.textContent=m.label;sel.appendChild(o);});
+}).catch(()=>{});
+</script>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <p class="section-label" style="margin-bottom:8px;">CONNECTD SOCIAL</p>
+  <h1>Trends &amp; Comparisons</h1>
+  <p>Month-over-month and year-over-year analysis across all tracked months. Normalized per-post metrics strip out volume effects so you see true performance changes.</p>
+</div>
+
+<div class="page-content">
+
+  <!-- TOGGLE -->
+  <div style="text-align:center;">
+    <div class="toggle-bar">
+      <button class="toggle-btn active" id="btnMoM" onclick="setMode('mom')">Month-over-Month</button>
+      <button class="toggle-btn" id="btnYoY" onclick="setMode('yoy')">Year-over-Year</button>
+    </div>
+  </div>
+
+  <!-- ========================= MoM VIEW ========================= -->
+  <div id="viewMoM">
+
+    <div class="section">
+      <div class="compare-header">
+        <div>
+          <div class="section-label">COMPARISON</div>
+          <div class="section-title" id="momTitle">Loading…</div>
+        </div>
+        <div class="period-selector">
+          <label>Comparing month:</label>
+          <select id="momMonthSel" onchange="renderMoM()">
+            <option value="">Loading…</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- LinkedIn -->
+      <div class="delta-section-title">
+        <span style="background:var(--dark);color:#fff;padding:2px 10px;border-radius:999px;font-size:9px;">LinkedIn</span>
+      </div>
+      <div class="delta-grid" id="momLiCards"></div>
+
+      <!-- Instagram -->
+      <div class="delta-section-title">
+        <span style="background:#e1306c;color:#fff;padding:2px 10px;border-radius:999px;font-size:9px;">Instagram</span>
+      </div>
+      <div class="delta-grid" id="momIgCards"></div>
+
+      <!-- Normalized / per post -->
+      <div class="delta-section-title">
+        <span style="background:var(--green);color:#166534;padding:2px 10px;border-radius:999px;font-size:9px;">Normalised (per post)</span>
+        <span style="font-size:10px;color:var(--text-muted);font-weight:500;font-style:normal;">Strips out posting volume — shows true content quality change</span>
+      </div>
+      <div class="delta-grid" id="momNormCards"></div>
+
+      <!-- Auto-generated insights -->
+      <div class="insight-box" id="momInsights"></div>
+    </div>
+  </div>
+
+  <!-- ========================= YoY VIEW ========================= -->
+  <div id="viewYoY" style="display:none;">
+
+    <div class="section">
+      <div class="compare-header">
+        <div>
+          <div class="section-label">YEAR-OVER-YEAR</div>
+          <div class="section-title" id="yoyTitle">Loading…</div>
+        </div>
+        <div class="period-selector">
+          <label>Month:</label>
+          <select id="yoyMonthSel" onchange="renderYoY()">
+            <option value="">Loading…</option>
+          </select>
+        </div>
+      </div>
+      <div id="yoyContent"></div>
+    </div>
+  </div>
+
+  <!-- ========================= TREND TABLE ========================= -->
+  <div class="section">
+    <div class="section-label">FULL HISTORY</div>
+    <div class="section-title">All Months at a Glance</div>
+    <div class="table-wrap">
+      <table class="trend-table" id="trendTable">
+        <thead>
+          <tr>
+            <th rowspan="2" style="vertical-align:bottom;border-right:1px solid rgba(255,255,255,.1);">Month</th>
+            <th colspan="5" class="group-li" style="text-align:center;">LinkedIn</th>
+            <th colspan="4" class="group-ig" style="text-align:center;">Instagram</th>
+            <th colspan="3" class="group-norm" style="text-align:center;">Per Post (LI)</th>
+          </tr>
+          <tr>
+            <th class="group-li">Impressions</th>
+            <th class="group-li">New Followers</th>
+            <th class="group-li">Avg ER</th>
+            <th class="group-li">Posts</th>
+            <th class="group-li" style="border-right:1px solid rgba(255,255,255,.1);">Clicks</th>
+            <th class="group-ig">Views</th>
+            <th class="group-ig">Avg ER</th>
+            <th class="group-ig">Posts</th>
+            <th class="group-ig" style="border-right:1px solid rgba(255,255,255,.1);">Saves</th>
+            <th class="group-norm">Imp / Post</th>
+            <th class="group-norm">Followers / Post</th>
+            <th class="group-norm">Reactions / Post</th>
+          </tr>
+        </thead>
+        <tbody id="trendTableBody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:10px;line-height:1.5;">MoM delta shown as badge on each value. Green = up, red = down. Normalised columns (right) use posts count to strip volume effects.</p>
+  </div>
+
+  <!-- ========================= CHARTS ========================= -->
+  <div class="section">
+    <div class="section-label">TRENDS OVER TIME</div>
+    <div class="section-title">Visual History</div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>LinkedIn Impressions</h3>
+        <p>Total organic impressions per month. Bars tinted by post count — lighter = fewer posts.</p>
+        <canvas id="chartImpressions"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Impressions per Post</h3>
+        <p>Normalised reach — what each post averaged. Removes volume bias from the impressions trend.</p>
+        <canvas id="chartImpPerPost"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>LinkedIn Engagement Rate</h3>
+        <p>Average ER per month. Higher is better — shows audience resonance independent of reach.</p>
+        <canvas id="chartER"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>New LinkedIn Followers</h3>
+        <p>Net new followers per month. Followers per post shown as the line overlay.</p>
+        <canvas id="chartFollowers"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Connectd Social Media Dashboard · <a href="2026-06.html">Latest Monthly Report</a></footer>
+
+<script>
+// ─── Data ───────────────────────────────────────────────────────────────────
+let MONTHS = [];
+
+function fmt(n, decimals=0){
+  if(n==null||isNaN(n)) return '—';
+  if(decimals>0) return n.toFixed(decimals);
+  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
+  if(n>=10000) return (n/1000).toFixed(1)+'k';
+  return Math.round(n).toLocaleString();
+}
+
+function delta(curr, prev){
+  if(!prev || prev===0) return null;
+  return ((curr - prev) / prev) * 100;
+}
+
+function deltaClass(d, invert=false){
+  if(d==null) return 'neutral';
+  const pos = invert ? d < 0 : d > 0;
+  if(Math.abs(d) < 1) return 'neutral';
+  return pos ? 'up' : 'down';
+}
+
+function deltaBadge(d){
+  if(d==null) return '';
+  const cls = deltaClass(d);
+  const arrow = cls==='up' ? '↑' : cls==='down' ? '↓' : '→';
+  return `<span class="delta-badge ${cls}">${arrow} ${Math.abs(d).toFixed(1)}%</span>`;
+}
+
+function momDeltaBadge(d){
+  if(d==null) return '';
+  const cls = deltaClass(d);
+  const arrow = cls==='up' ? '↑' : cls==='down' ? '↓' : '';
+  return `<span class="mom-delta ${cls}">${arrow}${Math.abs(d).toFixed(0)}%</span>`;
+}
+
+// ─── Mode toggle ─────────────────────────────────────────────────────────────
+function setMode(mode){
+  document.getElementById('viewMoM').style.display = mode==='mom' ? '' : 'none';
+  document.getElementById('viewYoY').style.display = mode==='yoy' ? '' : 'none';
+  document.getElementById('btnMoM').classList.toggle('active', mode==='mom');
+  document.getElementById('btnYoY').classList.toggle('active', mode==='yoy');
+}
+
+// ─── Delta card builder ───────────────────────────────────────────────────────
+function makeDeltaCard(label, currVal, prevVal, formatFn, note='', normalized=false, invertDelta=false){
+  const d = delta(currVal, prevVal);
+  const cls = deltaClass(d, invertDelta);
+  const currFmt = formatFn ? formatFn(currVal) : fmt(currVal);
+  const prevFmt = formatFn ? formatFn(prevVal) : fmt(prevVal);
+  return `
+    <div class="delta-card${normalized?' normalized':''}">
+      <div class="dc-accent ${cls}"></div>
+      <div class="dc-label">${label}</div>
+      <div class="dc-values">
+        <div class="dc-curr">${currFmt}</div>
+        <div class="dc-prev">was ${prevFmt}</div>
+      </div>
+      ${deltaBadge(d)}
+      ${note ? `<div class="dc-note">${note}</div>` : ''}
+    </div>`;
+}
+
+// ─── MoM Render ──────────────────────────────────────────────────────────────
+function renderMoM(){
+  if(!MONTHS.length) return;
+  const sel = document.getElementById('momMonthSel');
+  const idx = parseInt(sel.value);
+  if(isNaN(idx) || idx < 1) return;
+
+  const curr = MONTHS[idx];
+  const prev = MONTHS[idx - 1];
+  const li = curr.linkedin || {};
+  const liP = prev.linkedin || {};
+  const ig = curr.instagram || {};
+  const igP = prev.instagram || {};
+
+  document.getElementById('momTitle').textContent =
+    `${prev.label}  →  ${curr.label}`;
+
+  // LinkedIn cards
+  document.getElementById('momLiCards').innerHTML = [
+    makeDeltaCard('Organic Impressions', li.organic_impressions, liP.organic_impressions, null, 'Total reach on LinkedIn'),
+    makeDeltaCard('New Followers', li.new_followers, liP.new_followers),
+    makeDeltaCard('Avg Engagement Rate', li.avg_er, liP.avg_er, v=>`${v}%`, '', false, false),
+    makeDeltaCard('Posts Published', li.posts, liP.posts),
+    makeDeltaCard('Total Clicks', li.total_clicks, liP.total_clicks),
+    makeDeltaCard('Total Reactions', li.total_reactions, liP.total_reactions),
+    makeDeltaCard('Comments', li.total_comments, liP.total_comments),
+    makeDeltaCard('Shares', li.total_shares, liP.total_shares),
+  ].join('');
+
+  // Instagram cards
+  document.getElementById('momIgCards').innerHTML = [
+    makeDeltaCard('Total Views', ig.total_views, igP.total_views),
+    makeDeltaCard('Total Reach', ig.total_reach, igP.total_reach),
+    makeDeltaCard('Avg Engagement Rate', ig.avg_er, igP.avg_er, v=>`${v}%`),
+    makeDeltaCard('Saves', ig.total_saves, igP.total_saves),
+    makeDeltaCard('Likes', ig.total_likes, igP.total_likes),
+    makeDeltaCard('Posts Published', ig.posts, igP.posts),
+  ].join('');
+
+  // Normalised
+  const liImpPP = li.posts ? li.organic_impressions/li.posts : null;
+  const liIPPP = liP.posts ? liP.organic_impressions/liP.posts : null;
+  const liFlwPP = li.posts ? li.new_followers/li.posts : null;
+  const liFlwPPP = liP.posts ? liP.new_followers/liP.posts : null;
+  const liReacPP = li.posts ? (li.total_reactions||0)/li.posts : null;
+  const liReacPPP = liP.posts ? (liP.total_reactions||0)/liP.posts : null;
+  const liClkPP = li.posts ? (li.total_clicks||0)/li.posts : null;
+  const liClkPPP = liP.posts ? (liP.total_clicks||0)/liP.posts : null;
+  const igVwPP = ig.posts ? ig.total_views/ig.posts : null;
+  const igVwPPP = igP.posts ? igP.total_views/igP.posts : null;
+
+  document.getElementById('momNormCards').innerHTML = [
+    makeDeltaCard('LI Impressions / Post', liImpPP, liIPPP, v=>fmt(v,0), 'Reach efficiency per piece of content', true),
+    makeDeltaCard('LI Followers / Post', liFlwPP, liFlwPPP, v=>fmt(v,1), 'Audience growth per post', true),
+    makeDeltaCard('LI Reactions / Post', liReacPP, liReacPPP, v=>fmt(v,1), '', true),
+    makeDeltaCard('LI Clicks / Post', liClkPP, liClkPPP, v=>fmt(v,1), '', true),
+    makeDeltaCard('IG Views / Post', igVwPP, igVwPPP, v=>fmt(v,0), 'Instagram reach per post', true),
+  ].join('');
+
+  // Auto insights
+  const insights = [];
+  const impD = delta(li.organic_impressions, liP.organic_impressions);
+  const impPPD = delta(liImpPP, liIPPP);
+  const postD = delta(li.posts, liP.posts);
+  const erD = delta(li.avg_er, liP.avg_er);
+  const flwD = delta(li.new_followers, liP.new_followers);
+  const flwPPD = delta(liFlwPP, liFlwPPP);
+
+  // Insight: impressions vs imp/post divergence
+  if(impD!=null && impPPD!=null){
+    const diff = Math.abs(impD - impPPD);
+    if(diff > 15){
+      if(impD < 0 && impPPD > -5){
+        insights.push({bar:'down', text:`Total impressions fell <strong>${Math.abs(impD).toFixed(1)}%</strong> but impressions per post only dropped <strong>${Math.abs(impPPD).toFixed(1)}%</strong> — <em>the dip is largely a volume story</em>, not a content quality problem.`});
+      } else if(impD > 0 && impPPD < 0){
+        insights.push({bar:'warn', text:`Impressions rose <strong>${impD.toFixed(1)}%</strong> but impressions per post fell <strong>${Math.abs(impPPD).toFixed(1)}%</strong> — growth came from posting more, <span class="warn">not from better content</span>.`});
+      } else if(impPPD > 20){
+        insights.push({bar:'up', text:`Impressions per post up <em>${impPPD.toFixed(1)}%</em> — content quality genuinely improved this month, not just posting frequency.`});
+      }
+    }
+  }
+
+  // Insight: posting volume change
+  if(postD!=null && Math.abs(postD)>15){
+    if(postD < 0){
+      insights.push({bar:'warn', text:`Posts dropped <span class="warn">${Math.abs(postD).toFixed(0)}%</span> (${liP.posts} → ${li.posts}). If impressions also fell, check the per-post column first before drawing conclusions.`});
+    } else {
+      insights.push({bar:'up', text:`Posted <em>${li.posts - liP.posts} more times</em> this month (+${postD.toFixed(0)}%). Higher volume can inflate totals — the normalised column shows true per-post performance.`});
+    }
+  }
+
+  // Insight: ER trend
+  if(erD!=null){
+    if(erD > 10) insights.push({bar:'up', text:`LinkedIn ER improved <em>+${erD.toFixed(1)}%</em> to <strong>${li.avg_er}%</strong> — audience is more engaged with the content mix this month.`});
+    else if(erD < -10) insights.push({bar:'warn', text:`LinkedIn ER dipped <span class="warn">${Math.abs(erD).toFixed(1)}%</span> to <strong>${li.avg_er}%</strong>. Worth reviewing which post types drove lower engagement.`});
+  }
+
+  // Insight: follower acquisition efficiency
+  if(flwPPD!=null && Math.abs(flwPPD) > 15){
+    if(flwPPD > 0) insights.push({bar:'up', text:`Followers per post up <em>+${flwPPD.toFixed(1)}%</em> — each piece of content is acquiring more audience than last month.`});
+    else insights.push({bar:'warn', text:`Followers per post down <span class="warn">${Math.abs(flwPPD).toFixed(1)}%</span> — growth came in lower per post. Review which content types drive new follows.`});
+  }
+
+  if(!insights.length){
+    insights.push({bar:'up', text:`Metrics are broadly stable month-on-month. No significant outliers detected.`});
+  }
+
+  document.getElementById('momInsights').innerHTML = insights.map(i=>`
+    <div class="insight-item">
+      <div class="insight-bar ${i.bar}"></div>
+      <div class="insight-text">${i.text}</div>
+    </div>`).join('');
+}
+
+// ─── YoY Render ──────────────────────────────────────────────────────────────
+function renderYoY(){
+  if(!MONTHS.length) return;
+  const sel = document.getElementById('yoyMonthSel');
+  const yearMonth = sel.value;
+  if(!yearMonth){
+    document.getElementById('yoyContent').innerHTML = '<div class="no-yoy"><strong>No month selected</strong>Select a month above to compare year-over-year.</div>';
+    return;
+  }
+
+  // Find current and previous year
+  const [yr, mo] = yearMonth.split('-');
+  const prevYearMonth = `${parseInt(yr)-1}-${mo}`;
+
+  const curr = MONTHS.find(m => m.year_month === yearMonth);
+  const prev = MONTHS.find(m => m.year_month === prevYearMonth);
+
+  if(!curr || !prev){
+    document.getElementById('yoyContent').innerHTML = `
+      <div class="no-yoy">
+        <strong>No prior-year data yet</strong>
+        ${curr ? curr.label : yearMonth} has no ${parseInt(yr)-1} equivalent in the dataset yet.
+        <br><br>As each month passes, the prior-year comparison will populate here automatically.
+      </div>`;
+    document.getElementById('yoyTitle').textContent = yearMonth ? `${mo.padStart(2,'0')} — Year-over-Year` : 'Year-over-Year';
+    return;
+  }
+
+  document.getElementById('yoyTitle').textContent = `${prev.label}  vs  ${curr.label}`;
+
+  const li = curr.linkedin||{}, liP = prev.linkedin||{};
+  const ig = curr.instagram||{}, igP = prev.instagram||{};
+
+  const liImpPP = li.posts ? li.organic_impressions/li.posts : 0;
+  const liIPPP  = liP.posts ? liP.organic_impressions/liP.posts : 0;
+  const liFlwPP = li.posts ? li.new_followers/li.posts : 0;
+  const liFlwPPP= liP.posts ? liP.new_followers/liP.posts : 0;
+
+  const metrics = [
+    {label:'LI Impressions',  prev:liP.organic_impressions, curr:li.organic_impressions, fmt:v=>fmt(v)},
+    {label:'LI New Followers', prev:liP.new_followers, curr:li.new_followers, fmt:v=>fmt(v)},
+    {label:'LI Avg ER',       prev:liP.avg_er, curr:li.avg_er, fmt:v=>`${v}%`},
+    {label:'LI Posts',        prev:liP.posts, curr:li.posts, fmt:v=>String(v)},
+    {label:'LI Clicks',       prev:liP.total_clicks, curr:li.total_clicks, fmt:v=>fmt(v)},
+    {label:'LI Reactions',    prev:liP.total_reactions, curr:li.total_reactions, fmt:v=>fmt(v)},
+    {label:'IG Views',        prev:igP.total_views, curr:ig.total_views, fmt:v=>fmt(v)},
+    {label:'IG Avg ER',       prev:igP.avg_er, curr:ig.avg_er, fmt:v=>`${v}%`},
+    {label:'Imp / Post (LI)', prev:liIPPP, curr:liImpPP, fmt:v=>fmt(v,0), note:'normalised'},
+    {label:'Flw / Post (LI)', prev:liFlwPPP, curr:liFlwPP, fmt:v=>fmt(v,1), note:'normalised'},
+  ];
+
+  const leftRows  = metrics.map(m=>`<div class="yoy-metric"><span class="ym-label">${m.label}${m.note?` <em style="font-size:9px;color:var(--green)">(${m.note})</em>`:''}</span><span class="ym-val">${m.fmt(m.prev)}</span></div>`).join('');
+  const rightRows = metrics.map(m=>`<div class="yoy-metric"><span class="ym-label">${m.label}</span><span class="ym-val">${m.fmt(m.curr)}</span></div>`).join('');
+  const midRows   = metrics.map(m=>{
+    const d = delta(m.curr, m.prev);
+    const cls = deltaClass(d);
+    const arrow = cls==='up'?'↑':cls==='down'?'↓':'→';
+    const badge = d!=null ? `${arrow} ${Math.abs(d).toFixed(1)}%` : '—';
+    return `<div class="yoy-metric-mid"><span class="ym-delta ${cls}">${badge}</span><span class="ym-label-mid">YoY</span></div>`;
+  }).join('');
+
+  document.getElementById('yoyContent').innerHTML = `
+    <div class="yoy-compare">
+      <div class="yoy-col left">
+        <div class="yoy-year">${prev.label}</div>
+        ${leftRows}
+      </div>
+      <div class="yoy-col middle">
+        <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">YoY</div>
+        ${midRows}
+      </div>
+      <div class="yoy-col right">
+        <div class="yoy-year">${curr.label}</div>
+        ${rightRows}
+      </div>
+    </div>`;
+}
+
+// ─── Trend Table ─────────────────────────────────────────────────────────────
+function buildTrendTable(){
+  const tbody = document.getElementById('trendTableBody');
+  let html = '';
+  const latest = MONTHS[MONTHS.length - 1];
+  MONTHS.forEach((m, i)=>{
+    const li = m.linkedin||{}, ig = m.instagram||{};
+    const prev = i > 0 ? MONTHS[i-1] : null;
+    const liP = prev ? (prev.linkedin||{}) : {};
+    const igP = prev ? (prev.instagram||{}) : {};
+
+    const impPP  = li.posts ? Math.round(li.organic_impressions/li.posts) : null;
+    const impPPP = liP.posts ? Math.round(liP.organic_impressions/liP.posts) : null;
+    const flwPP  = li.posts ? (li.new_followers/li.posts).toFixed(1) : null;
+    const flwPPP = liP.posts ? (liP.new_followers/liP.posts).toFixed(1) : null;
+    const reacPP  = li.posts ? ((li.total_reactions||0)/li.posts).toFixed(1) : null;
+    const reacPPP = liP.posts ? ((liP.total_reactions||0)/liP.posts).toFixed(1) : null;
+
+    const isLatest = m === latest;
+    const row = (val, prevVal, fmtFn=fmt, invertDelta=false)=>{
+      const d = delta(val, prevVal);
+      const badge = prev ? momDeltaBadge(invertDelta ? (d!=null?-d:null) : d) : '';
+      return `<td>${fmtFn(val)}${badge}</td>`;
+    };
+
+    html += `<tr${isLatest?' class="highlight-row"':''}>
+      <td>${m.label}${isLatest?' <span style="font-size:9px;background:var(--red);color:#fff;padding:1px 6px;border-radius:999px;margin-left:4px;">latest</span>':''}</td>
+      ${row(li.organic_impressions, liP.organic_impressions)}
+      ${row(li.new_followers, liP.new_followers)}
+      <td>${li.avg_er||'—'}%${prev&&liP.avg_er?momDeltaBadge(delta(li.avg_er,liP.avg_er)):''}</td>
+      ${row(li.posts, liP.posts)}
+      ${row(li.total_clicks, liP.total_clicks)}
+      ${row(ig.total_views, igP.total_views)}
+      <td>${ig.avg_er||'—'}%${prev&&igP.avg_er?momDeltaBadge(delta(ig.avg_er,igP.avg_er)):''}</td>
+      ${row(ig.posts, igP.posts)}
+      ${row(ig.total_saves, igP.total_saves)}
+      ${row(impPP, impPPP)}
+      ${row(flwPP, flwPPP, v=>v)}
+      ${row(reacPP, reacPPP, v=>v)}
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+// ─── Charts ──────────────────────────────────────────────────────────────────
+function buildCharts(){
+  const labels = MONTHS.map(m=>m.label.replace(' 20','\''));
+  const liImp  = MONTHS.map(m=>(m.linkedin||{}).organic_impressions||0);
+  const liER   = MONTHS.map(m=>(m.linkedin||{}).avg_er||0);
+  const liFlw  = MONTHS.map(m=>(m.linkedin||{}).new_followers||0);
+  const liPost = MONTHS.map(m=>(m.linkedin||{}).posts||1);
+  const impPP  = MONTHS.map((m,i)=> liPost[i] ? Math.round(liImp[i]/liPost[i]) : 0);
+  const flwPP  = MONTHS.map((m,i)=> liPost[i] ? parseFloat((liFlw[i]/liPost[i]).toFixed(1)) : 0);
+
+  const baseOpts = {
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toLocaleString()}}},
+    scales:{
+      x:{grid:{display:false}, ticks:{font:{size:10},maxRotation:45}},
+      y:{grid:{color:'rgba(0,0,0,.05)'}, ticks:{font:{size:10}}}
+    }
+  };
+
+  new Chart(document.getElementById('chartImpressions'),{
+    type:'bar',
+    data:{labels, datasets:[{
+      data:liImp,
+      backgroundColor:'rgba(93,0,39,0.75)',
+      borderRadius:6, borderSkipped:false
+    }]},
+    options:{...baseOpts}
+  });
+
+  new Chart(document.getElementById('chartImpPerPost'),{
+    type:'bar',
+    data:{labels, datasets:[{
+      data:impPP,
+      backgroundColor:'rgba(246,0,57,0.7)',
+      borderRadius:6, borderSkipped:false
+    }]},
+    options:{...baseOpts}
+  });
+
+  new Chart(document.getElementById('chartER'),{
+    type:'line',
+    data:{labels, datasets:[{
+      data:liER, fill:true,
+      borderColor:'#f60039', backgroundColor:'rgba(246,0,57,0.08)',
+      borderWidth:2, pointRadius:3, pointBackgroundColor:'#f60039', tension:0.35
+    }]},
+    options:{...baseOpts, scales:{...baseOpts.scales, y:{...baseOpts.scales.y, ticks:{...baseOpts.scales.y.ticks, callback:v=>v+'%'}}}}
+  });
+
+  new Chart(document.getElementById('chartFollowers'),{
+    type:'bar',
+    data:{labels, datasets:[
+      {data:liFlw, backgroundColor:'rgba(93,0,39,0.65)', borderRadius:5, borderSkipped:false, yAxisID:'y', label:'Followers'},
+      {data:flwPP, type:'line', borderColor:'#51e668', backgroundColor:'transparent', borderWidth:2, pointRadius:3, pointBackgroundColor:'#51e668', tension:0.35, yAxisID:'y2', label:'Flw/Post'}
+    ]},
+    options:{
+      ...baseOpts,
+      plugins:{...baseOpts.plugins, legend:{display:true, labels:{font:{size:10}, boxWidth:12}}},
+      scales:{
+        x:baseOpts.scales.x,
+        y:{...baseOpts.scales.y, position:'left'},
+        y2:{...baseOpts.scales.y, position:'right', grid:{display:false}}
+      }
+    }
+  });
+}
+
+// ─── Bootstrap ───────────────────────────────────────────────────────────────
+fetch('monthly_data.json').then(r=>r.json()).then(data=>{
+  MONTHS = data.months;
+
+  // Populate MoM selector (skip first month — no prev)
+  const momSel = document.getElementById('momMonthSel');
+  momSel.innerHTML = '';
+  MONTHS.forEach((m,i)=>{
+    if(i===0) return;
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = m.label;
+    o.selected = (i === MONTHS.length - 1);
+    momSel.appendChild(o);
+  });
+
+  // Populate YoY selector — only months that have a prior-year equivalent
+  const yoySel = document.getElementById('yoyMonthSel');
+  yoySel.innerHTML = '<option value="">— Select month —</option>';
+  MONTHS.forEach(m=>{
+    if(!m.year_month) return;
+    const [yr, mo] = m.year_month.split('-');
+    const hasPrevYear = MONTHS.some(x=>x.year_month===`${parseInt(yr)-1}-${mo}`);
+    const o = document.createElement('option');
+    o.value = m.year_month;
+    o.textContent = m.label + (hasPrevYear ? '' : ' (no prior year yet)');
+    if(!hasPrevYear) o.disabled = true;
+    else o.selected = true; // select last valid one
+    yoySel.appendChild(o);
+  });
+
+  renderMoM();
+  renderYoY();
+  buildTrendTable();
+  buildCharts();
+}).catch(err=>{
+  console.error('Failed to load monthly_data.json', err);
+  document.querySelector('.page-content').innerHTML = '<p style="padding:40px;text-align:center;color:var(--text-muted);">Could not load monthly_data.json — make sure this file is in the same folder.</p>';
+});
+</script>
+
+</body>
+</html>
