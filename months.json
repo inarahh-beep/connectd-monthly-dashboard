@@ -1,16 +1,54 @@
 [
-  {"label": "📈 Trends & Comparisons", "url": "trends.html"},
-  {"label": "June 2026", "url": "2026-06.html"},
-  {"label": "May 2026", "url": "2026-05.html"},
-  {"label": "April 2026", "url": "2026-04.html"},
-  {"label": "March 2026", "url": "2026-03.html"},
-  {"label": "February 2026", "url": "2026-02.html"},
-  {"label": "January 2026", "url": "2026-01.html"},
-  {"label": "December 2025", "url": "2025-12.html"},
-  {"label": "November 2025", "url": "2025-11.html"},
-  {"label": "October 2025", "url": "2025-10.html"},
-  {"label": "September 2025", "url": "2025-09.html"},
-  {"label": "August 2025", "url": "2025-08.html"},
-  {"label": "July 2025", "url": "2025-07.html"},
-  {"label": "June 2025", "url": "2025-06.html"}
+  {
+    "label": "June 2026",
+    "url": "2026-06.html"
+  },
+  {
+    "label": "May 2026",
+    "url": "2026-05.html"
+  },
+  {
+    "label": "April 2026",
+    "url": "2026-04.html"
+  },
+  {
+    "label": "March 2026",
+    "url": "2026-03.html"
+  },
+  {
+    "label": "February 2026",
+    "url": "2026-02.html"
+  },
+  {
+    "label": "January 2026",
+    "url": "2026-01.html"
+  },
+  {
+    "label": "December 2025",
+    "url": "2025-12.html"
+  },
+  {
+    "label": "November 2025",
+    "url": "2025-11.html"
+  },
+  {
+    "label": "October 2025",
+    "url": "2025-10.html"
+  },
+  {
+    "label": "September 2025",
+    "url": "2025-09.html"
+  },
+  {
+    "label": "August 2025",
+    "url": "2025-08.html"
+  },
+  {
+    "label": "July 2025",
+    "url": "2025-07.html"
+  },
+  {
+    "label": "June 2025",
+    "url": "2025-06.html"
+  }
 ]
