@@ -245,6 +245,13 @@ fetch('months.json').then(r=>r.json()).then(months=>{
       </div>
       <div class="delta-grid" id="momNormCards"></div>
 
+      <!-- Growth Signals -->
+      <div class="delta-section-title" id="momGrowthLbl" style="display:none">
+        <span style="background:#7c3aed;color:#fff;padding:2px 10px;border-radius:999px;font-size:9px;">Growth Signals</span>
+        <span style="font-size:10px;color:var(--text-muted);font-weight:500;font-style:normal;">Share rate · click efficiency · competitive velocity</span>
+      </div>
+      <div class="delta-grid" id="momGrowthCards"></div>
+
       <!-- Auto-generated insights -->
       <div class="insight-box" id="momInsights"></div>
     </div>
@@ -507,6 +514,33 @@ function renderMoM(){
   if(!insights.length){
     insights.push({bar:'up', text:`Metrics are broadly stable month-on-month. No significant outliers detected.`});
   }
+
+  // ── Growth Signals ──────────────────────────────────────────────────────────
+  const shareRate = li.total_shares && li.organic_impressions ? (li.total_shares / li.organic_impressions * 100) : null;
+  const shareRateP = liP.total_shares && liP.organic_impressions ? (liP.total_shares / liP.organic_impressions * 100) : null;
+  const clickEff = li.total_clicks && li.organic_impressions ? (li.total_clicks / li.organic_impressions * 100) : null;
+  const clickEffP = liP.total_clicks && liP.organic_impressions ? (liP.total_clicks / liP.organic_impressions * 100) : null;
+  const EXCL = ['Toptal','Wellfound'];
+  const comps = curr.competitors||{}, compsP = prev ? (prev.competitors||{}) : {};
+  const cdComp = comps['Connectd'], cdCompP = compsP['Connectd'];
+  const cdRate = cdComp&&cdComp.followers>0 ? cdComp.new/cdComp.followers*100 : null;
+  const cdRateP = cdCompP&&cdCompP.followers>0 ? cdCompP.new/cdCompP.followers*100 : null;
+  const cRates = Object.entries(comps).filter(([n])=>n!=='Connectd'&&!EXCL.includes(n)).map(([,c])=>c.followers>0?c.new/c.followers*100:null).filter(r=>r!==null);
+  const cRatesP = Object.entries(compsP).filter(([n])=>n!=='Connectd'&&!EXCL.includes(n)).map(([,c])=>c.followers>0?c.new/c.followers*100:null).filter(r=>r!==null);
+  const compAvg = cRates.length ? cRates.reduce((a,b)=>a+b,0)/cRates.length : null;
+  const compAvgP = cRatesP.length ? cRatesP.reduce((a,b)=>a+b,0)/cRatesP.length : null;
+  const velGap = cdRate!==null&&compAvg!==null ? cdRate-compAvg : null;
+  const velGapP = cdRateP!==null&&compAvgP!==null ? cdRateP-compAvgP : null;
+  const velCls = velGap===null?'neutral':velGap>0?'up':'down';
+  const velDir = velGap===null||velGapP===null?'neutral':velGap>velGapP?'up':velGap<velGapP?'down':'neutral';
+  const velBadge = velDir==='neutral'?'':velDir==='up'?'<span class="delta-badge up">↑ gaining</span>':'<span class="delta-badge down">↓ losing ground</span>';
+
+  document.getElementById('momGrowthLbl').style.display = '';
+  document.getElementById('momGrowthCards').innerHTML = [
+    makeDeltaCard('Share Rate', shareRate, shareRateP, v=>v?v.toFixed(3)+'%':'—', 'Shares ÷ LI impressions — virality signal'),
+    makeDeltaCard('Click Efficiency', clickEff, clickEffP, v=>v?v.toFixed(2)+'%':'—', 'Clicks ÷ impressions — CTA conversion rate'),
+    velGap!==null ? `<div class="delta-card"><div class="dc-accent ${velCls}"></div><div class="dc-label">Competitor Velocity Gap</div><div class="dc-values"><div class="dc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="dc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div></div>${velBadge}<div class="dc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div></div>` : ''
+  ].filter(Boolean).join('');
 
   document.getElementById('momInsights').innerHTML = insights.map(i=>`
     <div class="insight-item">
