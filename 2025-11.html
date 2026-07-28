@@ -206,6 +206,8 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
     <div class="comp-cards" id="cIgCards"></div>
     <div class="comp-group-lbl"><span style="background:var(--green);color:#166534;padding:2px 8px;border-radius:999px;font-size:8px;">Per Post (normalised)</span><span style="font-size:9px;color:var(--text-muted);font-weight:500;font-style:normal;margin-left:4px;">Strips out volume — true content quality signal</span></div>
     <div class="comp-cards" id="cNormCards"></div>
+    <div class="comp-group-lbl" id="cGrowthLbl" style="display:none"><span style="background:#7c3aed;color:#fff;padding:2px 8px;border-radius:999px;font-size:8px;">Growth Signals</span><span style="font-size:9px;color:var(--text-muted);font-weight:500;font-style:normal;margin-left:4px;">Share rate · click efficiency · competitive velocity</span></div>
+    <div class="comp-cards" id="cGrowthCards"></div>
     <div id="cInsights"></div>
   </div>
   <div id="cViewYoY" style="display:none;">
@@ -242,6 +244,31 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
       const cpp=li.posts?(li.total_clicks||0)/li.posts:null,cppP=liP.posts?(liP.total_clicks||0)/liP.posts:null;
       const igvpp=ig.posts?ig.total_views/ig.posts:null,igvppP=igP.posts?igP.total_views/igP.posts:null;
       document.getElementById('cNormCards').innerHTML=[ccard('LI Impressions / Post',ipp,ippP,v=>cfmt(v,0),'Reach efficiency per post',true),ccard('LI Followers / Post',fpp,fppP,v=>v?v.toFixed(1):'—','Audience growth per post',true),ccard('LI Reactions / Post',rpp,rppP,v=>v?v.toFixed(1):'—','',true),ccard('LI Clicks / Post',cpp,cppP,v=>v?v.toFixed(1):'—','',true),ccard('IG Views / Post',igvpp,igvppP,v=>cfmt(v,0),'',true)].join('');
+      // ── Growth Signals ──────────────────────────────────────────────────────
+      const shareRate=li.total_shares&&li.organic_impressions?(li.total_shares/li.organic_impressions*100):null;
+      const shareRateP=liP.total_shares&&liP.organic_impressions?(liP.total_shares/liP.organic_impressions*100):null;
+      const clickEff=li.total_clicks&&li.organic_impressions?(li.total_clicks/li.organic_impressions*100):null;
+      const clickEffP=liP.total_clicks&&liP.organic_impressions?(liP.total_clicks/liP.organic_impressions*100):null;
+      const EXCL=['Toptal','Wellfound'];
+      const comps=curr.competitors||{},compsP=prev?(prev.competitors||{}):{};
+      const cdComp=comps['Connectd'],cdCompP=compsP['Connectd'];
+      const cdRate=cdComp&&cdComp.followers>0?cdComp.new/cdComp.followers*100:null;
+      const cdRateP=cdCompP&&cdCompP.followers>0?cdCompP.new/cdCompP.followers*100:null;
+      const cRates=Object.entries(comps).filter(([n])=>n!=='Connectd'&&!EXCL.includes(n)).map(([,c])=>c.followers>0?c.new/c.followers*100:null).filter(r=>r!==null);
+      const cRatesP=Object.entries(compsP).filter(([n])=>n!=='Connectd'&&!EXCL.includes(n)).map(([,c])=>c.followers>0?c.new/c.followers*100:null).filter(r=>r!==null);
+      const compAvg=cRates.length?cRates.reduce((a,b)=>a+b,0)/cRates.length:null;
+      const compAvgP=cRatesP.length?cRatesP.reduce((a,b)=>a+b,0)/cRatesP.length:null;
+      const velGap=cdRate!==null&&compAvg!==null?cdRate-compAvg:null;
+      const velGapP=cdRateP!==null&&compAvgP!==null?cdRateP-compAvgP:null;
+      const velCls=velGap===null?'neu':velGap>0?'up':'down';
+      const velDir=velGap===null||velGapP===null?'neu':velGap>velGapP?'up':velGap<velGapP?'down':'neu';
+      const velBadge=velDir==='neu'?'':velDir==='up'?'<span class="comp-badge up">↑ gaining</span>':'<span class="comp-badge down">↓ losing ground</span>';
+      if(document.getElementById('cGrowthLbl'))document.getElementById('cGrowthLbl').style.display='';
+      if(document.getElementById('cGrowthCards'))document.getElementById('cGrowthCards').innerHTML=[
+        ccard('Share Rate',shareRate,shareRateP,v=>v?v.toFixed(3)+'%':'—','Shares ÷ LI impressions — virality signal'),
+        ccard('Click Efficiency',clickEff,clickEffP,v=>v?v.toFixed(2)+'%':'—','Clicks ÷ impressions — CTA conversion rate'),
+        velGap!==null?`<div class="comp-card"><div class="cc-bar ${velCls}"></div><div class="cc-lbl">Competitor Velocity Gap</div><div class="cc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="cc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div>${velBadge}<div class="cc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div></div>`:''
+      ].filter(Boolean).join('');
       const insights=[];
       const dImp=cdelta(li.organic_impressions,liP.organic_impressions),dIpp=cdelta(ipp,ippP),dPost=cdelta(li.posts,liP.posts),dEr=cdelta(li.avg_er,liP.avg_er),dFpp=cdelta(fpp,fppP);
       if(dImp!=null&&dIpp!=null&&Math.abs(dImp-dIpp)>15){if(dImp<0&&dIpp>-5)insights.push({bar:'warn',txt:`Total impressions fell <span class="warn">${Math.abs(dImp).toFixed(1)}%</span> but impressions/post only moved <span class="warn">${Math.abs(dIpp).toFixed(1)}%</span> — mostly a <em>volume drop</em>, not a content quality problem.`});else if(dImp>0&&dIpp<0)insights.push({bar:'warn',txt:`Impressions grew <em>+${dImp.toFixed(1)}%</em> but impressions/post fell — growth came from posting more, not better content.`});else if(dIpp>15)insights.push({bar:'up',txt:`Impressions per post up <em>+${dIpp.toFixed(1)}%</em> — content quality genuinely improved, not just volume.`});}
