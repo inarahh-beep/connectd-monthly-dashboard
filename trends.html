@@ -71,6 +71,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .delta-badge.down{background:#fee2e2;color:#991b1b;}
 .delta-badge.neutral{background:#f3f4f6;color:#4b5563;}
 .delta-card .dc-note{font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.4;}
+.dc-info-btn{position:absolute;top:10px;right:12px;width:17px;height:17px;border-radius:50%;border:1.5px solid var(--text-muted);background:transparent;color:var(--text-muted);font-size:9px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:all .15s;}
+.dc-info-btn:hover{border-color:#6c47ff;color:#6c47ff;}
+.dc-why{display:none;margin-top:8px;padding:8px 10px;background:rgba(108,71,255,.06);border-radius:6px;border-left:3px solid rgba(108,71,255,.35);font-size:11px;line-height:1.55;color:var(--text-muted);}
+.dc-why.open{display:block;}
 .delta-card .dc-accent{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:4px 0 0 4px;}
 .dc-accent.up{background:var(--up);}
 .dc-accent.down{background:var(--down);}
@@ -390,7 +394,7 @@ function setMode(mode){
 }
 
 // ─── Delta card builder ───────────────────────────────────────────────────────
-function makeDeltaCard(label, currVal, prevVal, formatFn, note='', normalized=false, invertDelta=false){
+function makeDeltaCard(label, currVal, prevVal, formatFn, note='', normalized=false, invertDelta=false, why=''){
   const d = delta(currVal, prevVal);
   const cls = deltaClass(d, invertDelta);
   const currFmt = formatFn ? formatFn(currVal) : fmt(currVal);
@@ -405,8 +409,11 @@ function makeDeltaCard(label, currVal, prevVal, formatFn, note='', normalized=fa
       </div>
       ${deltaBadge(d)}
       ${note ? `<div class="dc-note">${note}</div>` : ''}
+      ${why ? `<button class="dc-info-btn" onclick="dcInfoToggle(this)" title="Why we track this">i</button><div class="dc-why">${why}</div>` : ''}
     </div>`;
 }
+
+function dcInfoToggle(btn){var w=btn.closest('.delta-card').querySelector('.dc-why');if(!w)return;var o=w.classList.toggle('open');btn.textContent=o?'×':'i';}
 
 // ─── MoM Render ──────────────────────────────────────────────────────────────
 function renderMoM(){
@@ -537,9 +544,9 @@ function renderMoM(){
 
   document.getElementById('momGrowthLbl').style.display = '';
   document.getElementById('momGrowthCards').innerHTML = [
-    makeDeltaCard('Share Rate', shareRate, shareRateP, v=>v?v.toFixed(3)+'%':'—', 'Shares ÷ LI impressions — virality signal'),
-    makeDeltaCard('Click Efficiency', clickEff, clickEffP, v=>v?v.toFixed(2)+'%':'—', 'Clicks ÷ impressions — CTA conversion rate'),
-    velGap!==null ? `<div class="delta-card"><div class="dc-accent ${velCls}"></div><div class="dc-label">Competitor Velocity Gap</div><div class="dc-values"><div class="dc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="dc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div></div>${velBadge}<div class="dc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div></div>` : ''
+    makeDeltaCard('Share Rate', shareRate, shareRateP, v=>v?v.toFixed(3)+'%':'—', 'Shares ÷ LI impressions — virality signal', false, false, 'Shares push content into networks you do not own &#8212; LinkedIn boosts shared posts more than likes or comments. A rising share rate means people are willing to put their name on your content. 0.2%+ is strong for B2B.'),
+    makeDeltaCard('Click Efficiency', clickEff, clickEffP, v=>v?v.toFixed(2)+'%':'—', 'Clicks ÷ impressions — CTA conversion rate', false, false, 'How well content converts impressions into clicks. High impressions + low clicks = hook works but the CTA does not. Rising efficiency means your content body and calls-to-action are improving &#8212; the most direct link between social activity and pipeline.'),
+    velGap!==null ? `<div class="delta-card"><div class="dc-accent ${velCls}"></div><button class="dc-info-btn" onclick="dcInfoToggle(this)" title="Why we track this">i</button><div class="dc-label">Competitor Velocity Gap</div><div class="dc-values"><div class="dc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="dc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div></div>${velBadge}<div class="dc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div><div class="dc-why">Absolute follower counts are vanity &#8212; a bigger brand always has more. This measures whether Connectd is growing faster or slower than the market. Positive = outpacing competitors. Negative = competitors are growing faster (even if both are growing). Excludes Toptal &amp; Wellfound as scale outliers.</div></div>` : ''
   ].filter(Boolean).join('');
 
   document.getElementById('momInsights').innerHTML = insights.map(i=>`

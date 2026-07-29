@@ -156,6 +156,10 @@ footer a{color:var(--red);text-decoration:none;font-weight:600;}
 .comp-badge{display:inline-flex;align-items:center;gap:2px;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;}
 .comp-badge.up{background:#dcfce7;color:#166534;}.comp-badge.down{background:#fee2e2;color:#991b1b;}.comp-badge.neu{background:#f3f4f6;color:#6b7280;}
 .comp-card .cc-note{font-size:10px;color:var(--text-muted);margin-top:5px;line-height:1.4;}
+.cc-info-btn{position:absolute;top:9px;right:10px;width:17px;height:17px;border-radius:50%;border:1.5px solid var(--text-muted);background:transparent;color:var(--text-muted);font-size:9px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;transition:all .15s;}
+.cc-info-btn:hover{border-color:#6c47ff;color:#6c47ff;}
+.cc-why{display:none;margin-top:8px;padding:8px 10px;background:rgba(108,71,255,.06);border-radius:6px;border-left:3px solid rgba(108,71,255,.35);font-size:10.5px;line-height:1.55;color:var(--text-muted);}
+.cc-why.open{display:block;}
 .comp-group-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 8px;display:flex;align-items:center;gap:8px;}
 .comp-group-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
 .comp-insight{background:var(--dark);border-radius:var(--radius-sm);padding:16px 20px;margin-top:12px;display:flex;gap:10px;align-items:flex-start;}
@@ -355,12 +359,14 @@ fetch('months.json').then(r=>r.json()).then(months=>{
     const c=ccls(d),ar=c==='up'?'↑':c==='down'?'↓':'→';
     return`<span class="comp-badge ${c}">${ar} ${Math.abs(d).toFixed(1)}%</span>`;
   }
-  function ccard(lbl,curr,prev,fmtFn,note,norm){
+  function ccard(lbl,curr,prev,fmtFn,note,norm,why){
     const d=cdelta(curr,prev);const c=ccls(d);
     const cf=fmtFn?fmtFn(curr):cfmt(curr);
     const pf=fmtFn?fmtFn(prev):cfmt(prev);
-    return`<div class="comp-card${norm?' norm':''}"><div class="cc-bar ${c}"></div><div class="cc-lbl">${lbl}</div><div class="cc-curr">${cf}</div><div class="cc-prev">was ${pf}</div>${cbadge(d)}${note?`<div class="cc-note">${note}</div>`:''}</div>`;
+    return`<div class="comp-card${norm?' norm':''}"><div class="cc-bar ${c}"></div>${why?'<button class="cc-info-btn" onclick="ccInfoToggle(this)" title="Why we track this">i</button>':''}<div class="cc-lbl">${lbl}</div><div class="cc-curr">${cf}</div><div class="cc-prev">was ${pf}</div>${cbadge(d)}${note?`<div class="cc-note">${note}</div>`:''}${why?`<div class="cc-why">${why}</div>`:''}</div>`;
   }
+  function ccInfoToggle(btn){var w=btn.closest('.comp-card').querySelector('.cc-why');if(!w)return;var o=w.classList.toggle('open');btn.textContent=o?'×':'i';}
+  window.ccInfoToggle=ccInfoToggle;
   function cSetMode(m){
     document.getElementById('cViewMoM').style.display=m==='mom'?'':'none';
     document.getElementById('cViewYoY').style.display=m==='yoy'?'':'none';
@@ -441,9 +447,9 @@ fetch('months.json').then(r=>r.json()).then(months=>{
       const velBadge=velGap===null?'':velGapP===null?(velGap>0?'<span class="comp-badge up">Leading</span>':velGap<0?'<span class="comp-badge down">Behind</span>':'<span class="comp-badge neu">Even</span>'):velGap>0&&velDir==='up'?'<span class="comp-badge up">↑ Leading &amp; widening</span>':velGap>0&&velDir==='down'?'<span class="comp-badge neu">↓ Lead narrowing</span>':velGap<=0&&velDir==='up'?'<span class="comp-badge up">↑ Closing the gap</span>':'<span class="comp-badge down">↓ Falling behind</span>';
       if(document.getElementById('cGrowthLbl'))document.getElementById('cGrowthLbl').style.display='';
       if(document.getElementById('cGrowthCards'))document.getElementById('cGrowthCards').innerHTML=[
-        ccard('Share Rate',shareRate,shareRateP,v=>v?v.toFixed(3)+'%':'—','Shares ÷ LI impressions — virality signal'),
-        ccard('Click Efficiency',clickEff,clickEffP,v=>v?v.toFixed(2)+'%':'—','Clicks ÷ impressions — CTA conversion rate'),
-        velGap!==null?`<div class="comp-card"><div class="cc-bar ${velCls}"></div><div class="cc-lbl">Competitor Velocity Gap</div><div class="cc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="cc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div>${velBadge}<div class="cc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div></div>`:''
+        ccard('Share Rate',shareRate,shareRateP,v=>v?v.toFixed(3)+'%':'—','Shares ÷ LI impressions — virality signal',false,'Shares push content into networks you do not own &#8212; LinkedIn boosts shared posts more than likes or comments. A rising share rate means people are willing to put their name on your content. 0.2%+ is strong for B2B.'),
+        ccard('Click Efficiency',clickEff,clickEffP,v=>v?v.toFixed(2)+'%':'—','Clicks ÷ impressions — CTA conversion rate',false,'How well content converts impressions into clicks. High impressions + low clicks = hook works but the CTA does not. Rising efficiency means your content body and calls-to-action are improving &#8212; the most direct link between social activity and pipeline.'),
+        velGap!==null?`<div class="comp-card"><div class="cc-bar ${velCls}"></div><button class="cc-info-btn" onclick="ccInfoToggle(this)" title="Why we track this">i</button><div class="cc-lbl">Competitor Velocity Gap</div><div class="cc-curr">${velGap>=0?'+':''}${velGap.toFixed(2)}pp</div><div class="cc-prev">was ${velGapP!==null?(velGapP>=0?'+':'')+velGapP.toFixed(2)+'pp':'—'}</div>${velBadge}<div class="cc-note">Connectd growth rate vs avg competitor (excl. Toptal &amp; Wellfound). Positive = leading.</div><div class="cc-why">Absolute follower counts are vanity &#8212; a bigger brand always has more. This measures whether Connectd is growing faster or slower than the market. Positive = outpacing competitors. Negative = competitors are growing faster (even if both are growing). Excludes Toptal &amp; Wellfound as scale outliers.</div></div>`:''
       ].filter(Boolean).join('');
       const insights=[];
       const dImp=cdelta(li.organic_impressions,liP.organic_impressions);
