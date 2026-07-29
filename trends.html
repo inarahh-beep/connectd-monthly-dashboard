@@ -533,7 +533,7 @@ function renderMoM(){
   const velGapP = cdRateP!==null&&compAvgP!==null ? cdRateP-compAvgP : null;
   const velCls = velGap===null?'neutral':velGap>0?'up':'down';
   const velDir = velGap===null||velGapP===null?'neutral':velGap>velGapP?'up':velGap<velGapP?'down':'neutral';
-  const velBadge = velDir==='neutral'?'':velDir==='up'?'<span class="delta-badge up">↑ gaining</span>':'<span class="delta-badge down">↓ losing ground</span>';
+  const velBadge = velGap===null?'':velGapP===null?(velGap>0?'<span class="delta-badge up">Leading</span>':velGap<0?'<span class="delta-badge down">Behind</span>':'<span class="delta-badge neu">Even</span>'):velGap>0&&velDir==='up'?'<span class="delta-badge up">↑ Leading &amp; widening</span>':velGap>0&&velDir==='down'?'<span class="delta-badge neu">↓ Lead narrowing</span>':velGap<=0&&velDir==='up'?'<span class="delta-badge up">↑ Closing the gap</span>':'<span class="delta-badge down">↓ Falling behind</span>';
 
   document.getElementById('momGrowthLbl').style.display = '';
   document.getElementById('momGrowthCards').innerHTML = [

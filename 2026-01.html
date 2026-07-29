@@ -268,7 +268,7 @@ fetch("months.json").then(r=>r.json()).then(months=>{const sel=document.getEleme
       const velGapP=cdRateP!==null&&compAvgP!==null?cdRateP-compAvgP:null;
       const velCls=velGap===null?'neu':velGap>0?'up':'down';
       const velDir=velGap===null||velGapP===null?'neu':velGap>velGapP?'up':velGap<velGapP?'down':'neu';
-      const velBadge=velDir==='neu'?'':velDir==='up'?'<span class="comp-badge up">↑ gaining</span>':'<span class="comp-badge down">↓ losing ground</span>';
+      const velBadge=velGap===null?'':velGapP===null?(velGap>0?'<span class="comp-badge up">Leading</span>':velGap<0?'<span class="comp-badge down">Behind</span>':'<span class="comp-badge neu">Even</span>'):velGap>0&&velDir==='up'?'<span class="comp-badge up">↑ Leading &amp; widening</span>':velGap>0&&velDir==='down'?'<span class="comp-badge neu">↓ Lead narrowing</span>':velGap<=0&&velDir==='up'?'<span class="comp-badge up">↑ Closing the gap</span>':'<span class="comp-badge down">↓ Falling behind</span>';
       if(document.getElementById('cGrowthLbl'))document.getElementById('cGrowthLbl').style.display='';
       if(document.getElementById('cGrowthCards'))document.getElementById('cGrowthCards').innerHTML=[
         ccard('Share Rate',shareRate,shareRateP,v=>v?v.toFixed(3)+'%':'—','Shares ÷ LI impressions — virality signal'),
