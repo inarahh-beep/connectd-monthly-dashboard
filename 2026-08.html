@@ -141,24 +141,25 @@ footer a{color:var(--red);text-decoration:none;font-weight:600;}
 .comp-insight .ci-txt{font-size:12px;color:rgba(255,255,255,.8);line-height:1.65;}
 .comp-insight .ci-txt em{color:var(--green);font-style:normal;font-weight:700;}
 .comp-insight .ci-txt .warn{color:#ffd166;font-style:normal;font-weight:700;}
-.yoy-split{display:grid;grid-template-columns:1fr 64px 1fr;background:var(--surface);border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--border);}
-.yoy-side{padding:20px 18px;}
-.yoy-side.right{background:#fff9f9;}
-.yoy-mid{background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 6px;}
-.yoy-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
-.yoy-row:last-child{border-bottom:none;}
-.yoy-lbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;}
-.yoy-val{font-size:14px;font-weight:900;color:var(--dark);}
-.yoy-mid-row{display:flex;flex-direction:column;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);}
-.yoy-mid-row:last-child{border-bottom:none;}
-.yoy-d{font-size:10px;font-weight:800;padding:2px 6px;border-radius:999px;}
-.yoy-d.up{background:#dcfce7;color:#166534;}.yoy-d.down{background:#fee2e2;color:#991b1b;}.yoy-d.neu{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);}
-.yoy-yr{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
-.yoy-side.left .yoy-yr{color:var(--text-muted);}
-.yoy-side.right .yoy-yr{color:var(--red);}
-.yoy-mid .yoy-yr{color:rgba(255,255,255,.3);font-size:8px;}
+/* YoY table — row-by-row grid so cells always align */
+.yoy-table{background:var(--surface);border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid var(--border);}
+.yoy-header{display:grid;grid-template-columns:1fr 96px 1fr;}
+.yoy-header>div{padding:11px 18px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;}
+.yoy-header>.yh-left{background:rgba(93,0,39,.06);color:var(--text-muted);}
+.yoy-header>.yh-mid{background:var(--dark);color:#fff;text-align:center;display:flex;align-items:center;justify-content:center;}
+.yoy-header>.yh-right{background:#fff1f1;color:var(--red);}
+.yoy-row-wrap{display:grid;grid-template-columns:1fr 96px 1fr;border-top:1px solid var(--border);}
+.yoy-cell-l,.yoy-cell-r{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.yoy-cell-r{background:#fff9f9;}
+.yoy-cell-m{background:var(--dark);display:flex;align-items:center;justify-content:center;border-top:1px solid rgba(255,255,255,.07);}
+.yoy-lbl{font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;flex:1;}
+.yoy-val{font-size:14px;font-weight:900;color:var(--dark);white-space:nowrap;}
+.yoy-d{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;white-space:nowrap;}
+.yoy-d.up{background:#dcfce7;color:#166534;}
+.yoy-d.down{background:#fee2e2;color:#991b1b;}
+.yoy-d.neu{background:rgba(255,255,255,.15);color:#fff;}
 .no-yoy-msg{text-align:center;padding:28px;color:var(--text-muted);font-size:13px;background:var(--surface);border-radius:var(--radius-sm);border:1.5px solid var(--border);}
-@media(max-width:700px){.comp-cards{grid-template-columns:1fr 1fr;}.yoy-split{grid-template-columns:1fr;}.yoy-mid{flex-direction:row;flex-wrap:wrap;padding:10px;justify-content:flex-start;}.yoy-mid-row{flex-direction:row;gap:8px;}}
+@media(max-width:700px){.comp-cards{grid-template-columns:1fr 1fr;}.yoy-header,.yoy-row-wrap{grid-template-columns:1fr 72px 1fr;}}
 </style>
 </head>
 <body>
@@ -343,7 +344,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
     const [yr,mo]=page.split('-');const prevYM=`${parseInt(yr)-1}-${mo}`;const prevYr=months.find(m=>m.year_month===prevYM);
     const ipp=li.posts?li.organic_impressions/li.posts:null;
     if(!prevYr){document.getElementById('cYoyPeriod').textContent='';document.getElementById('cYoyContent').innerHTML=`<div class="no-yoy-msg"><strong style="display:block;font-size:16px;color:var(--dark);margin-bottom:6px;">Prior-year data available</strong>August 2025 is in the dataset — use the YoY toggle to compare.</div>`;}
-    else{const liY=prevYr.linkedin||{},igY=prevYr.instagram||{};document.getElementById('cYoyPeriod').innerHTML=`Comparing <strong>${prevYr.label}</strong> vs <strong>${curr.label}</strong>`;const ippY=liY.posts?liY.organic_impressions/liY.posts:0;const fppY=liY.posts?liY.new_followers/liY.posts:0;const fpp=li.posts?li.new_followers/li.posts:null;const metrics=[{l:'LI Impressions',p:liY.organic_impressions,c:li.organic_impressions,f:v=>cfmt(v)},{l:'LI New Followers',p:liY.new_followers,c:li.new_followers,f:v=>cfmt(v)},{l:'LI Avg ER',p:liY.avg_er,c:li.avg_er,f:v=>v+'%'},{l:'LI Posts',p:liY.posts,c:li.posts,f:v=>String(v)},{l:'LI Clicks',p:liY.total_clicks,c:li.total_clicks,f:v=>cfmt(v)},{l:'LI Reactions',p:liY.total_reactions,c:li.total_reactions,f:v=>cfmt(v)},{l:'IG Views',p:igY.total_views,c:ig.total_views,f:v=>cfmt(v)},{l:'IG Avg ER',p:igY.avg_er,c:ig.avg_er,f:v=>v+'%'},{l:'Imp/Post (LI)',p:ippY,c:ipp,f:v=>cfmt(v,0),note:'normalised'},{l:'Flw/Post (LI)',p:fppY,c:fpp,f:v=>v?v.toFixed(1):'—',note:'normalised'}];const left=metrics.map(m=>`<div class="yoy-row"><span class="yoy-lbl">${m.l}${m.note?` <em style="font-size:8px;color:var(--green)">(${m.note})</em>`:''}</span><span class="yoy-val">${m.f(m.p)}</span></div>`).join('');const right=metrics.map(m=>`<div class="yoy-row"><span class="yoy-lbl">${m.l}</span><span class="yoy-val">${m.f(m.c)}</span></div>`).join('');const mid=metrics.map(m=>{const d=cdelta(m.c,m.p);const c=ccls(d);const ar=c==='up'?'↑':c==='down'?'↓':'→';const badge=d!=null?`${ar} ${Math.abs(d).toFixed(1)}%`:'—';return`<div class="yoy-mid-row"><span class="yoy-d ${c}">${badge}</span></div>`;}).join('');document.getElementById('cYoyContent').innerHTML=`<div class="yoy-split"><div class="yoy-side left"><div class="yoy-yr">${prevYr.label}</div>${left}</div><div class="yoy-mid"><div class="yoy-yr">YoY</div>${mid}</div><div class="yoy-side right"><div class="yoy-yr">${curr.label}</div>${right}</div></div>`;}
+    else{const liY=prevYr.linkedin||{},igY=prevYr.instagram||{};document.getElementById('cYoyPeriod').innerHTML=`Comparing <strong>${prevYr.label}</strong> vs <strong>${curr.label}</strong>`;const ippY=liY.posts?liY.organic_impressions/liY.posts:0;const fppY=liY.posts?liY.new_followers/liY.posts:0;const fpp=li.posts?li.new_followers/li.posts:null;const metrics=[{l:'LI Impressions',p:liY.organic_impressions,c:li.organic_impressions,f:v=>cfmt(v)},{l:'LI New Followers',p:liY.new_followers,c:li.new_followers,f:v=>cfmt(v)},{l:'LI Avg ER',p:liY.avg_er,c:li.avg_er,f:v=>v+'%'},{l:'LI Posts',p:liY.posts,c:li.posts,f:v=>String(v)},{l:'LI Clicks',p:liY.total_clicks,c:li.total_clicks,f:v=>cfmt(v)},{l:'LI Reactions',p:liY.total_reactions,c:li.total_reactions,f:v=>cfmt(v)},{l:'IG Views',p:igY.total_views,c:ig.total_views,f:v=>cfmt(v)},{l:'IG Avg ER',p:igY.avg_er,c:ig.avg_er,f:v=>v+'%'},{l:'Imp / Post (LI)',p:ippY,c:ipp,f:v=>cfmt(v,0),note:'normalised'},{l:'Flw / Post (LI)',p:fppY,c:fpp,f:v=>v?v.toFixed(1):'—',note:'normalised'}];const rows=metrics.map(m=>{const d=cdelta(m.c,m.p);const cls=ccls(d);const ar=cls==='up'?'↑':cls==='down'?'↓':'→';const badge=d!=null?`${ar} ${Math.abs(d).toFixed(1)}%`:'—';const lbl=m.l+(m.note?` <em style="font-size:8px;color:var(--green)">(${m.note})</em>`:'');return`<div class="yoy-row-wrap"><div class="yoy-cell-l"><span class="yoy-lbl">${lbl}</span><span class="yoy-val">${m.f(m.p)}</span></div><div class="yoy-cell-m"><span class="yoy-d ${cls}">${badge}</span></div><div class="yoy-cell-r"><span class="yoy-lbl">${m.l}</span><span class="yoy-val">${m.f(m.c)}</span></div></div>`;}).join('');document.getElementById('cYoyContent').innerHTML=`<div class="yoy-table"><div class="yoy-header"><div class="yh-left">${prevYr.label}</div><div class="yh-mid">YoY</div><div class="yh-right">${curr.label}</div></div>${rows}</div>`;}
   }).catch(e=>console.error('monthly_data.json load error',e));
 })();
 </script>
