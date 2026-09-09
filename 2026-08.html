@@ -596,6 +596,97 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   <div class="section-label">Experiments</div>
   <div class="section-title">🧪 Experiments Run in August</div>
 
+  <!-- Experiment 1 & 2 — A/B pair -->
+  <div style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:24px 28px;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="background:#0369a1;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px;">EXPERIMENT 1</span>
+      <span style="background:#0369a1;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px;">EXPERIMENT 2</span>
+      <span style="font-size:15px;font-weight:700;color:var(--dark);">NED/Salary Calculator: Graphic vs. Talking-Head Video (A/B)</span>
+    </div>
+
+    <!-- Hypotheses -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:#eff6ff;border-left:3px solid #0369a1;border-radius:6px;padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;letter-spacing:.5px;margin-bottom:6px;">EXP 1 HYPOTHESIS · Week 3 Aug</div>
+        <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.6;">A motion graphic with question-led "portfolio career" language will outperform the talking-head video on CTR to the calculator — shorter, question-led format converts better than a narrated one.</p>
+      </div>
+      <div style="background:#eff6ff;border-left:3px solid #0369a1;border-radius:6px;padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#0369a1;letter-spacing:.5px;margin-bottom:6px;">EXP 2 HYPOTHESIS · Week 10 Aug</div>
+        <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.6;">A talking-head video naming specific objections (not ready for board work; NED roles don't pay meaningfully) will outperform generic value-prop framing on CTR to the calculator.</p>
+      </div>
+    </div>
+
+    <!-- Success metric -->
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;">
+      <span style="font-size:18px;flex-shrink:0;">🎯</span>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);">Success metric:</strong> CTR to the salary calculator link.</p>
+    </div>
+
+    <!-- Post comparison -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+      <!-- Exp 1: Graphic -->
+      <div style="background:#fff9f9;border:1px solid #fecaca;border-radius:10px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#dc2626;letter-spacing:.5px;">EXP 1 — GRAPHIC · AUG 7</span>
+          <span style="background:#e11d48;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">IG Reel</span>
+        </div>
+        <p style="font-size:13px;color:var(--dark);margin:0 0 14px;font-style:italic;line-height:1.5;">"What's your experience actually worth at board level? NED salary calculator."</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:#dc2626;">1.31%</div>
+            <div style="font-size:10px;color:var(--muted);">IG ER</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">319</div>
+            <div style="font-size:10px;color:var(--muted);">Views</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">229</div>
+            <div style="font-size:10px;color:var(--muted);">Reach</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exp 2: Video -->
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;">EXP 2 — VIDEO · AUG 13</span>
+          <span style="background:#7c3aed;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">LI + IG</span>
+        </div>
+        <p style="font-size:13px;color:var(--dark);margin:0 0 14px;font-style:italic;line-height:1.5;">"Most senior leaders don't turn down board work because they're not ready for it."</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:#16a34a;">7.01%</div>
+            <div style="font-size:10px;color:var(--muted);">LI CTR</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1.49%</div>
+            <div style="font-size:10px;color:var(--muted);">IG ER</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1,754</div>
+            <div style="font-size:10px;color:var(--muted);">LI Imp.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Verdict -->
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;margin-bottom:6px;">✅ EXP 2 VALIDATED — VIDEO WINS</div>
+      <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.5;">The talking-head video (Exp 2) outperformed the graphic (Exp 1) on both platforms. On LinkedIn it drove a <strong>7.01% CTR</strong> — well above the channel average. On Instagram the video matched the graphic on ER (1.49% vs 1.31%), a marginal difference. Exp 1 hypothesis not validated — question-led graphic did not convert better than the narrated video.</p>
+    </div>
+
+    <!-- Learning -->
+    <div style="background:var(--dark);border-radius:10px;padding:18px 22px;color:#fff;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:8px;">💡 LEARNING FOR SEPTEMBER</div>
+      <p style="margin:0;font-size:14px;line-height:1.6;">Talking-head video that names and dismantles specific objections drives higher CTR than a static graphic with a question-led hook. For calculator promotion, lead with video. The graphic format alone is not enough to convert — pair it with video or use it as a retargeting asset.</p>
+    </div>
+
+  </div>
+
   <!-- Experiment 3 -->
   <div style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:24px 28px;margin-bottom:24px;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
