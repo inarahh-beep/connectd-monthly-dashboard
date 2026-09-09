@@ -436,7 +436,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
 <div class="section">
   <div class="section-label">Section 3</div>
   <div class="section-title">Posting Frequency &amp; Day-of-Week Performance</div>
-  <div class="chart-card"><h3>Posts per Day — August 2026</h3><canvas id="freqChart" height="180"></canvas></div>
+  <div class="chart-card"><h3>Impressions by Day — August 2026 (LinkedIn organic)</h3><canvas id="freqChart" height="180"></canvas></div>
   <div class="two-col" style="margin-top:16px;">
     <div class="chart-card">
       <h3>LinkedIn — Avg Impressions by Day of Week</h3>
@@ -1098,16 +1098,16 @@ new Chart(document.getElementById('formatChart'),{type:'bar',data:{labels:['Docu
 // IG format ER
 new Chart(document.getElementById('igFormatChart'),{type:'bar',data:{labels:['Carousel','Image','Reel'],datasets:[{data:[8.45,5.77,3.68],backgroundColor:[RED,'#f9a8b8',MUTED],borderRadius:8,borderWidth:0}]},options:{...CHART_DEFAULTS,plugins:{...CHART_DEFAULTS.plugins,tooltip:{callbacks:{label:c=>c.parsed.y+'%'}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v+'%'}}}}});
 
-// Frequency chart
+// Impressions by Day chart
 (function(){
-  const postsByDay={};
-  LI_POSTS.forEach(p=>{const d=p.date;postsByDay[d]=(postsByDay[d]||0)+1;});
-  IG_POSTS.forEach(p=>{const d='IG '+p.date;postsByDay[d]=(postsByDay[d]||0)+1;});
-  const liDays=['Aug 4','Aug 5','Aug 6a','Aug 7','Aug 11','Aug 12a','Aug 12b','Aug 12c','Aug 18','Aug 19','Aug 20','Aug 21','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28'];
   const days=['Aug 4','Aug 5','Aug 6','Aug 7','Aug 11','Aug 12','Aug 13','Aug 14','Aug 18','Aug 19','Aug 20','Aug 21','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28'];
-  const liCounts=days.map(d=>{const a=[d,'Aug 6a','Aug 6b','Aug 12a','Aug 12b','Aug 12c'].filter(x=>x.startsWith(d));return LI_POSTS.filter(p=>p.date===d||p.date===d+'a'||p.date===d+'b'||p.date===d+'c').length;});
-  const igCounts=days.map(d=>IG_POSTS.filter(p=>p.date===d).length);
-  new Chart(document.getElementById('freqChart'),{type:'bar',data:{labels:days,datasets:[{label:'LinkedIn',data:liCounts,backgroundColor:DARK,borderRadius:4},{label:'Instagram',data:igCounts,backgroundColor:RED,borderRadius:4}]},options:{...CHART_DEFAULTS,plugins:{...CHART_DEFAULTS.plugins,legend:{display:true,position:'top'}},scales:{x:{stacked:false,grid:{display:false}},y:{stacked:false,grid:{color:'rgba(0,0,0,.05)'},ticks:{stepSize:1}}}}});
+  const impMap={};
+  LI_POSTS.forEach(p=>{
+    const base=p.date.replace(/[abc]$/,'').trim();
+    impMap[base]=(impMap[base]||0)+(p.imp||0);
+  });
+  const liImp=days.map(d=>impMap[d]||0);
+  new Chart(document.getElementById('freqChart'),{type:'bar',data:{labels:days,datasets:[{label:'LI Impressions',data:liImp,backgroundColor:DARK,borderRadius:4}]},options:{...CHART_DEFAULTS,plugins:{...CHART_DEFAULTS.plugins,legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y.toLocaleString()+' imp'}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(0)+'k':v}}}}});
 })();
 
 // Theme impressions
