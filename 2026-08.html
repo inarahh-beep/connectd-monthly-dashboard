@@ -632,6 +632,20 @@ fetch('months.json').then(r=>r.json()).then(months=>{
           <span style="background:#e11d48;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">IG Reel</span>
         </div>
         <p style="font-size:13px;color:var(--dark);margin:0 0 14px;font-style:italic;line-height:1.5;">"What's your experience actually worth at board level? NED salary calculator."</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:8px;">
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:#dc2626;">3.92%</div>
+            <div style="font-size:10px;color:var(--muted);">LI CTR</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1,276</div>
+            <div style="font-size:10px;color:var(--muted);">LI Imp.</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">4.55%</div>
+            <div style="font-size:10px;color:var(--muted);">LI ER</div>
+          </div>
+        </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
           <div style="background:#fff;border-radius:6px;padding:8px 4px;">
             <div style="font-size:16px;font-weight:800;color:#dc2626;">1.31%</div>
@@ -639,11 +653,11 @@ fetch('months.json').then(r=>r.json()).then(months=>{
           </div>
           <div style="background:#fff;border-radius:6px;padding:8px 4px;">
             <div style="font-size:16px;font-weight:800;color:var(--dark);">319</div>
-            <div style="font-size:10px;color:var(--muted);">Views</div>
+            <div style="font-size:10px;color:var(--muted);">IG Views</div>
           </div>
           <div style="background:#fff;border-radius:6px;padding:8px 4px;">
             <div style="font-size:16px;font-weight:800;color:var(--dark);">229</div>
-            <div style="font-size:10px;color:var(--muted);">Reach</div>
+            <div style="font-size:10px;color:var(--muted);">IG Reach</div>
           </div>
         </div>
       </div>
@@ -676,7 +690,7 @@ fetch('months.json').then(r=>r.json()).then(months=>{
     <!-- Verdict -->
     <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
       <div style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;margin-bottom:6px;">✅ EXP 2 VALIDATED — VIDEO WINS</div>
-      <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.5;">The talking-head video (Exp 2) outperformed the graphic (Exp 1) on both platforms. On LinkedIn it drove a <strong>7.01% CTR</strong> — well above the channel average. On Instagram the video matched the graphic on ER (1.49% vs 1.31%), a marginal difference. Exp 1 hypothesis not validated — question-led graphic did not convert better than the narrated video.</p>
+      <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.5;">The talking-head video (Exp 2) outperformed the graphic (Exp 1) on both platforms. On LinkedIn, video hit <strong>7.01% CTR</strong> vs. the graphic's <strong>3.92% CTR</strong> — nearly 2× higher. On Instagram the gap was smaller (1.49% vs 1.31% ER) but still in video's favour. Exp 1 hypothesis not validated — question-led graphic did not convert better than the narrated video.</p>
     </div>
 
     <!-- Learning -->
@@ -955,7 +969,7 @@ const LI_POSTS = [
   {date:'Aug 14',fmt:'Video',caption:'[Experiment 3 — control post] Standard single-narrative value-prop on going fractional alone vs. with Connectd.',imp:1297,clicks:20,ctr:1.54,likes:13,cmt:0,shares:1,er:2.62,isExp:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7494060281392881664'},
   {date:'Aug 11',fmt:'Video',caption:'Mhairi joined Connectd to build a portfolio career. She didn\'t just build a client list — she built her community.',imp:1841,clicks:73,ctr:3.97,likes:25,cmt:0,shares:7,er:5.70,url:'https://www.linkedin.com/feed/update/urn:li:activity:7492973163232788481'},
   {date:'Aug 6a',fmt:'Video',caption:'The best advice a board advisor gives isn\'t always "here\'s what to do next." Sometimes it\'s knowing what to stop.',imp:2026,clicks:90,ctr:4.44,likes:12,cmt:1,shares:4,er:5.28,url:'https://www.linkedin.com/feed/update/urn:li:activity:7491161217261178881'},
-  {date:'Aug 6b',fmt:'Video',caption:'[Duplicate post] Best advice reel — board advisor knowing what to stop. Alternate version.',imp:1276,clicks:50,ctr:3.92,likes:7,cmt:0,shares:1,er:4.55,isDup:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7491523625582276609'},
+  {date:'Aug 7',fmt:'Video',caption:'[Experiment 1] Your expertise is worth more than you think. NED salary calculator — what\'s your experience actually worth at board level?',imp:1276,clicks:50,ctr:3.92,likes:7,cmt:0,shares:1,er:4.55,isExp:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7491523625582276609'},
   {date:'Aug 5',fmt:'Document',caption:'Being a great advisor starts with knowing where you can add value. Anna, Eric, Amy — five new placements.',imp:2302,clicks:550,ctr:23.89,likes:24,cmt:0,shares:6,er:25.20,isTop:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7490798837066981378'},
   {date:'Aug 4',fmt:'Video',caption:'Be explicit about your value-add from day one. Mhairi Berry — first 30 days of any advisory engagement.',imp:1891,clicks:93,ctr:4.92,likes:15,cmt:1,shares:5,er:6.03,url:'https://www.linkedin.com/feed/update/urn:li:activity:7490436415164461057'},
 ];
@@ -1089,7 +1103,7 @@ new Chart(document.getElementById('igFormatChart'),{type:'bar',data:{labels:['Ca
   const postsByDay={};
   LI_POSTS.forEach(p=>{const d=p.date;postsByDay[d]=(postsByDay[d]||0)+1;});
   IG_POSTS.forEach(p=>{const d='IG '+p.date;postsByDay[d]=(postsByDay[d]||0)+1;});
-  const liDays=['Aug 4','Aug 5','Aug 6a','Aug 6b','Aug 11','Aug 12a','Aug 12b','Aug 12c','Aug 18','Aug 19','Aug 20','Aug 21','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28'];
+  const liDays=['Aug 4','Aug 5','Aug 6a','Aug 7','Aug 11','Aug 12a','Aug 12b','Aug 12c','Aug 18','Aug 19','Aug 20','Aug 21','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28'];
   const days=['Aug 4','Aug 5','Aug 6','Aug 7','Aug 11','Aug 12','Aug 13','Aug 14','Aug 18','Aug 19','Aug 20','Aug 21','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28'];
   const liCounts=days.map(d=>{const a=[d,'Aug 6a','Aug 6b','Aug 12a','Aug 12b','Aug 12c'].filter(x=>x.startsWith(d));return LI_POSTS.filter(p=>p.date===d||p.date===d+'a'||p.date===d+'b'||p.date===d+'c').length;});
   const igCounts=days.map(d=>IG_POSTS.filter(p=>p.date===d).length);
