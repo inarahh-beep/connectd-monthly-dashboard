@@ -69,6 +69,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .data-table td{padding:11px 14px;border-top:1px solid var(--border);vertical-align:top;color:var(--text);}
 .data-table tr.top-post td:first-child{border-left:3px solid var(--green);}
 .data-table tr.top-post td{background:#f0fdf4;}
+.data-table tr.exp-post td:first-child{border-left:3px solid #a78bfa;}
+.data-table tr.exp-post td{background:#f5f3ff;}
 .data-table tr:hover td{background:#fafafa;}
 .platform-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:700;}
 .pb-li{background:var(--dark);color:#fff;}
@@ -201,6 +203,7 @@ function checkPw(){const val=document.getElementById('pwInput').value;if(val==='
         <option value="s4">4 · All Posts</option>
         <option value="s5">5 · Top Posts</option>
         <option value="s6">6 · Content Themes</option>
+        <option value="sexp">Experiments</option>
         <option value="s7">7 · CTA Analysis</option>
         <option value="s8">8 · Saves &amp; Conversion</option>
         <option value="s10">10 · Page Analytics</option>
@@ -587,6 +590,118 @@ fetch('months.json').then(r=>r.json()).then(months=>{
   </div>
 </div>
 
+<!-- EXPERIMENTS -->
+<div id="sexp"></div>
+<div class="section">
+  <div class="section-label">Experiments</div>
+  <div class="section-title">🧪 Experiments Run in August</div>
+
+  <!-- Experiment 3 -->
+  <div style="background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:24px 28px;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="background:#7c3aed;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px;">EXPERIMENT 3</span>
+      <span style="font-size:15px;font-weight:700;color:var(--dark);">Side-by-Side Comparison: Alone vs. With Connectd</span>
+    </div>
+
+    <!-- Hypothesis -->
+    <div style="background:#f5f3ff;border-left:3px solid #7c3aed;border-radius:6px;padding:14px 18px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;color:#7c3aed;letter-spacing:.5px;margin-bottom:6px;">HYPOTHESIS</div>
+      <p style="margin:0;font-size:14px;color:var(--dark);line-height:1.6;">A direct side-by-side comparison format (going it alone vs. with Connectd) will outperform a standard single-narrative value-prop post on engagement and saves — because it makes the value concrete and comparative rather than asserted.</p>
+    </div>
+
+    <!-- Success metric -->
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:20px;">
+      <span style="font-size:18px;flex-shrink:0;">🎯</span>
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.5;"><strong style="color:var(--dark);">Success metric:</strong> Engagement rate + saves, benchmarked against a past single-narrative value-prop post covering similar ground (the control).</p>
+    </div>
+
+    <!-- Post comparison -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+      <!-- Experiment post -->
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;">EXPERIMENT POST · AUG 13</span>
+          <span style="background:#7c3aed;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">LI Video</span>
+        </div>
+        <p style="font-size:13px;color:var(--dark);margin:0 0 14px;font-style:italic;line-height:1.5;">"Most senior leaders don't turn down board work because they're not ready for it."</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:#16a34a;">9.06%</div>
+            <div style="font-size:10px;color:var(--muted);">Eng. Rate</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1,754</div>
+            <div style="font-size:10px;color:var(--muted);">Impressions</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">7.01%</div>
+            <div style="font-size:10px;color:var(--muted);">CTR</div>
+          </div>
+        </div>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7493697921989771267" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:11px;color:#0077b5;text-decoration:none;font-weight:600;">View post ↗</a>
+      </div>
+
+      <!-- Control post -->
+      <div style="background:#fff9f9;border:1px solid #fecaca;border-radius:10px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:11px;font-weight:700;color:#dc2626;letter-spacing:.5px;">CONTROL POST · AUG 14</span>
+          <span style="background:#6b7280;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;">LI Video</span>
+        </div>
+        <p style="font-size:13px;color:var(--dark);margin:0 0 14px;font-style:italic;line-height:1.5;">Standard single-narrative value-prop — going fractional alone vs. with Connectd.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:#dc2626;">2.62%</div>
+            <div style="font-size:10px;color:var(--muted);">Eng. Rate</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1,297</div>
+            <div style="font-size:10px;color:var(--muted);">Impressions</div>
+          </div>
+          <div style="background:#fff;border-radius:6px;padding:8px 4px;">
+            <div style="font-size:16px;font-weight:800;color:var(--dark);">1.54%</div>
+            <div style="font-size:10px;color:var(--muted);">CTR</div>
+          </div>
+        </div>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7494060281392881664" target="_blank" style="display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:11px;color:#0077b5;text-decoration:none;font-weight:600;">View post ↗</a>
+      </div>
+
+    </div>
+
+    <!-- Benchmarks -->
+    <div style="background:var(--bg);border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;gap:24px;flex-wrap:wrap;">
+      <div style="font-size:12px;color:var(--muted);">📊 <strong style="color:var(--dark);">LI video avg ER:</strong> 5.06%</div>
+      <div style="font-size:12px;color:var(--muted);">📊 <strong style="color:var(--dark);">LI video avg CTR:</strong> 3.67%</div>
+      <div style="font-size:12px;color:var(--muted);">📊 <strong style="color:var(--dark);">IG avg ER:</strong> 5.30%</div>
+      <div style="font-size:12px;color:var(--muted);">💾 <strong style="color:var(--dark);">Saves (both posts):</strong> 0</div>
+    </div>
+
+    <!-- Verdict -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;margin-bottom:6px;">✅ LINKEDIN — PARTIALLY VALIDATED</div>
+        <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.5;">Experiment post hit <strong>9.06% ER</strong> vs. 5.06% average — <strong>+79% above benchmark</strong>. CTR also significantly higher (7.01% vs. 3.67%). The side-by-side format drove notably stronger engagement than the control.</p>
+      </div>
+      <div style="background:#fff9f9;border:1px solid #fecaca;border-radius:8px;padding:14px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#dc2626;letter-spacing:.5px;margin-bottom:6px;">❌ INSTAGRAM — NOT VALIDATED</div>
+        <p style="margin:0;font-size:13px;color:var(--dark);line-height:1.5;">The IG reel (NED calculator, Aug 13) hit <strong>1.49% ER</strong> vs. 5.30% average — well below benchmark. No saves from either platform. The format didn't land on IG, possibly due to different audience expectations.</p>
+      </div>
+    </div>
+
+    <!-- "Partially" qualification note -->
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--dark);">
+      <strong>⚠️ Note on "partially validated":</strong> The save metric — which was half the success criterion — returned zero on both posts. LinkedIn ER surpassed benchmark, but saves didn't move, so the hypothesis is only half-confirmed.
+    </div>
+
+    <!-- Learning -->
+    <div style="background:var(--dark);border-radius:10px;padding:18px 22px;color:#fff;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:8px;">💡 LEARNING FOR SEPTEMBER</div>
+      <p style="margin:0;font-size:14px;line-height:1.6;">The side-by-side comparison hook works on LinkedIn — use it again, but test with a clearer CTA that prompts saves (e.g. "Save this to share with someone weighing up their options"). Don't replicate this format on Instagram without adapting it to the visual-first audience.</p>
+    </div>
+
+  </div>
+</div>
+
 <!-- S7 CTA ANALYSIS -->
 <div id="s7"></div>
 <div class="section">
@@ -745,8 +860,8 @@ const LI_POSTS = [
   {date:'Aug 19',fmt:'Document',caption:'The expertise you\'ve spent years building — Nik, Alison, Iain. Three new advisor placements at Connectd.',imp:1451,clicks:373,ctr:25.69,likes:23,cmt:2,shares:3,er:27.64,isTop:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7495872272558231552'},
   {date:'Aug 18',fmt:'Video',caption:'One of the hardest parts of being a founder? Knowing if you\'re working on the right thing. Kelvin, NewKroo.',imp:1067,clicks:28,ctr:2.63,likes:26,cmt:7,shares:3,er:6.0,url:'https://www.linkedin.com/feed/update/urn:li:activity:7495510072400433152'},
   {date:'Aug 12c',fmt:'Document',caption:'The expertise you\'ve spent years building — Thomas, Mukul, Ashley. Three new advisor placements.',imp:3337,clicks:981,ctr:29.40,likes:20,cmt:0,shares:2,er:30.06,isTop:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7493335502885031936'},
-  {date:'Aug 12b',fmt:'Video',caption:'[Duplicate post A] Kelvin NewKroo advisor placement story — momentum and community.',imp:1754,clicks:123,ctr:7.01,likes:31,cmt:3,shares:2,er:9.06,isDup:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7493697921989771267'},
-  {date:'Aug 12a',fmt:'Video',caption:'[Duplicate post B] Kelvin NewKroo advisor placement story — alternate cut.',imp:1297,clicks:20,ctr:1.54,likes:13,cmt:0,shares:1,er:2.62,isDup:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7494060281392881664'},
+  {date:'Aug 13',fmt:'Video',caption:'Most senior leaders don\'t turn down board work because they\'re not ready for it. [Experiment 3 — side-by-side: alone vs. with Connectd]',imp:1754,clicks:123,ctr:7.01,likes:31,cmt:3,shares:2,er:9.06,isExp:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7493697921989771267'},
+  {date:'Aug 14',fmt:'Video',caption:'[Experiment 3 — control post] Standard single-narrative value-prop on going fractional alone vs. with Connectd.',imp:1297,clicks:20,ctr:1.54,likes:13,cmt:0,shares:1,er:2.62,isExp:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7494060281392881664'},
   {date:'Aug 11',fmt:'Video',caption:'Mhairi joined Connectd to build a portfolio career. She didn\'t just build a client list — she built her community.',imp:1841,clicks:73,ctr:3.97,likes:25,cmt:0,shares:7,er:5.70,url:'https://www.linkedin.com/feed/update/urn:li:activity:7492973163232788481'},
   {date:'Aug 6a',fmt:'Video',caption:'The best advice a board advisor gives isn\'t always "here\'s what to do next." Sometimes it\'s knowing what to stop.',imp:2026,clicks:90,ctr:4.44,likes:12,cmt:1,shares:4,er:5.28,url:'https://www.linkedin.com/feed/update/urn:li:activity:7491161217261178881'},
   {date:'Aug 6b',fmt:'Video',caption:'[Duplicate post] Best advice reel — board advisor knowing what to stop. Alternate version.',imp:1276,clicks:50,ctr:3.92,likes:7,cmt:0,shares:1,er:4.55,isDup:true,url:'https://www.linkedin.com/feed/update/urn:li:activity:7491523625582276609'},
@@ -798,13 +913,13 @@ const COMPETITORS = [
     tb.innerHTML=rows.map(p=>{
       const isLi=p.platform==='LinkedIn';
       const pbCls=isLi?'pb-li':'pb-ig';
-      const topCls=p.isTop?'top-post':'';
+      const topCls=p.isTop?'top-post':p.isExp?'exp-post':'';
       const caption=p.url?`<a href="${p.url}" target="_blank" class="caption-link" title="${p.caption}">${p.caption.slice(0,55)}${p.caption.length>55?'…':''}</a>`:`<span title="${p.caption}">${p.caption.slice(0,55)}${p.caption.length>55?'…':''}</span>`;
       const impV=isLi?(p.imp||0).toLocaleString():(p.views||0).toLocaleString();
       const reach=isLi?'—':(p.reach||0).toLocaleString();
       const ctrs=isLi?`${(p.clicks||0).toLocaleString()} / ${(p.ctr||0).toFixed(2)}%`:'—';
       const saves=isLi?'—':(p.saves||0);
-      return`<tr class="${topCls}"><td><span class="platform-badge ${pbCls}">${p.platform}</span></td><td>${p.date}</td><td>${p.fmt}${p.isDup?' <span class="pill pill-warn" style="font-size:9px">DUP</span>':''}</td><td>${caption}</td><td>${impV}</td><td>${reach}</td><td>${ctrs}</td><td>${p.likes||0}</td><td>${p.cmt||0}</td><td>${saves}</td><td>${p.shares||0}</td><td style="font-weight:700;color:var(--dark)">${(p.er||0).toFixed(2)}%</td></tr>`;
+      return`<tr class="${topCls}"><td><span class="platform-badge ${pbCls}">${p.platform}</span></td><td>${p.date}</td><td>${p.fmt}${p.isDup?' <span class="pill pill-warn" style="font-size:9px">DUP</span>':''}${p.isExp?' <span class="pill" style="font-size:9px;background:#7c3aed;color:#fff">EXP</span>':''}</td><td>${caption}</td><td>${impV}</td><td>${reach}</td><td>${ctrs}</td><td>${p.likes||0}</td><td>${p.cmt||0}</td><td>${saves}</td><td>${p.shares||0}</td><td style="font-weight:700;color:var(--dark)">${(p.er||0).toFixed(2)}%</td></tr>`;
     }).join('');
     document.getElementById('rowCount').textContent=`${rows.length} posts`;
   }
